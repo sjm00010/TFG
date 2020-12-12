@@ -35,11 +35,11 @@
         methods:{
             obtenerColor(dificultad){
                 switch(dificultad){
-                    case "1":
+                    case 1:
                         return "dusty-grass";
-                    case "2":
+                    case 2:
                         return "winter-neva";
-                    case "3":
+                    case 3:
                         return "warm-flame";
                     default:
                         return "cloudy-knoxville";

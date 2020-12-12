@@ -4,9 +4,9 @@
         <hr/>        
         <tipo class="mb-3" titulo="Cálculo de apoyo en vigas" color="aqua-gradient"></tipo>
         <mdb-row>
-            <mdb-col col="md">
-                <tarjeta  titulo="Ejercio 1" dificultad="1" 
-                    descripcion="Ejemplo" enlace="/ejercicios/ejVigas"></tarjeta>
+            <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="i">
+                <tarjeta :titulo="'Ejercio' + ej.id" :dificultad="ej.dificultad"
+                    :descripcion="ej.desc" :enlace="'/ejercicios/ej'+ ej.id"></tarjeta>
             </mdb-col>
         </mdb-row>
     </mdb-container>
@@ -16,13 +16,22 @@
 import tarjeta from '@/components/TarjetaEjercicio';
 import tipo from '@/components/TipoEjercicios';
 import {mdbContainer, mdbRow, mdbCol} from 'mdbvue';
+
+import {Ejercicio} from '@/assets/js/ejercicio.js';
 export default {
     components: {
-        mdbContainer,
-        mdbRow,
-        mdbCol,
+        mdbContainer, mdbRow, mdbCol,
         tarjeta,
         tipo
+    },
+    data(){
+        return{
+            ejVigas: []
+        }
+    },
+    created(){
+        this.ejVigas.push(new Ejercicio(1,'Prueba 1'));
+        this.ejVigas.push(new Ejercicio(3,'Prueba 2'));
     }
 }
 </script>
