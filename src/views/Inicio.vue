@@ -43,8 +43,8 @@
         </mdb-row>
       </mdb-jumbotron>
 
-      <mdb-btn block v-show="!prof" outline="danger" @click.native="modal = true, error = false">Solo para profesores</mdb-btn>
-      <mdb-btn block v-show="prof" outline="warning" @click.native="logout">Cerrar sesión</mdb-btn>
+      <mdb-btn block v-show="!prof" outline="danger" @click="modal = true, error = false">Solo para profesores</mdb-btn>
+      <mdb-btn block v-show="prof" outline="warning" @click="logout">Cerrar sesión</mdb-btn>
 
       <mdb-modal centered :show="modal" @close="modal = false">
         <mdb-modal-header>
@@ -58,7 +58,7 @@
             Usuario o contraseña incorrectos.
           </mdb-alert>
           <mdb-input label="Usuario" v-model="user" />
-          <mdb-input type="password" label="Contraseña" v-model="pass" />
+          <mdb-input type="password" label="Contraseña" v-model="pass" @keyup.enter.native="login"/>
         </mdb-modal-body>
         <mdb-modal-footer>
           <mdb-btn color="success" @click.native="login">Identificarse</mdb-btn>
@@ -73,6 +73,8 @@
 import {  mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMask, 
           mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
           mdbModalFooter, mdbInput, mdbAlert} from 'mdbvue';
+
+import {profesor, getUser, logout} from '@/assets/js/identificacion.js';
 export default {
   name: 'Inicio',
   components: {
@@ -98,11 +100,12 @@ export default {
         this.prof = true;
         this.modal = false;
       }else
-        this.error=true;
+        this.error = true;
     },
     logout(){
-      localStorage.setItem("auth", 'alumno');
-      this.prof = false;
+      logout();
+      this.prof = profesor;
+      console.log(this.prof)
     }
   },
   created(){
@@ -118,11 +121,8 @@ export default {
         });
     });
 
-    const auth = localStorage.getItem("auth");
-    if (!auth)
-      localStorage.setItem("auth", 'alumno');
-    else if(auth=='profesor')
-      this.prof = true;
+    getUser();
+    this.prof = profesor;
   }
 }
 </script>
