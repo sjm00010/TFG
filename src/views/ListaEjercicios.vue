@@ -3,7 +3,7 @@
         <h1 class="text-muted text-center mb-4">Listado de ejercicios</h1>
         <div v-show="prof">
             <hr/>
-            <mdb-btn block color="success">Crear ejercicio</mdb-btn>
+            <router-link tag="button" class="btn btn-block success-color text-white" to="/crearEjercicio">Crear ejercicio</router-link>
         </div>
         <hr/>        
         <tipo class="mb-3" titulo="Cálculo de apoyo en vigas" color="aqua-gradient"></tipo>
@@ -22,14 +22,14 @@
 <script>
 import tarjeta from '@/components/TarjetaEjercicio';
 import tipo from '@/components/TipoEjercicios';
-import {mdbContainer, mdbRow, mdbCol, mdbBtn} from 'mdbvue';
+import {mdbContainer, mdbRow, mdbCol} from 'mdbvue';
 
 import {cargaEjVigas, borrarEjViga} from '@/assets/js/ejercicio.js';
 import {profesor, getUser} from '@/assets/js/identificacion.js';
 
 export default {
     components: {
-        mdbContainer, mdbRow, mdbCol, mdbBtn,
+        mdbContainer, mdbRow, mdbCol,
         tarjeta,
         tipo
     },

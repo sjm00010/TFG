@@ -31,7 +31,7 @@
                   <b>Correo</b> : fsuarez@ujaen.es
                 </li>
                 <li>
-                  <b>Teléfono</b> : (+34) 953 648606
+                  <b>Teléfono</b> : (+34) 953 648 606
                 </li>
                 <li>
                   <b>Dirección</b> : Campus Científico Tecnológico de Linares, Dependencia: D-50

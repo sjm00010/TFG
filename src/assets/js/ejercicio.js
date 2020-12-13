@@ -28,8 +28,9 @@ export class Ejercicio {
 
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
 let vigas = [];
-reiniciaIds();
 export function cargaEjVigas(){
+    reiniciaIds();
+    vigas.splice(0);
     vigas.push(new Ejercicio(1,'Prueba 1'));
     vigas.push(new Ejercicio(3,'Prueba 2'));
     return vigas;
