@@ -24,6 +24,23 @@ export class Ejercicio {
     }
 }
 
+export class Viga {
+    constructor( numTramos, minTramos, maxTramos, elementos) {
+        this.numTramos = numTramos;
+        this.minTramos = minTramos;
+        this.maxTramos = maxTramos;
+        this.elementos = elementos;
+    }
+}
+
+export function compruebaTramos(tramos){
+    let error = false;
+    tramos.forEach(tramo => {
+        error = tramo.min==undefined || tramo.max==undefined;
+    });
+    return error ? "Se debe introducir el mínimo y máximo para todos los tramos." : "OK";
+}
+
 // FUNCION PARA CARGAR TODOS LOS EJERCICIOS DE LA BBDD
 
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
