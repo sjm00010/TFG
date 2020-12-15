@@ -43,20 +43,14 @@
         </mdb-row>
       </mdb-jumbotron>
 
-      <mdb-btn block v-show="!prof" outline="danger" @click="modal = true, error = false">Solo para profesores</mdb-btn>
+      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin">Solo para profesores</mdb-btn>
       <mdb-btn block v-show="prof" outline="warning" @click="logout">Cerrar sesión</mdb-btn>
 
       <mdb-modal centered :show="modal" @close="modal = false">
         <mdb-modal-header>
           <mdb-modal-title>Identificacion</mdb-modal-title>
         </mdb-modal-header>
-        <mdb-modal-body>
-          <mdb-alert color="info">
-            <i>Tu IP es {{this.ip}} con ubicación en {{this.city}}. Será almacenada por motivos de seguridad, para evitar suplantación de identidad.</i>
-          </mdb-alert>
-          <mdb-alert color="danger" v-show="error">
-            Usuario o contraseña incorrectos.
-          </mdb-alert>
+        <mdb-modal-body class="py-0">
           <mdb-input label="Usuario" v-model="user" />
           <mdb-input type="password" label="Contraseña" v-model="pass" @keyup.enter.native="login"/>
         </mdb-modal-body>
@@ -72,15 +66,14 @@
 <script>
 import {  mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMask, 
           mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
-          mdbModalFooter, mdbInput, mdbAlert} from 'mdbvue';
-
+          mdbModalFooter, mdbInput} from 'mdbvue';
 import {profesor, getUser, logout} from '@/assets/js/identificacion.js';
 export default {
   name: 'Inicio',
   components: {
     mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMask, 
     mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
-    mdbModalFooter, mdbInput, mdbAlert
+    mdbModalFooter, mdbInput
   },
   data() {
     return {
@@ -94,18 +87,49 @@ export default {
     }
   },
   methods:{
+    verLogin(){
+      this.modal = true;
+      this.error = false;
+      this.$notify({
+          group: 'auth',
+          title: '<i class="far fa-2x fa-question-circle"></i></i> <b class="h3">Información</b>',
+          text: '<i style="font-size:12px"> Para cerrar las notificaciones basta con hacer click en ellas.</i>',
+          duration: 5000,
+      });
+      this.$notify({
+        group: 'auth',
+        title: '<i class="fas fa-2x fa-exclamation-circle"></i>  <b class="h3">Aviso</b>',
+        text: `<i style="font-size:15px">Tu IP es ${this.ip} con ubicación en ${this.city}. Será almacenada por motivos de seguridad, para evitar suplantación de identidad.</i>`,
+        duration: 10000,
+        type: 'warn'
+      });
+    },
     login(){
       if(this.user == "fernando" && this.pass == "prueba"){ // Usuario y contraseña
         localStorage.setItem("auth", 'profesor');
         this.prof = true;
         this.modal = false;
-      }else
-        this.error = true;
+        this.$notify({
+          group: 'auth',
+          title: '<i class="fas fa-2x fa-user-circle"></i> <b class="h3">Bienvenido Fernando</b>',
+          text: '<i style="font-size:15px"> Te has identificado correctamente. El botón para cerrar sesión esta en el mismo lugar que el de identificarse</i>',
+          duration: 8000,
+          type: 'success'
+        });
+      }else{
+        this.$notify({
+          group: 'auth',
+          title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de autentificación</b>',
+          text: '<i style="font-size:15px"> El usuario o contraseña introducidos son incorrectos.</i>',
+          duration: 5000,
+          type: 'error'
+        });
+      }
+        
     },
     logout(){
       logout();
       this.prof = profesor;
-      console.log(this.prof)
     }
   },
   created(){

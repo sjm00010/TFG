@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h4 class="text-center"><small class="text-muted">DIBUJA LA FIGURA</small></h4>
+    <h4 class="text-center"><small class="text-muted">DIBUJO DEL PROBLEMA</small></h4>
     <mdb-card-text class="text-center">Dibuja la figura con los datos requeridos para que cambie cuando los alumnos ajusten los valores.</mdb-card-text>
     <mdb-row class="justify-content-center">
         <mdb-col col="md" class="my-2">

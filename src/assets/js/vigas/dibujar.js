@@ -1,10 +1,18 @@
 import { fabric } from 'fabric';
-import { setInicio, setFin, setCanvas, canvas, inicio, fin, altura, colores} from '@/assets/js/vigas/variables.js';
-import { vinculaContenedor } from './variables';
 
+// Configuracion de fabric
 fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
+// Variables
+const colores = {   azul: "rgba(100,149,237,0.9)", verde: "rgba(35,160,58,0.9)", 
+                    naranja: "rgba(255,157,65,0.9)", morado: "rgba(125, 33, 129,0.9)", 
+                    rojo: "rgba(223, 78, 78,0.9)"};
+
 let tamViga;
+let canvas;
+let inicio;
+let fin;
+let altura = 150;
 
 /**
   * Función que dibuja una viga
@@ -571,8 +579,8 @@ export function recalculaCoorX(coorX){
  * @param {*} outerCanvasContainer Contenedor del canvas
  */
 export function reinicia(outerCanvasContainer){
-    setInicio(outerCanvasContainer.clientWidth*0.10);
-    setFin(outerCanvasContainer.clientWidth*0.80);
+    inicio = outerCanvasContainer.clientWidth*0.10;
+    fin = outerCanvasContainer.clientWidth*0.80;
 }
 
 /**
@@ -580,15 +588,14 @@ export function reinicia(outerCanvasContainer){
  * @param {*} outerCanvasContainer 
  */
 export function vincularCanvas(outerCanvasContainer){
-    vinculaContenedor(outerCanvasContainer);
+    // canvas = outerCanvasContainer;
 
     // Creo el canvas de fabric
-    setCanvas( new fabric.Canvas('editor', {
+    canvas = new fabric.Canvas('editor', {
             width: outerCanvasContainer.clientWidth,
             height: 300,
             selection: false
-        })
-    );
+        });
 
     canvas.hoverCursor = 'pointer';
     canvas.on({

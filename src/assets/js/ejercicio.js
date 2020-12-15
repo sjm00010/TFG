@@ -34,11 +34,14 @@ export class Viga {
 }
 
 export function compruebaTramos(tramos){
-    let error = false;
-    tramos.forEach(tramo => {
-        error = tramo.min==undefined || tramo.max==undefined;
+    let error = [];
+    tramos.forEach((tramo, pos) => {
+        if(tramo.min=='')
+            error.push(('min'+(pos+1)));
+        if (tramo.max=='')
+            error.push(('max'+(pos+1)));
     });
-    return error ? "Se debe introducir el mínimo y máximo para todos los tramos." : "OK";
+    return error;
 }
 
 // FUNCION PARA CARGAR TODOS LOS EJERCICIOS DE LA BBDD
