@@ -1,5 +1,5 @@
 <template>
-<div v-on:keydown.capture="mapear">
+<div>
     <mdb-row class="justify-content-between">
         <mdb-col col="auto">
             <mdb-btn color="elegant" icon="bold  fa-lg" class="px-3" @click="enunciado += '<b>Texto</b>'"/>
@@ -58,13 +58,9 @@
         </mdb-modal-footer>
     </mdb-modal>
 
-    <mdb-input type="textarea" label="Enunciado en HTML" outline inputClass="z-depth-1 p-3" 
-                v-model="enunciado" width="100%" :rows="5" @change="vistaPrevia" 
-                @keyup.enter.native="enunciado += '<br/>\n'"
-                @keyup.ctrl.b.native="enunciado += '<b>Texto</b>'"
-                @keyup.ctrl.i.native="enunciado += '<i>Texto</i>'"
-                @keyup.ctrl.u.native="enunciado += '<u>Texto</u>'"
-            />
+    <textarea class="form-control z-depth-1 p-3 w-100" :rows="10" ref="textarea" 
+                placeholder="Escribe el enunciado en HTML" v-model="enunciado"></textarea>
+
     <mdb-btn block color="default" size="sm" @click.native="previa">
         <mdb-icon v-if="!vprevia" icon="eye fa-lg" class="mr-2"/>
         <mdb-icon v-if="vprevia" icon="eye-slash fa-lg" class="mr-2"/>
@@ -79,13 +75,13 @@
 </template>
 
 <script>
-import {mdbCard, mdbCardBody, mdbInput, mdbIcon,
+import {mdbCard, mdbCardBody, mdbIcon,
         mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader, 
         mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
 export default {
     name: 'editorTexto',
     components: {
-       mdbCard, mdbCardBody, mdbInput, mdbIcon,
+       mdbCard, mdbCardBody, mdbIcon,
        mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader,
        mdbModalTitle, mdbModalBody, mdbModalFooter,
     },
@@ -99,34 +95,62 @@ export default {
         }
     },
     methods:{
-        mapear(event){
+        previa(){
+            this.vprevia = !this.vprevia;
+            this.$refs.previa.$el.innerHTML = this.enunciado;
+        }
+    },
+    mounted(){
+        this.$refs.textarea.addEventListener('keydown', (event) => {
+            let posicion = this.$refs.textarea.selectionStart;
             switch(event.key){
                 case 'Control':
                     this.ctrl = true;
                     break;
                 case 'b':
-                case 'l':
-                case 'u':
                     if(this.ctrl){
-                        this.ctrl = false;
+                        this.enunciado = [this.enunciado.slice(0, posicion), 
+                                            '<b>Texto</b>', 
+                                            this.enunciado.slice(posicion)]
+                                            .join('');
                         event.preventDefault();
                     }
+                    this.ctrl = false; 
+                    break;
+                case 'i':
+                    if(this.ctrl){
+                        this.enunciado = [this.enunciado.slice(0, posicion), 
+                                            '<i>Texto</i>', 
+                                            this.enunciado.slice(posicion)]
+                                            .join('');
+                        event.preventDefault();
+                    }
+                    this.ctrl = false; 
+                    break;
+                case 'u':
+                    if(this.ctrl){
+                        this.enunciado = [this.enunciado.slice(0, posicion), 
+                                            '<u>Texto</u>', 
+                                            this.enunciado.slice(posicion)]
+                                            .join('');
+                        event.preventDefault();
+                    }
+                    this.ctrl = false; 
                     break;
                 case 'Enter':
+                    this.enunciado += '<br/>\n'
                     event.preventDefault();
                     break;
                 default:
                     this.ctrl = false;
+                    break;
             }
-        },
-        vistaPrevia(){
+        });
+
+        this.$refs.textarea.addEventListener('keyup', () => {
             if(this.vprevia)
                 this.$refs.previa.$el.innerHTML = this.enunciado;
-        },
-        previa(){
-            this.vprevia = !this.vprevia;
-            this.vistaPrevia();
-        }
+        });
     }
 }
 </script>
@@ -134,5 +158,12 @@ export default {
 <style>
 textarea {
     resize: vertical;
+    overflow-y: scroll;
 }
+textarea::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+textarea::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #4285F4; }
 </style>

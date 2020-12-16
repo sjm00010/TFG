@@ -25,10 +25,9 @@ export class Ejercicio {
 }
 
 export class Viga {
-    constructor( numTramos, minTramos, maxTramos, elementos) {
-        this.numTramos = numTramos;
-        this.minTramos = minTramos;
-        this.maxTramos = maxTramos;
+    constructor( ejercicio, tramos, elementos) {
+        this.enunciado = ejercicio;
+        this.tramos = tramos;
         this.elementos = elementos;
     }
 }
@@ -36,10 +35,12 @@ export class Viga {
 export function compruebaTramos(tramos){
     let error = [];
     tramos.forEach((tramo, pos) => {
-        if(tramo.min=='')
+        if(tramo.min=='' || parseFloat(tramo.min) > parseFloat(tramo.max))
             error.push(('min'+(pos+1)));
-        if (tramo.max=='')
+        if (tramo.max=='' || parseFloat(tramo.max) < parseFloat(tramo.min))
             error.push(('max'+(pos+1)));
+        if (tramo.valor=='' || parseFloat(tramo.valor) < parseFloat(tramo.min) || parseFloat(tramo.valor) > parseFloat(tramo.max))
+            error.push(('valor'+(pos+1)));
     });
     return error;
 }

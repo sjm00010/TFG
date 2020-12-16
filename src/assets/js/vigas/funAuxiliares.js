@@ -1,6 +1,5 @@
-import {redibuja} from '@/assets/js/vigas/main.js';
-import {vincularCanvas} from '@/assets/js/vigas/dibujar.js';
-import { canvas, elementos, borraElemento, limpiaElementos, pushElemento, reiniciaIds } from './variables';
+import * as dibujo from '@/assets/js/vigas/dibujar.js';
+import * as val from './variables';
 
 /**
  * Función que escala el canvas a partir del tamaño de la ventana
@@ -8,21 +7,8 @@ import { canvas, elementos, borraElemento, limpiaElementos, pushElemento, reinic
  */
 export function resizeCanvas(outerCanvasContainer) {
     if(outerCanvasContainer == undefined) return;
-    canvas.setDimensions({width: outerCanvasContainer.clientWidth});
-    reiniciaIds();
+    dibujo.canvas.setDimensions({width: outerCanvasContainer.clientWidth});
     redibuja(outerCanvasContainer);
-}
-
-/**
- * Función que obtiene el tamaño mínimo de la viga
- */
-export function tamMin(){
-    let min = 1;
-    elementos.forEach( e => {
-        if(parseFloat(e.posX) > min) min = parseFloat(e.posX);
-        if(e.posX2 != undefined && e.posX2 > min) min = e.posX2;
-    });
-    return min;
 }
 
 /**
@@ -30,102 +16,189 @@ export function tamMin(){
  * @param {*} outerCanvasContainer 
  */
 export function clearDatos(outerCanvasContainer){
-    limpiaElementos();
-    reiniciaIds();
+    val.limpiaElementos();
     redibuja(outerCanvasContainer);
 }
 
-/**
- * Función que comprueba si un id existe
- * @param {int} id Id a buscar
- * @returns True si existe, False si no
- */
-export function existeId(id){
-    if( elementos.findIndex(e => e.id == id) == -1)
-        return false;
-    return true;
-}
-
-/**
- * Función que devuelve el elemento con id proporcionado
- * @param {int} id 
- */
-export function obtenEl(id){
-    return elementos[elementos.findIndex(e => e.id == id)];
-}
-
-/**
- * Función que borra un objeto tras modificarlo
- * @param {int} id Id del objeto a borrar 
- * @param {*} outerCanvasContainer
- */
-export function borrar(id){
-    borraElemento(id);
-}
-
-/**
- * Función que borra un objeto
- * @param {int} id Id del objeto a borrar 
- * @param {*} outerCanvasContainer
- */
-export function borrarDato(id){
-    if(elementos[elementos.findIndex(e => e.id == id)].tipo == 'Viga'){
-        return false;
-    }else{
-        borraElemento(id);
-        return true;
-    }
-}
-
-/**
- * Función que guarga un elemento dibujado
- * @param {string} tipo Tipo de elemento dibujado
- * @param {*} props Propiedades del elemento
- */
-export function addElemento(tipo, props){
-    pushElemento(tipo, props);
-}
-
 export function vinculaCanvas(outerCanvasContainer){
-    vincularCanvas(outerCanvasContainer);
+    dibujo.vincularCanvas(outerCanvasContainer);
 }
 
 /**
  * Funión que vuelve a dibujar todo
  * @param {canvas} outerCanvasContainer Canvas
  */
-export function redibuja(outerCanvasContainer, elementos){
-    dibujo.reinicia(outerCanvasContainer);
-    canvas.remove(...canvas.getObjects());
-    elementos.forEach( elemento => {
+export function redibuja(outerCanvasContainer){
+    if(outerCanvasContainer != null)
+        dibujo.reinicia(outerCanvasContainer);
+    dibujo.canvas.remove(...dibujo.canvas.getObjects());
+    val.elementos.forEach( elemento => {
         switch(elemento.tipo){
             case 'Viga':
-                addViga();
+                dibujo.addViga(elemento.magnitud);
                 break;
             case 'Soporte fijo':
-                addSoporte('fijo', elemento.segmento);
+                dibujo.addSoporteFijo(val.calculaSegmento(elemento.segmento));
                 break;
             case 'Soporte simple':
-                addSoporte('simple', elemento.segmento);
+                dibujo.addSoporteSimple(val.calculaSegmento(elemento.segmento));
                 break;
             case 'Soporte móvil':
-                addSoporte('móvil', elemento.segmento);
+                dibujo.addSoporteMovil(val.calculaSegmento(elemento.segmento));
                 break;
             case 'Punto de carga':
-                addPuntoCarga( elemento.alternativa, elemento.segmento, elemento.magnitud);
+                dibujo.addPuntoCarga( val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
             case 'Barra':
-                addBarra( elemento.alternativa, elemento.segmento, elemento.magnitud, elemento.segmentoFinal, elemento.idBarra);
+                dibujo.addBarra( val.calculaSegmento(elemento.segmento), elemento.magnitud, elemento.segmentoFinal);
                 break;
             case 'Momento':
-                addMomento( elemento.segmento, elemento.alternativa, elemento.magnitud);
+                dibujo.addMomento( val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
             case 'Carga distribuida':
-                addCargaDistribuida( elemento.segmento, elemento.segmentoFinal, elemento.magnitud);
+                dibujo.addCargaDistribuida( val.calculaSegmento(elemento.segmento), val.calculaSegmento(elemento.segmentoFinal), elemento.magnitud);
                 break;
             case 'Normal':
-                addNormal(elemento.posX, elemento.magnitud);
+                dibujo.addNormal(val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
         }
     });
+}
+
+/********************************
+ *      Funciones dibujado      *
+ ********************************/
+
+ /**
+  * Función que dibuja una viga
+  */
+ export function addViga(){
+    let tam = val.calculaSegmento(val.numTramos()); // Tamaño de la viga
+    dibujo.addViga(tam);
+    val.vinculaViga(tam);
+    val.pushElemento("Viga", {magnitud : tam});
+}
+
+/**
+ * Función que dibuja un soporte para la viga
+ * @param {String} tipo Tipo de soporte
+ * @param {Int} seg Posición del vector tramos del segmento asociado
+ */
+export function addSoporte(tipo, seg){
+    let coorX = val.calculaSegmento(seg);
+    let error = val.verificaSoporte(tipo, coorX);
+    if(error.existe) return error;
+    val.pushElemento("Soporte " + tipo, 
+                    {magnitud: tipo, segmento: seg});
+    switch(tipo){
+        case 'simple':
+            dibujo.addSoporteSimple(coorX);
+            break;
+        case 'móvil':
+            dibujo.addSoporteMovil(coorX);
+            break;
+        case 'fijo':
+            dibujo.addSoporteFijo(coorX);
+            break;  
+    }
+}
+
+/**
+ * Función que dibuja una carga
+ * @param {Int} seg Posición del vector tramos del segmento asociado
+ * @param {Int} P Valor de la carga
+ * @param {Int} min Valor mínimo de la carga
+ * @param {Int} max Valor máximo de la carga
+ */
+export function addPuntoCarga(seg, P, min, max){
+    let coorX = val.calculaSegmento(seg);
+    let error = val.verificaPuntoC(P, min, max);
+    if(error.existe) return error;
+    dibujo.addPuntoCarga(coorX, P);
+    val.pushElemento("Punto de carga", { magnitud: P, segmento: seg, min:  min, max: max});
+}
+
+/**
+ * Función que dibuja una barra
+ * @param {String} id ID de la barra
+ * @param {Int} seg Posición del vector tramos del segmento asociado
+ * @param {Int} H Valor de la carga
+ * @param {Int} min Valor mínimo de la carga
+ * @param {Int} max Valor máximo de la carga
+ * @param {Int} d Distancia respecto a la viga
+ * @param {Int} minD Distancia mínima respecto a la viga
+ * @param {Int} maxD Distancia máxima respecto a la viga
+ */
+export function addBarra(id, seg, H, min, max, d, minD, maxD){
+    console.log(id, seg, H, min, max, d, minD, maxD)
+    let error = val.verificaBarra(H, min, max, d, minD, maxD);
+    if(error.existe) return error;
+    let coorX = val.calculaSegmento(seg);
+    dibujo.addBarra(coorX, H, d);
+    val.pushElemento("Barra", {
+        idBarra: id,
+        magnitud: H,
+        min: min,
+        max: max,
+        segmento: seg,
+        d: d,
+        minD: minD,
+        maxD: maxD
+    });
+}
+
+/**
+ * Función que dibuja la normal
+ * @param {Int} seg Posición del vector tramos del segmento asociado
+ * @param {Int} N Valor de la carga
+ * @param {Int} min Valor mínimo de la carga
+ * @param {Int} max Valor máximo de la carga
+ */
+export function addNormal(seg, N, min, max){
+    let error = val.verificaNormal(N, min, max);
+    if(error.existe) return error;
+    dibujo.addNormal( seg == "inicio" ? true : false, N);
+    val.pushElemento("Normal", {segmento: seg, magnitud: N, min: min, max: max});
+}
+
+/**
+ * Función que dibuja un momento
+ * @param {Int} seg Posición del vector tramos del segmento asociado
+ * @param {Int} M Valor del momento
+ * @param {Int} min Valor mínimo de la carga
+ * @param {Int} max Valor máximo de la carga
+ */
+export function addMomento(seg, M, min, max){
+    let coorX = val.calculaSegmento(seg);
+    let error = val.verificaMomento(M, min, max);
+    if(error.existe) return error;
+    dibujo.addMomento(coorX, M);
+    val.pushElemento("Momento", {
+                            segmento: seg,
+                            magnitud: M,
+                            min: min,
+                            max: max
+                            });
+}
+
+/**
+ * Función que dibuja una carga distribuida
+ * @param {Int} desdeSeg Posición inicial del vector tramos del segmento asociado
+ * @param {Int} hastaSeg Posición final del vector tramos del segmento asociado
+ * @param {Int} q Valor de la carga
+ * @param {Int} min Valor mínimo de la carga
+ * @param {Int} max Valor máximo de la carga
+ */
+export function addCargaDistribuida(desdeSeg, hastaSeg, q, min, max){
+    let desdeX = val.calculaSegmento(desdeSeg);
+    let hastaX = val.calculaSegmento(hastaSeg);
+    let error = val.verificaCargaD(desdeX, hastaX, q, min, max);
+    if(error.existe) return error;
+    dibujo.addCargaDistribuida(desdeX, hastaX, q);
+    val.pushElemento("Carga distribuida", {
+                                      magnitud: q, 
+                                      min: min,
+                                      max: max,
+                                      segmento: desdeSeg,
+                                      segmentoFinal: hastaSeg});
 }

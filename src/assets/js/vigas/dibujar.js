@@ -1,4 +1,5 @@
 import { fabric } from 'fabric';
+import { limpiaElementos } from './variables';
 
 // Configuracion de fabric
 fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -9,7 +10,7 @@ const colores = {   azul: "rgba(100,149,237,0.9)", verde: "rgba(35,160,58,0.9)",
                     rojo: "rgba(223, 78, 78,0.9)"};
 
 let tamViga;
-let canvas;
+export let canvas;
 let inicio;
 let fin;
 let altura = 150;
@@ -189,12 +190,12 @@ export function addSoporteMovil(coorX){
  * @param {boolean} sentido Sentido de la carga
  * @param {int} P Valor de la carga
  */
-export function addPuntoCarga(coorX, sentido, P){
+export function addPuntoCarga(coorX, P){
     const x = recalculaX(coorX);
 
     // Coordenadas
-    const y1 = sentido ? altura-110 : altura+80;
-    const y2 = sentido ? altura-20 : altura+20;
+    const y1 = P > 0 ? altura-110 : altura+80;
+    const y2 = P > 0 ? altura-20 : altura+20;
 
     const linea = new fabric.Line([ x, y1, x, y2], {
         stroke: colores.azul,
@@ -224,7 +225,7 @@ export function addPuntoCarga(coorX, sentido, P){
     canvas.add(linea);
     canvas.add(arrow);
 
-    if(!sentido){
+    if(P < 0){
         escribir(P.toString()+" kN", x-30,  altura+60, colores.azul);
     }else{
         escribir(P.toString()+" kN", x,  altura-120, colores.azul);
@@ -239,11 +240,11 @@ export function addPuntoCarga(coorX, sentido, P){
  * @param {int} H Valor de la carga
  * @param {int} d Valor de la carga
  */
-export function addBarra(coorX, sentido, H, d){
+export function addBarra(coorX, H, d){
     
     const x = recalculaX(coorX);
-    const y1 = sentido ? altura-12 : altura+12;
-    const y2 = sentido ? altura-60 : altura+60;
+    const y1 = H > 0 ? altura-12 : altura+12;
+    const y2 = H > 0 ? altura-60 : altura+60;
 
     const linea = new fabric.Line([ x, y1, x, y2 ], {
         stroke: colores.rojo,
@@ -280,7 +281,7 @@ export function addBarra(coorX, sentido, H, d){
     canvas.add(linea2);
     canvas.add(arrow);
 
-    if(!sentido){
+    if(!H < 0){
         escribir(H.toString()+" kN", x-30,  altura+80, colores.rojo);
         escribir(d.toString()+" m", x+35,  altura+40, colores.rojo);
     }else{
@@ -296,7 +297,7 @@ export function addBarra(coorX, sentido, H, d){
  * @param {String} horario Sentido del momento
  * @param {int} M Valor del momento
  */
-export function addMomento(coorX, horario, M){
+export function addMomento(coorX, M){
     let x = recalculaX(coorX);
 
     let arco = new fabric.Circle({
@@ -313,7 +314,7 @@ export function addMomento(coorX, horario, M){
         evented: false
     });
     let yFlecha = altura-20;
-    if(horario == "horario"){
+    if(M > 0){
         yFlecha = altura+20;
     }
     let arrow = new fabric.Triangle({
@@ -587,9 +588,7 @@ export function reinicia(outerCanvasContainer){
  * Función para vincular el canvas
  * @param {*} outerCanvasContainer 
  */
-export function vincularCanvas(outerCanvasContainer){
-    // canvas = outerCanvasContainer;
-
+export function vincularCanvas(outerCanvasContainer){    
     // Creo el canvas de fabric
     canvas = new fabric.Canvas('editor', {
             width: outerCanvasContainer.clientWidth,
@@ -637,4 +636,9 @@ function limitaMovimiento(){
             obj.left = Math.min( obj.left, obj.canvas.width - obj.width/2);
         }
     });
+}
+
+export function resetCanvas(){
+    canvas.remove(...canvas.getObjects());
+    limpiaElementos();
 }

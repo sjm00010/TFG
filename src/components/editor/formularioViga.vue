@@ -12,16 +12,18 @@
                     <mdb-input type="number" label="Número de tramos" :min="0" :step="1" v-model="numTramos" @change="crearTramos"/>
                 </mdb-col>
                 <mdb-col md="12">
+                    <mdb-card-text v-show="tramos.length > 0" class="text-center">Introduce el mínimo, el maximo y un valor por defecto para cada tramo.</mdb-card-text>
                     <div class="md-form input-group" v-for="(tramo, i) in tramos" :key="i">
                         <div class="input-group-prepend">
                             <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                         </div>
-                        <input :ref="'min'+(i+1)" type="number" min="0.1" step="0.1" aria-label="Mínimo" class="form-control" placeholder="Mínimo" v-model="tramo.min">
-                        <input :ref="'max'+(i+1)" type="number" min="0.1" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="tramo.max">
+                        <input :ref="'min'+(i+1)" type="number" min="0.1" step="0.1" label="Mínimo" class="form-control" placeholder="Mínimo" v-model="tramo.min">
+                        <input :ref="'max'+(i+1)" type="number" min="0.2" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="tramo.max">
+                        <input :ref="'valor'+(i+1)" type="number" min="0.1" step="0.1" aria-label="Valor por defecto" class="form-control" placeholder="Valor por defecto" v-model="tramo.valor">
                     </div>
                 </mdb-col>
             </mdb-row>
-            <dibujar v-show="compTramos"/>
+            <dibujar ref="dibujo" v-show="compTramos"/>
         </mdb-card-body>
     </mdb-card>
     <mdb-btn class="my-3" block color="light-green" @click="comprobar"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
@@ -34,6 +36,7 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
          } from 'mdbvue';
 import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/editor/dibujaViga';
+import { vincularTramos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, Ejercicio } from '@/assets/js/ejercicio.js';
 export default {
     name: 'formularioViga',
@@ -55,7 +58,7 @@ export default {
         crearTramos(){
             this.tramos.splice(0);
             for (let i = 0; i < this.numTramos; i++) {
-                this.tramos.push({min: '', max: ''});
+                this.tramos.push({min: '', max: '', valor: ''});
             }
         },
         comprobarTramos(){
@@ -84,12 +87,15 @@ export default {
                     this.$notify({
                         group: 'app',
                         title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error en los tramos</b>',
-                        text: '<i style="font-size:15px"> Se debe introducir el mínimo y máximo para todos los tramos.</i>',
+                        text: '<i style="font-size:15px"> Revisa el mínimo, el máximo y el valor por defecto de los tramos marcados en rojo.</i>',
                         duration: 7000,
                         type: 'error'
                     });
-                }else
+                }else{
                     this.compTramos = true;
+                    setTimeout(() => { this.$refs.dibujo.actualiza(); }, 300);
+                    vincularTramos(this.tramos);
+                }
             }
         },
         comprobar(){
