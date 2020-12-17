@@ -24,6 +24,7 @@
                 </mdb-col>
             </mdb-row>
             <dibujar ref="dibujo" v-show="compTramos"/>
+            <formulas ref="formulas" v-show="compTramos" />
         </mdb-card-body>
     </mdb-card>
     <mdb-btn class="my-3" block color="light-green" @click="comprobar"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
@@ -36,6 +37,7 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
          } from 'mdbvue';
 import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/editor/dibujaViga';
+import formulas from '@/components/editor/formulas';
 import { vincularTramos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, Ejercicio } from '@/assets/js/ejercicio.js';
 export default {
@@ -45,6 +47,7 @@ export default {
        mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon, 
        enunciado,
        dibujar,
+       formulas
     },
     data(){
         return{
@@ -94,6 +97,7 @@ export default {
                 }else{
                     this.compTramos = true;
                     setTimeout(() => { this.$refs.dibujo.actualiza(); }, 300);
+                    setTimeout(() => { this.$refs.formulas.cargaTramos(this.tramos); }, 300);
                     vincularTramos(this.tramos);
                 }
             }

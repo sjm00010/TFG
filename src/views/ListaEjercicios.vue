@@ -42,7 +42,8 @@ export default {
     },
     methods:{
         borrar(id){
-            this.ejVigas = borrarEjViga(id);
+            if(confirm("¿Esta seguro de eliminar el ejercicio"+ id +"?"))
+                this.ejVigas = borrarEjViga(id);
         }
     },
     created(){

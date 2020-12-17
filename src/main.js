@@ -6,9 +6,11 @@ import App from './App'
 import router from './router'
 import store from './store'
 import Notifications from 'vue-notification'
+import VueKatex from 'vue-katex'
 
 Vue.config.productionTip = false;
 Vue.use(Notifications);
+Vue.use(VueKatex)
 
 new Vue({
   router,

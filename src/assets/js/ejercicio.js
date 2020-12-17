@@ -63,9 +63,8 @@ export function borrarEjViga(id){
     let copy = [];
     vigas.forEach(ej => {
         copy.push(new Ejercicio(ej.dificultad, ej.desc));
-    })
-    console.log(vigas)
-    vigas = [...copy]
+    });
+    vigas = [...copy];
     return vigas;
 }
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MATRICES DE LA BBDD
