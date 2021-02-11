@@ -4,7 +4,7 @@
 // Las variables necesitan setters para poder modificar sus valores
 
 // Elementos dibujados
-export let elementos = [];
+export const elementos = [];
 
 /**
  * Función que guarga un elemento dibujado
@@ -24,6 +24,14 @@ export function pushElemento(tipo, props){
         minD: props.minD, // Mínimo para d de la barra (Opcional)
         maxD: props.maxD, // Máximo para d de la barra (Opcional)
     });
+}
+
+/**
+ * Función que borra un elemento
+ * @param {Number} pos Posición del elemento a borrar
+ */
+export function borraElemento(pos){
+    elementos.splice(pos,1);
 }
 
 let tramos = [];

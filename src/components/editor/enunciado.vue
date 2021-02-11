@@ -1,169 +1,64 @@
 <template>
 <div>
-    <mdb-row class="justify-content-between">
-        <mdb-col col="auto">
-            <mdb-btn color="elegant" icon="bold  fa-lg" class="px-3" @click="enunciado += '<b>Texto</b>'"/>
-            <mdb-btn color="elegant" icon="italic  fa-lg" class="px-3" @click="enunciado += '<i>Texto</i>'"/>
-            <mdb-btn color="elegant" icon="underline  fa-lg" class="px-3" @click="enunciado += '<u>Texto</u>'"/>
-        </mdb-col>
-        <mdb-col col="auto">
-            <mdb-btn color="light" icon="subscript  fa-lg" class="px-3" @click="enunciado += '<sub>Texto</sub>'"/>
-            <mdb-btn color="light" icon="superscript  fa-lg" class="px-3" @click="enunciado += '<sup>Texto</sup>'"/>
-            <mdb-btn color="light" icon="list-ul  fa-lg" class="px-3" @click="enunciado += '<ul>\n<li>Elemento</li>\n</ul>'"/>
-            <mdb-btn color="light" icon="list-ol  fa-lg" class="px-3" @click="enunciado += '<ol>\n<li>Elemento</li>\n</ol>'"/>
-        </mdb-col>
-        <mdb-col col="auto">
-            <mdb-btn color="secondary" icon="image fa-lg" class="px-3" @click="enunciado += `<img src='URL_DE_LA_IMAGEN' alt='Figura 1' class='img-fluid my-2'>`"/>
-            <mdb-btn color="secondary" icon="film fa-lg" class="px-3" @click="video=true"/>
-        </mdb-col>
-        <mdb-col col="auto">
-            <mdb-btn color="danger" icon="trash  fa-lg" @click="enunciado = ''"/>
-            <mdb-btn color="info" icon="question-circle  fa-lg" class="px-3" @click="modal = true"/>
-        </mdb-col>
-    </mdb-row>
-    <!-- Ayuda -->
-    <mdb-modal :show="modal" @close="modal = false">
-        <mdb-modal-header>
-            <mdb-modal-title><mdb-icon icon="info" class="mr-2"/>Ayuda</mdb-modal-title>
-        </mdb-modal-header>
-        <mdb-modal-body>
-            Para ayudar en el uso del editor se han proporciodado elementos que se suelen emplear a menudo en la escritura, como poner el texto en negrita, cursiva, etc. <br/>
-            Ademas de presionando el boton correspondiente se han proporcionado los siguientes atajos de teclado:
-            <ul>
-                <li>Ctrl + b : <b>Negrita</b></li>
-                <li>Ctrl + i : <i>Cursiva</i></li>
-                <li>Ctrl + u : <i>Subrayado</i></li>
-            </ul>
-            Todas las ayudas añadiran el al final del texto ya introducido un texto de ejemplo con el elemento seleccionado.
-        </mdb-modal-body>
-        <mdb-modal-footer>
-            <mdb-btn color="danger" @click.native="modal = false">Cerrar</mdb-btn>
-        </mdb-modal-footer>
-    </mdb-modal>
+    <mdb-card class="card-body mb-3" >
+        <mdb-card-text class="text-center">Selecciona el contenido que deseas añadir, las pestañas de explicación y vídeo son los apoyos al ejercicio.</mdb-card-text>
+        <mdb-card-body class="pt-0">                
+            <mdb-btn-group class="w-100">
+                <mdb-btn color="primary" v-show="selecEnun" disabled class="mb-2" @click="selectEnun = false"><mdb-icon size="lg" icon="edit" /> Enunciado</mdb-btn>
+                <mdb-btn color="primary" v-show="!selecEnun" class="mb-2" @click="selecEnun = true, selecVideo = false, selecExp = false"><mdb-icon size="lg" icon="edit" /> Enunciado</mdb-btn>
+                <mdb-btn color="secondary" class="mb-2"  v-show="selecExp" disabled ><mdb-icon size="lg" icon="recycle" /> Explicación </mdb-btn>
+                <mdb-btn color="secondary" class="mb-2" v-show="!selecExp" @click="selecExp = true, selecEnun = false, selecVideo = false"><mdb-icon size="lg" icon="recycle" /> Explicación </mdb-btn>
+                <mdb-btn color="dark-green" class="mb-2" v-show="selecVideo" disabled><mdb-icon size="lg" icon="calculator" /> Vídeo</mdb-btn>
+                <mdb-btn color="dark-green" class="mb-2" v-show="!selecVideo" @click="selecVideo = true, selecExp = false, selecEnun = false"><mdb-icon size="lg" icon="calculator" /> Vídeo</mdb-btn>                   
+            </mdb-btn-group>
+        </mdb-card-body>
+        
+        <div v-show="selecEnun"> <!-- Enunciado -->
+            <editor @actualiza="actualizaEnunciado"/>
+        </div>
 
-    <!-- Video -->
-    <mdb-modal size="lg" :show="video" @close="video = false" scrollable>
-        <mdb-modal-header>
-            <mdb-modal-title><mdb-icon icon="info" class="mr-2"/>Ayuda</mdb-modal-title>
-        </mdb-modal-header>
-        <mdb-modal-body>
-            Para insertar un video de YouTube hay que ir a la pagina del video deseado, hacer click en compartir y seleccionar la opción insertar. 
-            <img :src="require('@/assets/img/ejemploVideo/videoPaso1.png')" class="img-fluid" alt='Explicación 1 vídeo'>
-            <img :src="require('@/assets/img/ejemploVideo/videoPaso2.png')" class="img-fluid my-2" alt='Explicación 2 vídeo'><br/>
-            Una vez listo copia el <i>iframe</i> resultante y pegalo en el editor para que aparezca.
-            <img :src="require('@/assets/img/ejemploVideo/videoPaso3.png')" class="img-fluid" alt='Explicación 3 vídeo'>
-        </mdb-modal-body>
-        <mdb-modal-footer>
-            <mdb-btn color="danger" @click.native="video = false">Cerrar</mdb-btn>
-        </mdb-modal-footer>
-    </mdb-modal>
+        <div v-show="selecExp"> <!-- Explicación -->
+            <editor @actualiza="actualizaExplicacion"/>
+        </div>
 
-    <textarea class="form-control z-depth-1 p-3 w-100" :rows="10" ref="textarea" 
-                placeholder="Escribe el enunciado en HTML" v-model="enunciado"></textarea>
-
-    <mdb-btn block color="default" size="sm" @click.native="previa">
-        <mdb-icon v-if="!vprevia" icon="eye fa-lg" class="mr-2"/>
-        <mdb-icon v-if="vprevia" icon="eye-slash fa-lg" class="mr-2"/>
-        Vista previa</mdb-btn>
-
-    <div v-show="vprevia">
-        <mdb-card class="z-depth-0" style="border: 1px solid rgb(211,211,211)">
-            <mdb-card-body ref="previa"></mdb-card-body>
-        </mdb-card>
-    </div>
+        <div v-show="selecVideo"> <!-- Vídeo -->
+            <mdb-input label="URL del vídeo" v-model="videoExp" />
+        </div>
+    </mdb-card>
 </div>
 </template>
 
 <script>
-import {mdbCard, mdbCardBody, mdbIcon,
-        mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader, 
-        mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
+import {mdbCard, mdbCardBody, mdbIcon, mdbInput,
+        mdbCardText, mdbBtn, mdbBtnGroup } from 'mdbvue';
+import editor from '@/components/editor/editor';
 export default {
     name: 'editorTexto',
     components: {
-       mdbCard, mdbCardBody, mdbIcon,
-       mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader,
-       mdbModalTitle, mdbModalBody, mdbModalFooter,
+        mdbCard, mdbCardBody, mdbIcon, mdbInput,
+        mdbCardText, mdbBtn, mdbBtnGroup,
+        editor
     },
     data(){
         return{
             enunciado: '',
+            explicacion: '',
+            videoExp: '',
+            selecEnun: true,
+            selecExp: false,
+            selecVideo: false,
             ctrl: false,
             modal: false,
-            video: false,
-            vprevia: false
+            vprevia: false,
         }
     },
     methods:{
-        previa(){
-            this.vprevia = !this.vprevia;
-            this.$refs.previa.$el.innerHTML = this.enunciado;
-        }
-    },
-    mounted(){
-        this.$refs.textarea.addEventListener('keydown', (event) => {
-            let posicion = this.$refs.textarea.selectionStart;
-            switch(event.key){
-                case 'Control':
-                    this.ctrl = true;
-                    break;
-                case 'b':
-                    if(this.ctrl){
-                        this.enunciado = [this.enunciado.slice(0, posicion), 
-                                            '<b>Texto</b>', 
-                                            this.enunciado.slice(posicion)]
-                                            .join('');
-                        event.preventDefault();
-                    }
-                    this.ctrl = false; 
-                    break;
-                case 'i':
-                    if(this.ctrl){
-                        this.enunciado = [this.enunciado.slice(0, posicion), 
-                                            '<i>Texto</i>', 
-                                            this.enunciado.slice(posicion)]
-                                            .join('');
-                        event.preventDefault();
-                    }
-                    this.ctrl = false; 
-                    break;
-                case 'u':
-                    if(this.ctrl){
-                        this.enunciado = [this.enunciado.slice(0, posicion), 
-                                            '<u>Texto</u>', 
-                                            this.enunciado.slice(posicion)]
-                                            .join('');
-                        event.preventDefault();
-                    }
-                    this.ctrl = false; 
-                    break;
-                case 'Enter':
-                    this.enunciado += '<br/>\n'
-                    event.preventDefault();
-                    break;
-                default:
-                    this.ctrl = false;
-                    break;
-            }
-        });
-
-        this.$refs.textarea.addEventListener('keyup', () => {
-            if(this.vprevia)
-                this.$refs.previa.$el.innerHTML = this.enunciado;
-        });
+        actualizaEnunciado(texto){
+            this.enunciado = texto;
+        },
+        actualizaExplicacion(texto){
+            this.explicacion = texto;
+        },
     }
 }
 </script>
-
-<style>
-textarea {
-    resize: vertical;
-    overflow-y: scroll;
-}
-textarea::-webkit-scrollbar {
-  width: 12px;
-  background-color: #F5F5F5; }
-textarea::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #4285F4; }
-</style>

@@ -12,7 +12,7 @@
             </select>
 		</mdb-card-body>
 	</mdb-card>
-    <formularioViga v-show="tipo == 'Vigas'"/>
+    <formularioViga v-if="tipo == 'Vigas'"/>
 </mdb-container>
 </template>
 

@@ -1,34 +1,27 @@
-// Variable para asignar un ID a los ejercicios leídos
-let idEjercicios = 1;
-
-function reiniciaIds(){
-    idEjercicios = 1;
-}
-
 /**
  * Clase con la información básica de un ejercicio
  * @type Ejercicio
  * @param id ID numerico del ejercicio.
  * @param dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
- * @param desc Breve descripción del ejercicio que aparecera en el listado.
  * @param enunciado Enunciado completo del ejercicio en HTML.
  * @param imagen URL de la imagen que se quiere incluir en el enunciado del ejercicio.
  */
 export class Ejercicio {
-    constructor( dificultad, desc, enunciado, imagen) {
-        this.id = idEjercicios++;
+    constructor( id, dificultad, enunciado, ayuda, video) {
+        this.id = id;
         this.dificultad = dificultad;
-        this.desc = desc;
         this.enunciado = enunciado;
-        this.imagen = imagen;
+        this.ayuda = ayuda;
+        this.video = video;
     }
 }
 
 export class Viga {
-    constructor( ejercicio, tramos, elementos) {
-        this.enunciado = ejercicio;
+    constructor( ejercicio, tramos, elementos, formulas) {
+        this.datos = ejercicio;
         this.tramos = tramos;
         this.elementos = elementos;
+        this.formulas = formulas;
     }
 }
 
@@ -48,23 +41,32 @@ export function compruebaTramos(tramos){
 // FUNCION PARA CARGAR TODOS LOS EJERCICIOS DE LA BBDD
 
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
-let vigas = [];
-export function cargaEjVigas(){
-    reiniciaIds();
-    vigas.splice(0);
-    vigas.push(new Ejercicio(1,'Prueba 1'));
-    vigas.push(new Ejercicio(3,'Prueba 2'));
-    return vigas;
+export var vigas = [];
+export async function cargaEjVigas(){
+    const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
+        headers: {'Content-Type': 'application/json'},
+        method: 'GET'
+    });
+
+    vigas.splice(0, vigas.length, ...await respuesta.json());
 }
 
-export function borrarEjViga(id){
-    vigas.splice(id-1,1);
-    reiniciaIds();
-    let copy = [];
-    vigas.forEach(ej => {
-        copy.push(new Ejercicio(ej.dificultad, ej.desc));
+// FUNCION PARA BORRAR UN EJERCICIO DE VIGAS DE LA BBDD
+export async function borrarEjViga(id){
+    const respuesta = await fetch('http://localhost:8080/api/ejViga/'+id, { 
+        headers: {'Content-Type': 'application/json'},
+        method: 'DELETE'
     });
-    vigas = [...copy];
-    return vigas;
+    
+    if(respuesta.ok)
+        cargaEjVigas();
+    else
+        this.$notify({
+            group: 'app',
+            title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al borrar el ejercicio</b>',
+            text: '<i style="font-size:15px"> Ocurrio un error al tratar de borrar el ejercicio, intentelo de nuevo.</i>',
+            duration: 7000,
+            type: 'error'
+        });
 }
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MATRICES DE LA BBDD

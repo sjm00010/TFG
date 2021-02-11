@@ -74,7 +74,7 @@
                 </mdb-row>
             </div>
 
-            <p>Seleccione el segmento al que está ligado (se dibujará al final, si desea pintarla en el 0 seleccione <i>inicio</i>):</p>
+            <p>Seleccione el tramo al que está ligado (se dibujará al final del tramo, si desea pintarla en al inicio seleccione <i>inicio</i>):</p>
             <select class="browser-default custom-select my-2" v-model="datos.segmento">
                 <option selected value=''>Seleccione uno...</option>
                 <option value='0'>Inicio (0)</option>

@@ -12,7 +12,7 @@
                     <mdb-input type="number" label="Número de tramos" :min="0" :step="1" v-model="numTramos" @change="crearTramos"/>
                 </mdb-col>
                 <mdb-col md="12">
-                    <mdb-card-text v-show="tramos.length > 0" class="text-center">Introduce el mínimo, el maximo y un valor por defecto para cada tramo.</mdb-card-text>
+                    <mdb-card-text v-show="tramos.length > 0" class="text-center">Introduce el mínimo, el máximo y un valor por defecto para cada tramo.</mdb-card-text>
                     <div class="md-form input-group" v-for="(tramo, i) in tramos" :key="i">
                         <div class="input-group-prepend">
                             <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
@@ -54,7 +54,7 @@ export default {
             ejercicio: Ejercicio,
             numTramos: undefined,
             tramos: [],
-            compTramos: false,
+            compTramos: false
         }
     },
     methods:{

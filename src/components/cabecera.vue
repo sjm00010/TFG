@@ -8,7 +8,7 @@
                 <mdb-nav-item class="text-center" router-link to="/" v-on:click.native="cambiar('/')" :class="{'active' : rut=='/'}" >
                     <mdb-icon icon="home" /> Inicio
                 </mdb-nav-item>
-                <mdb-nav-item class="text-center" router-link to="/ejercicios" v-on:click.native="cambiar('/Ejercicios')" :class="{'active' : rut !='/'}">
+                <mdb-nav-item class="text-center" router-link to="/ejercicios" v-on:click.native="cambiar('/ejercicios')" :class="{'active' : rut !='/'}">
                     <mdb-icon icon="book" /> Ejercicios
                 </mdb-nav-item>
             </mdb-navbar-nav>

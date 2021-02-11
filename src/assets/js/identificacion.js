@@ -5,15 +5,15 @@ export let profesor = false;
  * Función para comprobar el usuario
  */
 export function getUser(){
-    const auth = localStorage.getItem("auth");
-    if (!auth){
-        localStorage.setItem("auth", 'alumno');
+    const log = sessionStorage.getItem("user");
+    if (!log)
         profesor = false;
-    }else if(auth =='profesor')
+    else
         profesor = true;
 }
 
 export function logout(){
-    localStorage.setItem("auth", 'alumno');
+    sessionStorage.setItem("user", '');
+    sessionStorage.setItem("pass", '');
     profesor = false;
 }

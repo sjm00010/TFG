@@ -5,11 +5,12 @@
             <hr/>
             <router-link tag="button" class="btn btn-block success-color text-white" to="/crearEjercicio">Crear ejercicio</router-link>
         </div>
+        <mdb-btn block color="info" @click="cargarEjercicios">Recargar ejercicios</mdb-btn>
         <hr/>        
         <tipo class="mb-3" titulo="Cálculo de apoyo en vigas" color="aqua-gradient"></tipo>
         <mdb-row v-if="this.ejVigas.length > 0">
-            <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="i">
-                <tarjeta :id="ej.id" :dificultad="ej.dificultad"
+            <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="ej.id">
+                <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
                     :descripcion="ej.desc" enlace="/ejercicios/ejercicioViga" @borrar="borrar"></tarjeta>
             </mdb-col>
         </mdb-row>
@@ -22,14 +23,14 @@
 <script>
 import tarjeta from '@/components/TarjetaEjercicio';
 import tipo from '@/components/TipoEjercicios';
-import {mdbContainer, mdbRow, mdbCol} from 'mdbvue';
+import {mdbContainer, mdbRow, mdbCol, mdbBtn} from 'mdbvue';
 
-import {cargaEjVigas, borrarEjViga} from '@/assets/js/ejercicio.js';
+import {vigas, cargaEjVigas, borrarEjViga} from '@/assets/js/ejercicio.js';
 import {profesor, getUser} from '@/assets/js/identificacion.js';
 
 export default {
     components: {
-        mdbContainer, mdbRow, mdbCol,
+        mdbContainer, mdbRow, mdbCol, mdbBtn,
         tarjeta,
         tipo
     },
@@ -43,7 +44,10 @@ export default {
     methods:{
         borrar(id){
             if(confirm("¿Esta seguro de eliminar el ejercicio"+ id +"?"))
-                this.ejVigas = borrarEjViga(id);
+                borrarEjViga(id);
+        },
+        cargarEjercicios(){
+            cargaEjVigas();
         }
     },
     created(){
@@ -51,7 +55,7 @@ export default {
         this.prof = profesor;
 
         // Pruebas de carga de ejercicios
-        this.ejVigas = cargaEjVigas();
+        this.ejVigas = vigas;
     }
 }
 </script>

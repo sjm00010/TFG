@@ -27,7 +27,8 @@ export default {
         id: Number,
         dificultad: Number,
         descripcion: String,
-        enlace: String
+        enlace: String,
+        id_bd: String
     },
     components: {
         mdbCard, mdbCardBody, mdbCardText, mdbView, mdbIcon, mdbBtn
@@ -51,7 +52,7 @@ export default {
             }
         },
         borrar(){
-            this.$emit('borrar', this.id);
+            this.$emit('borrar', this.id_bd);
         }
     },
     created(){

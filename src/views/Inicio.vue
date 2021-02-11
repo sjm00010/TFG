@@ -90,27 +90,21 @@ export default {
     verLogin(){
       this.modal = true;
       this.error = false;
-      this.$notify({
-          group: 'auth',
-          title: '<i class="far fa-2x fa-question-circle"></i></i> <b class="h3">Información</b>',
-          text: '<i style="font-size:12px"> Para cerrar las notificaciones basta con hacer click en ellas.</i>',
-          duration: 5000,
-      });
-      this.$notify({
-        group: 'auth',
-        title: '<i class="fas fa-2x fa-exclamation-circle"></i>  <b class="h3">Aviso</b>',
-        text: `<i style="font-size:15px">Tu IP es ${this.ip} con ubicación en ${this.city}. Será almacenada por motivos de seguridad, para evitar suplantación de identidad.</i>`,
-        duration: 10000,
-        type: 'warn'
-      });
     },
-    login(){
-      if(this.user == "fernando" && this.pass == "prueba"){ // Usuario y contraseña
-        localStorage.setItem("auth", 'profesor');
+    async login(){
+      const respuesta = await fetch('http://localhost:8080/api/usuario/login', { 
+        headers: {'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify({ usuario: this.user, pass: this.pass })
+      });
+
+      if(respuesta.ok){ // Usuario y contraseña válidos
+        sessionStorage.setItem("user", this.user);
+        sessionStorage.setItem("pass", this.pass);
         this.prof = true;
         this.modal = false;
         this.$notify({
-          group: 'auth',
+          group: 'log',
           title: '<i class="fas fa-2x fa-user-circle"></i> <b class="h3">Bienvenido Fernando</b>',
           text: '<i style="font-size:15px"> Te has identificado correctamente. El botón para cerrar sesión esta en el mismo lugar que el de identificarse</i>',
           duration: 8000,
@@ -118,14 +112,13 @@ export default {
         });
       }else{
         this.$notify({
-          group: 'auth',
+          group: 'log',
           title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de autentificación</b>',
           text: '<i style="font-size:15px"> El usuario o contraseña introducidos son incorrectos.</i>',
           duration: 5000,
           type: 'error'
         });
       }
-        
     },
     logout(){
       logout();
@@ -133,18 +126,6 @@ export default {
     }
   },
   created(){
-    // Obtiene la IP del usuario
-    fetch('https://api.ipify.org?format=json')
-      .then(x => x.json())
-      .then(({ ip }) => {
-        this.ip = ip;
-        fetch(`http://api.ipstack.com/${this.ip}?access_key=40e89371e2776c5336083cd5ebbde367`)
-          .then(x => x.json())
-          .then(({ city }) => {
-              this.city = city;
-        });
-    });
-
     getUser();
     this.prof = profesor;
   }

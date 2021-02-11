@@ -30,26 +30,55 @@
     <div class="my-4" ref="editor">
         <canvas id="editor" style="border: 1px solid rgb(211,211,211)"></canvas>
     </div>
+
+    <small class="text-muted"><mdb-icon icon="info-circle" /> Si se actualizan valores de los tramos se debe volver a verificar para actualizar los valores de la tabla.
+    </small>
+
+    <mdb-tbl>
+        <mdb-tbl-head color="black" textWhite>
+            <tr>
+            <th>#</th>
+            <th>Tipo</th>
+            <th>Magnitud</th>
+            <th>Borrar</th>
+            </tr>
+        </mdb-tbl-head>
+        <mdb-tbl-body>
+            <tr v-for="(elemento, i) in elementos" :key="i">
+                <th>{{i}}</th>
+                <td>{{elemento.tipo}}</td>
+                <td>{{elemento.magnitud}}</td>
+                <td>
+                    <mdb-btn class="my-0" size="sm" color="danger" @click="borrar(i)" v-show="elemento.tipo!='Viga'"><mdb-icon far icon="trash-alt" /></mdb-btn>
+                    <small class="text-muted" v-show="elemento.tipo=='Viga'">La viga no se puede borrar</small>
+                </td>
+            </tr>
+        </mdb-tbl-body>
+    </mdb-tbl>
 </div>
 </template>
 
 <script>
-import { mdbCardText, mdbBtn, mdbIcon, mdbRow, mdbCol} from 'mdbvue';
+import { mdbCardText, mdbBtn, mdbIcon, mdbRow, mdbCol,
+         mdbTbl, mdbTblHead, mdbTblBody } from 'mdbvue';
 import modal from '@/components/editor/modal';
-import { vinculaCanvas, resizeCanvas, addViga } from '@/assets/js/vigas/funAuxiliares.js';
+import { vinculaCanvas, resizeCanvas, addViga, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { resetCanvas } from '@/assets/js/vigas/dibujar.js';
+import { elementos, borraElemento } from '@/assets/js/vigas/variables.js';
 export default {
     name: 'dibujar',
     components: {
         mdbCardText, mdbBtn, mdbIcon, mdbRow, mdbCol,
+        mdbTbl, mdbTblHead, mdbTblBody,
         modal
     },
     data(){
         return {
             modal: {
-                    visible: false,
-                    edicion: false
-                }
+                visible: false,
+                edicion: false
+            },
+            elementos: elementos
         };
     },
     methods:{
@@ -57,6 +86,10 @@ export default {
             resetCanvas();
             resizeCanvas(this.$refs.editor);
             addViga();
+        },
+        borrar(id){
+            borraElemento(id);
+            redibuja();
         }
     },
     mounted() {
