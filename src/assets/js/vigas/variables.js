@@ -5,6 +5,9 @@
 
 // Elementos dibujados
 export const elementos = [];
+export function setElementos(el){
+    elementos.splice(0, elementos.length, ...el);
+}
 
 /**
  * Función que guarga un elemento dibujado

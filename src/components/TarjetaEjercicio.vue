@@ -11,8 +11,7 @@
             <mdb-card-text>{{this.descripcion}}</mdb-card-text>
             <hr/>
             <router-link tag="button" class="btn btn-block elegant-color text-white" :to="{ path: this.enlace+'/'+this.id_bd}" append >Realizar</router-link>
-            <router-link tag="button" class="btn btn-block secondary-color text-white my-2" v-show="prof" :to="{ path: this.enlace+'/modificar/'+this.id_bd}" append >Modificar</router-link>
-            <mdb-btn block class="my-2" color="orange" v-show="prof" @click="modificar">Modificar</mdb-btn>
+            <mdb-btn block class="my-2" color="secondary" v-show="prof" @click="modificar">Modificar</mdb-btn>
             <mdb-btn block class="my-2" color="danger" v-show="prof" @click="borrar">Borrar</mdb-btn>
         </mdb-card-body>
     </mdb-card>

@@ -12,7 +12,7 @@
             </select>
 		</mdb-card-body>
 	</mdb-card>
-    <formularioViga v-if="tipo == 'Vigas'" />
+    <formularioViga v-if="tipo == 'Vigas'" :modificando="true" />
 </mdb-container>
 </template>
 
@@ -20,6 +20,8 @@
 import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/editor/formularioViga';
 import { limpiar } from '@/assets/js/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/ejercicioJSON.js';
+
 export default {
     components: {
        mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
@@ -46,6 +48,9 @@ export default {
                 this.$route.push('/ejercicios');
                 break;
         }
+
+        if(ejViga.id === undefined)
+            this.$router.push('/ejercicios');
     },
     beforeDestroy(){
         limpiar();

@@ -14,11 +14,11 @@
         </mdb-card-body>
         
         <div v-show="selecEnun"> <!-- Enunciado -->
-            <editor @actualiza="actualizaEnunciado"/>
+            <editor @actualiza="actualizaEnunciado" :nTexto="enunciado" />
         </div>
 
         <div v-show="selecExp"> <!-- Explicación -->
-            <editor @actualiza="actualizaExplicacion"/>
+            <editor @actualiza="actualizaExplicacion" :nTexto="explicacion" />
         </div>
 
         <div v-show="selecVideo"> <!-- Vídeo -->
@@ -65,6 +65,9 @@ export default {
         actualizaVideo(e){
             ejViga.video = e;
         }
+    },
+    created(){
+        console.log(ejViga)
     }
 }
 </script>

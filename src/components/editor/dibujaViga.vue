@@ -64,7 +64,7 @@ import { mdbCardText, mdbBtn, mdbIcon, mdbRow, mdbCol,
 import modal from '@/components/editor/modal';
 import { vinculaCanvas, resizeCanvas, addViga, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { resetCanvas } from '@/assets/js/vigas/dibujar.js';
-import { elementos, borraElemento } from '@/assets/js/vigas/variables.js';
+import { setElementos, borraElemento } from '@/assets/js/vigas/variables.js';
 import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'dibujar',
@@ -79,7 +79,7 @@ export default {
                 visible: false,
                 edicion: false
             },
-            elementos: ejViga.elementos.length || elementos
+            elementos: ejViga.elementos
         };
     },
     methods:{
@@ -94,8 +94,12 @@ export default {
         }
     },
     mounted() {
-            vinculaCanvas(this.$refs.editor);
-            window.addEventListener('resize', () => resizeCanvas(this.$refs.editor));
+        vinculaCanvas(this.$refs.editor);
+        window.addEventListener('resize', () => resizeCanvas(this.$refs.editor));
+        if(this.elementos?.length > 0){
+            setElementos(this.elementos);
+            redibuja();
+        }
     },
     beforeDestroy(){
         window.removeEventListener('resize', () => resizeCanvas(this.$refs.editor));

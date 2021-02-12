@@ -22,6 +22,7 @@ export async function cargaEjercicio(id, tipo){
 
         if(ejercicio.ok){
             ejViga = await ejercicio.json();
+            console.log(ejViga)
             return true;
         }else {
             return false;

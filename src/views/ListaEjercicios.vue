@@ -46,8 +46,8 @@ export default {
             if(confirm("¿Esta seguro de eliminar el ejercicio"+ id +"?"))
                 borrarEjViga(id);
         },
-        cargarEjercicios(){
-            cargaEjVigas();
+        async cargarEjercicios(){
+            await cargaEjVigas();
         }
     },
     created(){

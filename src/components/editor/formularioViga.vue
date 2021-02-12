@@ -39,8 +39,11 @@
         <mdb-col>
             <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
         </mdb-col>
-        <mdb-col v-if="compTramos">
+        <mdb-col v-if="compTramos && !modificando">
             <mdb-btn class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
+        </mdb-col>
+        <mdb-col v-if="compTramos && modificando">
+            <mdb-btn class="my-3" block color="unique" @click="modificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
         </mdb-col>
     </mdb-row>
 </div>
@@ -54,7 +57,7 @@ import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/editor/dibujaViga';
 import formulas from '@/components/editor/formulas';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
-import { compruebaTramos } from '@/assets/js/ejercicio.js';
+import { compruebaTramos, cargaEjVigas } from '@/assets/js/ejercicio.js';
 import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'formularioViga',
@@ -65,9 +68,12 @@ export default {
        dibujar,
        formulas
     },
+    props:{
+        modificando: Boolean
+    },
     data(){
         return{
-            dificultad: ejViga.tramos.dificultad,
+            dificultad: ejViga.dificultad,
             numTramos: ejViga.tramos.length || undefined,
             tramos: ejViga.tramos,
             compTramos: ejViga.tramos.length > 0
@@ -140,7 +146,41 @@ export default {
             if(respuesta.ok){
                 console.log(respuesta)
                 // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
-                this.$router.push('ejercicios');
+                this.$router.push('/ejercicios');
+            }else{
+                this.$notify({
+                    group: 'log',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de creación</b>',
+                    text: '<i style="font-size:15px"> No se pudo crear los ejercicios. Revise los datos.</i>',
+                    duration: 5000,
+                    type: 'error'
+                });
+            }
+        },
+        async modificar(){
+            ejViga.dificultad = this.dificultad;
+            ejViga.tramos = this.tramos;
+            ejViga.elementos = elementos;
+            ejViga.formulas = this.$refs.formulas.formulas;
+
+            const ejercicio = JSON.stringify(
+                                    {...ejViga, usuario: sessionStorage.getItem("user"), 
+                                                pass: sessionStorage.getItem("pass")})
+                                            .replace('_tramos', 'tramos')
+                                            .replace('_elementos', 'elementos')
+                                            .replace('_formulas', 'formulas');
+
+            const respuesta = await fetch('http://localhost:8080/api/ejViga/'+this.$route.params.id, { 
+                headers: {'Content-Type': 'application/json'},
+                method: 'PUT',
+                body: ejercicio
+            });
+
+            if(respuesta.ok){
+                console.log(respuesta)
+                // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
+                await cargaEjVigas();
+                this.$router.push('/ejercicios');
             }else{
                 this.$notify({
                     group: 'log',
@@ -151,9 +191,6 @@ export default {
                 });
             }
         }
-    },
-    created(){
-        console.log(this.dificultad)
     }
 }
 </script>

@@ -69,12 +69,15 @@ export default {
        mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader,
        mdbModalTitle, mdbModalBody, mdbModalFooter,
     },
+    props:{
+        nTexto: String
+    },
     data(){
         return{
             ctrl: false,
             modal: false,
             vprevia: false,
-            texto: ''
+            texto: this.nTexto
         }
     },
     methods:{
@@ -137,7 +140,7 @@ export default {
             if(this.vprevia)
                 this.$refs.previa.$el.innerHTML = this.texto;
         });
-    }
+    },
 }
 </script>
 
