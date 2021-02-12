@@ -22,7 +22,7 @@
         </div>
 
         <div v-show="selecVideo"> <!-- Vídeo -->
-            <mdb-input label="URL del vídeo" v-model="videoExp" />
+            <mdb-input label="URL del vídeo" @input="actualizaVideo" v-model="video"/>
         </div>
     </mdb-card>
 </div>
@@ -32,6 +32,7 @@
 import {mdbCard, mdbCardBody, mdbIcon, mdbInput,
         mdbCardText, mdbBtn, mdbBtnGroup } from 'mdbvue';
 import editor from '@/components/editor/editor';
+import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'editorTexto',
     components: {
@@ -41,9 +42,9 @@ export default {
     },
     data(){
         return{
-            enunciado: '',
-            explicacion: '',
-            videoExp: '',
+            enunciado: ejViga.enunciado,
+            explicacion: ejViga.ayuda,
+            video: ejViga.video,
             selecEnun: true,
             selecExp: false,
             selecVideo: false,
@@ -55,10 +56,15 @@ export default {
     methods:{
         actualizaEnunciado(texto){
             this.enunciado = texto;
+            ejViga.enunciado = texto;
         },
         actualizaExplicacion(texto){
             this.explicacion = texto;
+            ejViga.ayuda = texto;
         },
+        actualizaVideo(e){
+            ejViga.video = e;
+        }
     }
 }
 </script>

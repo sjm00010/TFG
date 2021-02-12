@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import cabecera from '@/components/cabecera';
+import cabecera from '@/components/Cabecera';
 import {cargaEjVigas} from '@/assets/js/ejercicio.js';
 export default {
   name: 'App',

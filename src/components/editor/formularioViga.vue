@@ -3,7 +3,15 @@
     <mdb-card>
         <mdb-card-body>
             <mdb-card-title>Datos del ejercicio</mdb-card-title>
-            <mdb-card-text>Introduce los datos requeridos. Cuando los hayas introducido verificalos para continuar, si todos los datos han sido verificados se habilitaró la opción de crear ejercicio.</mdb-card-text>
+            <mdb-card-text>Introduce los datos requeridos. Cuando los hayas introducido verificalos para continuar, si todos los datos han sido verificados se habilitará la opción de crear ejercicio.</mdb-card-text>
+            <h4 class="text-center"><small class="text-muted">DIFICUALTAD</small></h4>
+            <mdb-card-text class="text-center">Seleccione una dificultad:</mdb-card-text>
+            <select class="browser-default custom-select" v-model="dificultad">
+                <option selected value="undefined">Selecciona una dificultad</option>
+                <option :value="1">Fácil</option>
+                <option :value="2">Normal</option>
+                <option :value="3">Difícil</option>
+            </select>
             <h4 class="text-center"><small class="text-muted">ENUNCIADO</small></h4>
             <enunciado/>
             <h4 class="text-center mt-3"><small class="text-muted">DATOS DE LOS TRAMOS</small></h4>
@@ -27,7 +35,14 @@
             <formulas ref="formulas" v-show="compTramos" />
         </mdb-card-body>
     </mdb-card>
-    <mdb-btn class="my-3" block color="light-green" @click="comprobar"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
+    <mdb-row>
+        <mdb-col>
+            <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
+        </mdb-col>
+        <mdb-col v-if="compTramos">
+            <mdb-btn class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
+        </mdb-col>
+    </mdb-row>
 </div>
 </template>
 
@@ -38,8 +53,9 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
 import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/editor/dibujaViga';
 import formulas from '@/components/editor/formulas';
-import { vincularTramos } from '@/assets/js/vigas/variables.js';
-import { compruebaTramos, Ejercicio } from '@/assets/js/ejercicio.js';
+import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
+import { compruebaTramos } from '@/assets/js/ejercicio.js';
+import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'formularioViga',
     components: {
@@ -51,10 +67,10 @@ export default {
     },
     data(){
         return{
-            ejercicio: Ejercicio,
-            numTramos: undefined,
-            tramos: [],
-            compTramos: false
+            dificultad: ejViga.tramos.dificultad,
+            numTramos: ejViga.tramos.length || undefined,
+            tramos: ejViga.tramos,
+            compTramos: ejViga.tramos.length > 0
         }
     },
     methods:{
@@ -102,9 +118,42 @@ export default {
                 }
             }
         },
-        comprobar(){
-            this.comprobarTramos();
+        async crear(){
+            ejViga.dificultad = this.dificultad;
+            ejViga.tramos = this.tramos;
+            ejViga.elementos = elementos;
+            ejViga.formulas = this.$refs.formulas.formulas;
+
+            const ejercicio = JSON.stringify(
+                                    {...ejViga, usuario: sessionStorage.getItem("user"), 
+                                                pass: sessionStorage.getItem("pass")})
+                                            .replace('_tramos', 'tramos')
+                                            .replace('_elementos', 'elementos')
+                                            .replace('_formulas', 'formulas');
+
+            const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
+                headers: {'Content-Type': 'application/json'},
+                method: 'POST',
+                body: ejercicio
+            });
+
+            if(respuesta.ok){
+                console.log(respuesta)
+                // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
+                this.$router.push('ejercicios');
+            }else{
+                this.$notify({
+                    group: 'log',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de creación</b>',
+                    text: '<i style="font-size:15px"> No se pudo crear los ejercicios. Revise los datos.</i>',
+                    duration: 5000,
+                    type: 'error'
+                });
+            }
         }
+    },
+    created(){
+        console.log(this.dificultad)
     }
 }
 </script>

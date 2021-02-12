@@ -17,8 +17,8 @@ export function pushElemento(tipo, props){
         segmento: props.segmento, // Indice tramo inicio
         segmentoFinal: props.segmentoFinal, // Indice tramo fin (Opcional)
         magnitud: props.magnitud, // Magnitud del elemento por defecto
-        min: props.min, // Valor mínimo de la magnitud
-        max: props.max, // Valor máximo de la magnitud
+        min: props.min, // Valor mínimo de la magnitud (Opcional)
+        max: props.max, // Valor máximo de la magnitud (Opcional)
         idBarra: props.idBarra, // Nombre de la barra (Opcional)
         d: props.d, // Magnitud d para la barra (Opcional)
         minD: props.minD, // Mínimo para d de la barra (Opcional)

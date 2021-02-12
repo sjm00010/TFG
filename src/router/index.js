@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Inicio from '@/views/Inicio';
 import ListaEjercicios from '@/views/ListaEjercicios';
 import Editor from '@/views/Editor';
+import Modificador from '@/views/Modificador';
 
 Vue.use(Router);
 
@@ -19,9 +20,14 @@ export default new Router({
       component: ListaEjercicios
     },
     {
-      path: '/crearEjercicio',
+      path: '/ejercicios/nuevo',
       name: 'Editor',
       component: Editor
+    },
+    {
+      path: '/ejercicios/:tipo/modificar/:id',
+      name: 'Modificador',
+      component: Modificador
     },
   ]
 });

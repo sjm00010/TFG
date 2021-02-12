@@ -3,7 +3,7 @@
         <h1 class="text-muted text-center mb-4">Listado de ejercicios</h1>
         <div v-show="prof">
             <hr/>
-            <router-link tag="button" class="btn btn-block success-color text-white" to="/crearEjercicio">Crear ejercicio</router-link>
+            <router-link tag="button" class="btn btn-block success-color text-white" :to="{ path: 'nuevo' }" append>Crear ejercicio</router-link>
         </div>
         <mdb-btn block color="info" @click="cargarEjercicios">Recargar ejercicios</mdb-btn>
         <hr/>        
@@ -11,7 +11,7 @@
         <mdb-row v-if="this.ejVigas.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
-                    :descripcion="ej.desc" enlace="/ejercicios/ejercicioViga" @borrar="borrar"></tarjeta>
+                    :descripcion="ej.desc" enlace="viga" @borrar="borrar"></tarjeta>
             </mdb-col>
         </mdb-row>
         <div class="text-center my-5" v-else-if="this.ejVigas.length == 0">

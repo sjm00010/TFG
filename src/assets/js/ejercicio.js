@@ -6,7 +6,7 @@
  * @param enunciado Enunciado completo del ejercicio en HTML.
  * @param imagen URL de la imagen que se quiere incluir en el enunciado del ejercicio.
  */
-export class Ejercicio {
+class Ejercicio {
     constructor( id, dificultad, enunciado, ayuda, video) {
         this.id = id;
         this.dificultad = dificultad;
@@ -16,12 +16,36 @@ export class Ejercicio {
     }
 }
 
-export class Viga {
-    constructor( ejercicio, tramos, elementos, formulas) {
-        this.datos = ejercicio;
-        this.tramos = tramos;
-        this.elementos = elementos;
-        this.formulas = formulas;
+export class Viga extends Ejercicio {
+    constructor( id, dificultad, enunciado, ayuda, video, tramos = [], elementos = [], formulas = []) {
+        super(id, dificultad, enunciado, ayuda, video);
+        this._tramos = tramos;
+        this._elementos = elementos;
+        this._formulas = formulas;
+    }
+
+    set tramos(nTramos){
+        this._tramos.splice(0, this._tramos.length, ...nTramos);
+    }
+
+    set elementos(nElementos){
+        this._elementos.splice(0, this._elementos.length, ...nElementos);
+    }
+
+    set formulas(nFormulas){
+        this._formulas.splice(0, this._formulas.length, ...nFormulas);
+    }
+
+    get tramos(){
+        return this._tramos;
+    }
+
+    get elementos(){
+        return this._elementos;
+    }
+
+    get formulas(){
+        return this._formulas;
     }
 }
 

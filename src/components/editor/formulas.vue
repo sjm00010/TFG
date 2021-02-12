@@ -10,7 +10,7 @@
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
                 <mdb-input type="text" label="Formula del tramo" v-model="formula.axiles"/>
-                <katex-element :expression="formula.axiles"/>
+                <katex-element :expression="formula.axiles" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
         <mdb-col md="12">
@@ -20,7 +20,7 @@
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
                 <mdb-input type="text" label="Formula del tramo" v-model="formula.cortantes"/>
-                <katex-element :expression="formula.cortantes"/>
+                <katex-element :expression="formula.cortantes" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
         <mdb-col md="12">
@@ -30,7 +30,7 @@
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
                 <mdb-input type="text" label="Formula del tramo" v-model="formula.flectores"/>
-                <katex-element :expression="formula.flectores"/>
+                <katex-element :expression="formula.flectores" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
     </mdb-row>
@@ -40,6 +40,7 @@
 <script>
 import 'katex/dist/katex.min.css';
 import { mdbCardText, mdbInput, mdbRow, mdbCol} from 'mdbvue';
+import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'formulas',
     components:{
@@ -47,7 +48,7 @@ export default {
     },
     data(){
         return {
-            formulas: [{min: '', max: '', valor: ''}]
+            formulas: ejViga.formulas
         };
     },
     methods:{

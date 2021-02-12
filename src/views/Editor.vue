@@ -28,9 +28,6 @@ export default {
         return{
             tipo: ''
         }
-    },
-    methods:{
-        
     }
 }
 </script>

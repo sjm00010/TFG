@@ -10,8 +10,9 @@
         <mdb-card-body class="text-center">
             <mdb-card-text>{{this.descripcion}}</mdb-card-text>
             <hr/>
-            <router-link tag="button" class="btn btn-block elegant-color text-white" :to="this.enlace">Realizar</router-link>
-            <mdb-btn block class="my-2" color="secondary" v-show="prof">Modificar</mdb-btn>
+            <router-link tag="button" class="btn btn-block elegant-color text-white" :to="{ path: this.enlace+'/'+this.id_bd}" append >Realizar</router-link>
+            <router-link tag="button" class="btn btn-block secondary-color text-white my-2" v-show="prof" :to="{ path: this.enlace+'/modificar/'+this.id_bd}" append >Modificar</router-link>
+            <mdb-btn block class="my-2" color="orange" v-show="prof" @click="modificar">Modificar</mdb-btn>
             <mdb-btn block class="my-2" color="danger" v-show="prof" @click="borrar">Borrar</mdb-btn>
         </mdb-card-body>
     </mdb-card>
@@ -20,7 +21,7 @@
 <script>
 import { mdbCard, mdbCardBody, mdbCardText, mdbView, mdbIcon, mdbBtn } from 'mdbvue';
 import {profesor, getUser} from '@/assets/js/identificacion.js';
-
+import { cargaEjercicio } from '@/assets/js/ejercicioJSON.js'
 export default {
     name: 'tarjeta',
     props: {
@@ -53,6 +54,27 @@ export default {
         },
         borrar(){
             this.$emit('borrar', this.id_bd);
+        },
+        tipo(){
+            switch(this.enlace){
+                case 'viga':
+                    return 'Vigas';
+                default:
+                    this.$notify({
+                        group: 'app',
+                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al cargar el ejercicio</b>',
+                        text: '<i style="font-size:15px"> Ocurrio un problema al cargar el ejercicio. Recargue los ejercicios y vuelve a intentarlo.</i>',
+                        duration: 7000,
+                        type: 'error'
+                    });
+                    break;
+            }
+        },
+        async modificar(){
+            const ok = await cargaEjercicio(this.id_bd, this.tipo());
+            if(ok){
+                this.$router.push('ejercicios/viga/modificar/'+this.id_bd);
+            }
         }
     },
     created(){
