@@ -11,7 +11,9 @@ export async function cargaEjercicio(id, tipo){
 
     switch(tipo){
         case 'Vigas':
+        case 'viga':
             url = 'http://localhost:8080/api/ejViga/'+id;
+            break;
     }
 
     if(url != ''){
@@ -22,7 +24,6 @@ export async function cargaEjercicio(id, tipo){
 
         if(ejercicio.ok){
             ejViga = await ejercicio.json();
-            console.log(ejViga)
             return true;
         }else {
             return false;

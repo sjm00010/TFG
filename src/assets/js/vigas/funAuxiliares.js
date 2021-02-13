@@ -130,7 +130,6 @@ export function addPuntoCarga(seg, P, min, max){
  * @param {Int} maxD Distancia máxima respecto a la viga
  */
 export function addBarra(id, seg, H, min, max, d, minD, maxD){
-    console.log(id, seg, H, min, max, d, minD, maxD)
     let error = val.verificaBarra(H, min, max, d, minD, maxD);
     if(error.existe) return error;
     let coorX = val.calculaSegmento(seg);

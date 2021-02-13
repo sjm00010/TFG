@@ -65,9 +65,6 @@ export default {
         actualizaVideo(e){
             ejViga.video = e;
         }
-    },
-    created(){
-        console.log(ejViga)
     }
 }
 </script>

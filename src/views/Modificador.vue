@@ -19,8 +19,7 @@
 <script>
 import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/editor/formularioViga';
-import { limpiar } from '@/assets/js/ejercicioJSON.js';
-import { ejViga } from '@/assets/js/ejercicioJSON.js';
+import { ejViga, cargaEjercicio, limpiar } from '@/assets/js/ejercicioJSON.js';
 
 export default {
     components: {
@@ -54,6 +53,12 @@ export default {
     },
     beforeDestroy(){
         limpiar();
+    },
+    async beforeRouteEnter (to, from, next) {
+        await cargaEjercicio(to.params.id, to.params.tipo);
+        
+        // called before the route that renders this component is confirmed.
+        next();
     }
 }
 </script>

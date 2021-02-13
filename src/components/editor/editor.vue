@@ -10,7 +10,7 @@
         <mdb-col col="auto">
             <mdb-btn color="light" icon="subscript fa-lg" class="px-3" @click="texto += '<sub>Texto</sub>'"/>
             <mdb-btn color="light" icon="superscript fa-lg" class="px-3" @click="texto += '<sup>Texto</sup>'"/>
-            <mdb-btn color="light" icon="list-ul  fa-lg" class="px-3" @click="texto += '<ul>\n<li>Elemento</li>\n</ul>'"/>
+            <mdb-btn color="light" icon="list-ul  fa-lg" class="px-3" @click="texto +='<ul>\n<li>Elemento</li>\n</ul>'"/>
             <mdb-btn color="light" icon="list-ol  fa-lg" class="px-3" @click="texto += '<ol>\n<li>Elemento</li>\n</ol>'"/>
         </mdb-col>
         <mdb-col col="auto">

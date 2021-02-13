@@ -34,7 +34,7 @@
     <small class="text-muted"><mdb-icon icon="info-circle" /> Si se actualizan valores de los tramos se debe volver a verificar para actualizar los valores de la tabla.
     </small>
 
-    <mdb-tbl>
+    <mdb-tbl v-if="actualiza">
         <mdb-tbl-head color="black" textWhite>
             <tr>
             <th>#</th>
@@ -64,7 +64,7 @@ import { mdbCardText, mdbBtn, mdbIcon, mdbRow, mdbCol,
 import modal from '@/components/editor/modal';
 import { vinculaCanvas, resizeCanvas, addViga, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { resetCanvas } from '@/assets/js/vigas/dibujar.js';
-import { setElementos, borraElemento } from '@/assets/js/vigas/variables.js';
+import { elementos, setElementos, borraElemento } from '@/assets/js/vigas/variables.js';
 import { ejViga } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: 'dibujar',
@@ -79,7 +79,7 @@ export default {
                 visible: false,
                 edicion: false
             },
-            elementos: ejViga.elementos
+            elementos: elementos
         };
     },
     methods:{
@@ -93,13 +93,13 @@ export default {
             redibuja();
         }
     },
+    created(){
+        setElementos(ejViga.elementos);
+    },
     mounted() {
         vinculaCanvas(this.$refs.editor);
         window.addEventListener('resize', () => resizeCanvas(this.$refs.editor));
-        if(this.elementos?.length > 0){
-            setElementos(this.elementos);
-            redibuja();
-        }
+        redibuja();
     },
     beforeDestroy(){
         window.removeEventListener('resize', () => resizeCanvas(this.$refs.editor));

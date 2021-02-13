@@ -29,6 +29,10 @@ export function pushElemento(tipo, props){
     });
 }
 
+export function modificaElemento( pos, nMagnitud){
+    elementos[pos].magnitud = nMagnitud;
+}
+
 /**
  * Función que borra un elemento
  * @param {Number} pos Posición del elemento a borrar

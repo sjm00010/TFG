@@ -144,7 +144,6 @@ export default {
             });
 
             if(respuesta.ok){
-                console.log(respuesta)
                 // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
                 this.$router.push('/ejercicios');
             }else{
@@ -177,7 +176,6 @@ export default {
             });
 
             if(respuesta.ok){
-                console.log(respuesta)
                 // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
                 await cargaEjVigas();
                 this.$router.push('/ejercicios');

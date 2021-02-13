@@ -11,7 +11,7 @@
             <mdb-card-text>{{this.descripcion}}</mdb-card-text>
             <hr/>
             <router-link tag="button" class="btn btn-block elegant-color text-white" :to="{ path: this.enlace+'/'+this.id_bd}" append >Realizar</router-link>
-            <mdb-btn block class="my-2" color="secondary" v-show="prof" @click="modificar">Modificar</mdb-btn>
+            <router-link tag="button" v-show="prof" class="btn btn-block secondary-color text-white my-2" :to="{ path: 'modificar/'+this.enlace+'/'+this.id_bd}" append >Modificar</router-link>
             <mdb-btn block class="my-2" color="danger" v-show="prof" @click="borrar">Borrar</mdb-btn>
         </mdb-card-body>
     </mdb-card>
@@ -20,7 +20,6 @@
 <script>
 import { mdbCard, mdbCardBody, mdbCardText, mdbView, mdbIcon, mdbBtn } from 'mdbvue';
 import {profesor, getUser} from '@/assets/js/identificacion.js';
-import { cargaEjercicio } from '@/assets/js/ejercicioJSON.js'
 export default {
     name: 'tarjeta',
     props: {
@@ -67,12 +66,6 @@ export default {
                         type: 'error'
                     });
                     break;
-            }
-        },
-        async modificar(){
-            const ok = await cargaEjercicio(this.id_bd, this.tipo());
-            if(ok){
-                this.$router.push('ejercicios/viga/modificar/'+this.id_bd);
             }
         }
     },
