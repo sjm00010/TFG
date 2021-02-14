@@ -44,7 +44,14 @@ export default {
     methods:{
         borrar(id){
             if(confirm("¿Esta seguro de eliminar el ejercicio"+ id +"?"))
-                borrarEjViga(id);
+                if (!borrarEjViga(id))
+                    this.$notify({
+                        group: 'app',
+                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al borrar el ejercicio</b>',
+                        text: '<i style="font-size:15px"> Ocurrio un error al tratar de borrar el ejercicio, intentelo de nuevo.</i>',
+                        duration: 7000,
+                        type: 'error'
+                    });
         },
         async cargarEjercicios(){
             await cargaEjVigas();

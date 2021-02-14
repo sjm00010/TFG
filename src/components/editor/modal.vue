@@ -114,7 +114,7 @@
 // import * as editor from '@/assets/js/vigas/funAuxiliares.js';
 import { mdbBtn, mdbIcon, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
          mdbModalFooter, mdbInput, mdbRow, mdbCol} from 'mdbvue';
-import {numTramos, numBarras} from '@/assets/js/vigas/variables.js';
+import {numTramos, num} from '@/assets/js/vigas/variables.js';
 import * as aux from '@/assets/js/vigas/funAuxiliares.js';
 export default {
     name: 'modal',
@@ -183,33 +183,33 @@ export default {
                 let error;
                 switch (this.tipo.toString()){
                     case 'Punto de carga':
-                        error = aux.addPuntoCarga(parseInt(this.datos.segmento), 
+                        error = aux.addPuntoCarga('P'+ num('Punto de carga'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max));
                         break;
                     case 'Momento':
-                        error = aux.addMomento(parseInt(this.datos.segmento), 
+                        error = aux.addMomento('M'+ num('Momento'),parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max));
                         break;
                     case 'Carga distribuida':
-                        error = aux.addCargaDistribuida(parseInt(this.datos.segmento), 
+                        error = aux.addCargaDistribuida('q'+ num('Carga distribuida'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.segmentoFinal), parseInt(this.datos.magnitud),
                                     parseInt(this.datos.min), parseInt(this.datos.max));
                         break;
                     case 'Normal':
-                        error = aux.addNormal(parseInt(this.datos.segmento), 
+                        error = aux.addNormal('N'+ num('Normal'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max));
                         break;
                     case 'Barra':
-                        error = aux.addBarra( 'H'+ numBarras(), parseInt(this.datos.segmento), 
+                        error = aux.addBarra( 'H'+ num('Barra'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max), parseInt(this.datos.d),
                                     parseInt(this.datos.minD), parseInt(this.datos.maxD));
                         break;
                     case 'Soporte':
-                        error = aux.addSoporte(this.datos.tipo , parseInt(this.datos.segmento));
+                        error = aux.addSoporte('S', this.datos.tipo , parseInt(this.datos.segmento));
                         break;
                 }
 

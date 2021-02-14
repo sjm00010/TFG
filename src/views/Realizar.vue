@@ -6,7 +6,7 @@
 
 <script>
 // import { mdbContainer, mdbJumbotron, mdbCardTitle} from 'mdbvue';
-import viga from '@/components/ejercicios/viga';
+import viga from '@/components/visualizar/vigas/viga';
 import { cargaEjercicio, limpiar } from '@/assets/js/ejercicioJSON.js';
 export default {
     name: "EjercicioViga",

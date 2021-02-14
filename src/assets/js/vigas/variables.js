@@ -1,3 +1,4 @@
+import { ejViga } from '@/assets/js/ejercicioJSON.js';
 /*******************
  *     Variables   *
  *******************/
@@ -22,7 +23,7 @@ export function pushElemento(tipo, props){
         magnitud: props.magnitud, // Magnitud del elemento por defecto
         min: props.min, // Valor mínimo de la magnitud (Opcional)
         max: props.max, // Valor máximo de la magnitud (Opcional)
-        idBarra: props.idBarra, // Nombre de la barra (Opcional)
+        nombre: props.nombre, // Nombre (ID)
         d: props.d, // Magnitud d para la barra (Opcional)
         minD: props.minD, // Mínimo para d de la barra (Opcional)
         maxD: props.maxD, // Máximo para d de la barra (Opcional)
@@ -50,16 +51,16 @@ export function numTramos(){
     return tramos.length;
 }
 
-export function numBarras(){
+export function num(tipo){
     let total = 1;
     elementos.forEach(elemento => {
-        if (elemento.tipo === 'Barra') total++;
+        if (elemento.tipo === tipo) total++;
     });
     return total;
 }
 
 // Flecha y giro
-export let E = 'null', I = 'null';
+export let E = 0, I = 0;
 export function setE(newE) {
     switch(newE){
         case "Aluminio":
@@ -103,6 +104,8 @@ export function setI(newI) {
 }
 
 export function calculaSegmento(tramo){
+    if(tramos.length === 0)
+        tramos.splice(0, tramos.length, ...ejViga.tramos);
     if(tramo === 0)
         return 0;
     

@@ -50,7 +50,7 @@ export function redibuja(outerCanvasContainer){
                 dibujo.addPuntoCarga( val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
             case 'Barra':
-                dibujo.addBarra( val.calculaSegmento(elemento.segmento), elemento.magnitud, elemento.segmentoFinal);
+                dibujo.addBarra( val.calculaSegmento(elemento.segmento), elemento.magnitud, elemento.d);
                 break;
             case 'Momento':
                 dibujo.addMomento( val.calculaSegmento(elemento.segmento), elemento.magnitud);
@@ -76,20 +76,21 @@ export function redibuja(outerCanvasContainer){
     let tam = val.calculaSegmento(val.numTramos()); // Tamaño de la viga
     dibujo.addViga(tam);
     val.vinculaViga(tam);
-    val.pushElemento("Viga", {magnitud : tam});
+    val.pushElemento("Viga", {nombre: 'V', magnitud : tam});
 }
 
 /**
  * Función que dibuja un soporte para la viga
+ * @param {String} nom Nombre del elemento
  * @param {String} tipo Tipo de soporte
  * @param {Int} seg Posición del vector tramos del segmento asociado
  */
-export function addSoporte(tipo, seg){
+export function addSoporte(nom, tipo, seg){
     let coorX = val.calculaSegmento(seg);
     let error = val.verificaSoporte(tipo, coorX);
     if(error.existe) return error;
     val.pushElemento("Soporte " + tipo, 
-                    {magnitud: tipo, segmento: seg});
+                    {nombre: nom, magnitud: tipo, segmento: seg});
     switch(tipo){
         case 'simple':
             dibujo.addSoporteSimple(coorX);
@@ -105,22 +106,23 @@ export function addSoporte(tipo, seg){
 
 /**
  * Función que dibuja una carga
+ * @param {String} nom Nombre del elemento
  * @param {Int} seg Posición del vector tramos del segmento asociado
  * @param {Int} P Valor de la carga
  * @param {Int} min Valor mínimo de la carga
  * @param {Int} max Valor máximo de la carga
  */
-export function addPuntoCarga(seg, P, min, max){
+export function addPuntoCarga(nom, seg, P, min, max){
     let coorX = val.calculaSegmento(seg);
     let error = val.verificaPuntoC(P, min, max);
     if(error.existe) return error;
     dibujo.addPuntoCarga(coorX, P);
-    val.pushElemento("Punto de carga", { magnitud: P, segmento: seg, min:  min, max: max});
+    val.pushElemento("Punto de carga", { nombre: nom, magnitud: P, segmento: seg, min:  min, max: max});
 }
 
 /**
  * Función que dibuja una barra
- * @param {String} id ID de la barra
+ * @param {String} nom Nombre del elemento
  * @param {Int} seg Posición del vector tramos del segmento asociado
  * @param {Int} H Valor de la carga
  * @param {Int} min Valor mínimo de la carga
@@ -129,13 +131,13 @@ export function addPuntoCarga(seg, P, min, max){
  * @param {Int} minD Distancia mínima respecto a la viga
  * @param {Int} maxD Distancia máxima respecto a la viga
  */
-export function addBarra(id, seg, H, min, max, d, minD, maxD){
+export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
     let error = val.verificaBarra(H, min, max, d, minD, maxD);
     if(error.existe) return error;
     let coorX = val.calculaSegmento(seg);
     dibujo.addBarra(coorX, H, d);
     val.pushElemento("Barra", {
-        idBarra: id,
+        nombre: nom,
         magnitud: H,
         min: min,
         max: max,
@@ -153,11 +155,11 @@ export function addBarra(id, seg, H, min, max, d, minD, maxD){
  * @param {Int} min Valor mínimo de la carga
  * @param {Int} max Valor máximo de la carga
  */
-export function addNormal(seg, N, min, max){
+export function addNormal(nom, seg, N, min, max){
     let error = val.verificaNormal(N, min, max);
     if(error.existe) return error;
     dibujo.addNormal( seg == "inicio" ? true : false, N);
-    val.pushElemento("Normal", {segmento: seg, magnitud: N, min: min, max: max});
+    val.pushElemento("Normal", {nombre: nom, segmento: seg, magnitud: N, min: min, max: max});
 }
 
 /**
@@ -167,12 +169,13 @@ export function addNormal(seg, N, min, max){
  * @param {Int} min Valor mínimo de la carga
  * @param {Int} max Valor máximo de la carga
  */
-export function addMomento(seg, M, min, max){
+export function addMomento(nom, seg, M, min, max){
     let coorX = val.calculaSegmento(seg);
     let error = val.verificaMomento(M, min, max);
     if(error.existe) return error;
     dibujo.addMomento(coorX, M);
     val.pushElemento("Momento", {
+                            nombre: nom,
                             segmento: seg,
                             magnitud: M,
                             min: min,
@@ -188,13 +191,14 @@ export function addMomento(seg, M, min, max){
  * @param {Int} min Valor mínimo de la carga
  * @param {Int} max Valor máximo de la carga
  */
-export function addCargaDistribuida(desdeSeg, hastaSeg, q, min, max){
+export function addCargaDistribuida(nom, desdeSeg, hastaSeg, q, min, max){
     let desdeX = val.calculaSegmento(desdeSeg);
     let hastaX = val.calculaSegmento(hastaSeg);
     let error = val.verificaCargaD(desdeX, hastaX, q, min, max);
     if(error.existe) return error;
     dibujo.addCargaDistribuida(desdeX, hastaX, q);
     val.pushElemento("Carga distribuida", {
+                                      nombre: nom,
                                       magnitud: q, 
                                       min: min,
                                       max: max,

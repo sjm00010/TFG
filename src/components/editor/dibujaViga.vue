@@ -45,7 +45,7 @@
         </mdb-tbl-head>
         <mdb-tbl-body>
             <tr v-for="(elemento, i) in elementos" :key="i">
-                <th>{{i}}</th>
+                <th v-html="elemento.nombre.replace(/(\w+)(\d+)/, '$1<sub>$2</sub>')"></th>
                 <td>{{elemento.tipo}}</td>
                 <td>{{elemento.magnitud}}</td>
                 <td>

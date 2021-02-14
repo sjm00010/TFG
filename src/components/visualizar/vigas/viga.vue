@@ -63,8 +63,8 @@
             <hr/>
             <mdb-row>
                 <mdb-col md="3" col="md" v-for="(tramo, i) in datos.tramos" :key="i">
-                    <mdb-input type="number" :label="'Tramo '+(i+1)+'(m)'" :min="tramo.min" :max="tramo.max" :step="0.1" v-model.number="tramo.valor" @input="cambioTramos(0)"/>
-                    <input type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @input="cambioTramos(0)">
+                    <mdb-input type="number" :label="'Tramo '+(i+1)+'(m)'" :min="tramo.min" :max="tramo.max" :step="0.1" v-model.number="tramo.valor" @input="cambioTramos(0, i)"/>
+                    <input type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @input="cambioTramos(0, i)">
                 </mdb-col>
             </mdb-row>
 
@@ -81,6 +81,59 @@
             </mdb-row>
         </mdb-card-body>
     </mdb-card>
+
+    <mdb-card class="my-3">
+        <mdb-card-body>
+            <mdb-row>
+                <mdb-col xl="6" class="mb-3">
+                    <p class="lead">Módulo elástico <i>E</i> (· 10<sup>7</sup> kN/m<sup>2</sup>)</p>
+                    <select class="browser-default custom-select" v-model="E">
+                        <option value="null" selected>Selecciona un módulo...</option>
+                        <option value="Aluminio">Aluminio (7)</option>
+                        <option value="Cobre">Cobre (10)</option>
+                        <option value="Acero">Acero (21)</option>
+                    </select>
+                </mdb-col>
+                <mdb-col xl="6" class="mb-3">
+                    <p class="lead">Momento de inercia <i>I</i> (· 10<sup>-8</sup> kN/m<sup>4</sup>)</p>
+                    <select class="browser-default custom-select" v-model="I">
+                        <option value="null" selected>Selecciona un momento...</option>
+                        <option value="120">IPN 120 (328)</option>
+                        <option value="160">IPN 160 (935)</option>
+                        <option value="200">IPN 200 (2140)</option>
+                        <option value="240">IPN 240 (4250)</option>
+                        <option value="280">IPN 280 (7590)</option>
+                        <option value="320">IPN 320 (12510)</option>
+                        <option value="360">IPN 360 (19610)</option>
+                        <option value="400">IPN 400 (29210)</option>
+                    </select>
+                </mdb-col>
+            </mdb-row>
+            <mdb-row>
+                <mdb-col xl="6" class="mb-3" v-show="this.giro != null">
+                    <p class="lead blue-grey-text">Giro en C : {{this.giro}} rad</p>
+                </mdb-col>
+                <mdb-col xl="6" class="mb-3" v-show="this.flecha != null">
+                    <p class="lead blue-grey-text">Fecha en D : {{this.flecha}} metros</p>
+                </mdb-col>
+            </mdb-row>
+        </mdb-card-body>
+    </mdb-card>
+
+    <div class="d-flex">
+        <mdb-popover class="ml-auto" trigger="hover">
+            <span slot="header">Sabías que...</span>
+            <span slot="body">Si quieres ocultar una ley solo tienes que pinchar en su nombre.</span>
+            <mdb-btn color="info" class="my-3" slot="reference">
+                <mdb-icon size="2x" icon="question-circle" />
+            </mdb-btn>
+        </mdb-popover>
+    </div>
+
+    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzo de axiles" color="rgb(41, 128, 185)" :invertida="false" ></grafica>
+    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzo cortantes" color="rgb(231, 76, 60)" :invertida="false" ></grafica>
+    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" ></grafica>
+
 </mdb-container>
 </template>
 
@@ -88,10 +141,13 @@
 import { mdbContainer, mdbJumbotron, mdbCardTitle, mdbInput,
          mdbBtn, mdbRow, mdbCol, mdbModal, mdbModalBody, mdbCard, 
          mdbModalTitle, mdbModalFooter, mdbModalHeader, mdbIcon,
-         mdbCardBody} from 'mdbvue';
+         mdbCardBody, mdbPopover} from 'mdbvue';
+import grafica from '@/components/visualizar/vigas/grafica';
+
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
 import { ejViga } from '@/assets/js/ejercicioJSON.js';
+import { inicializar, actualizaTramo, actualizaElemento } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",
     data(){
@@ -99,28 +155,50 @@ export default {
             datos: ejViga,
             modal1: false,
             modal2: false,
-            elementos: []
+            elementos: [],
+            E: null,
+            I: null,
+            giro: null,
+            flecha: null,
+            datosGraficas: {
+                axiles: [],
+                cortantes: [],
+                flectores: [],
+            }
         };
     },
     components:{
         mdbContainer, mdbJumbotron, mdbCardTitle, mdbInput,
         mdbBtn, mdbRow, mdbCol, mdbModal, mdbModalHeader,
         mdbModalTitle, mdbModalBody, mdbModalFooter, mdbIcon,
-        mdbCardBody, mdbCard
+        mdbCardBody, mdbCard, mdbPopover,
+        grafica
     },
     methods:{
-        cambioTramos(pos){
+        cambioTramos(pos, i){
             modificaElemento( pos, calculaSegmento(this.datos.tramos.length));
             redibuja();
+            this.actualizaGrafica(
+                actualizaTramo(i+1, this.datos.tramos[i].valor)
+            );
         },
         cambio(pos, mag, min, max){
             if(!(mag < min || mag > max)){
                 modificaElemento( pos, mag);
                 redibuja();
+                this.actualizaGrafica(
+                    actualizaElemento(this.datos.elementos[pos].nombre, mag)
+                );
             }
+        },
+        actualizaGrafica(resultado){
+            this.datosGraficas.axiles.push(...resultado.axiles);
+            this.datosGraficas.cortantes.push(...resultado.cortantes);
+            this.datosGraficas.flectores.push(...resultado.flectores);
         }
     },
     mounted() {
+        this.actualizaGrafica(inicializar());
         for(let i = 0; i < ejViga.elementos.length; i++){
             if(!isNaN(ejViga.elementos[i].magnitud) && ejViga.elementos[i].tipo !== 'Viga')
                 this.elementos.push({
