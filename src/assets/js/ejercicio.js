@@ -17,11 +17,12 @@ class Ejercicio {
 }
 
 export class Viga extends Ejercicio {
-    constructor( id, dificultad, enunciado, ayuda, video, tramos = [], elementos = [], formulas = []) {
+    constructor( id, dificultad, enunciado, ayuda, video, tramos = [], elementos = [], formulas = [], auxiliares = []) {
         super(id, dificultad, enunciado, ayuda, video);
         this._tramos = tramos;
         this._elementos = elementos;
         this._formulas = formulas;
+        this._auxiliares = auxiliares;
     }
 
     set tramos(nTramos){
@@ -36,6 +37,10 @@ export class Viga extends Ejercicio {
         this._formulas.splice(0, this._formulas.length, ...nFormulas);
     }
 
+    set auxiliares(nAuxiliares){
+        this._auxiliares.splice(0, this._auxiliares.length, ...nAuxiliares);
+    }
+
     get tramos(){
         return this._tramos;
     }
@@ -46,6 +51,10 @@ export class Viga extends Ejercicio {
 
     get formulas(){
         return this._formulas;
+    }
+
+    get auxiliares(){
+        return this._auxiliares;
     }
 }
 

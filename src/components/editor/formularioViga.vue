@@ -129,13 +129,15 @@ export default {
             ejViga.tramos = this.tramos;
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
+            ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
             const ejercicio = JSON.stringify(
                                     {...ejViga, usuario: sessionStorage.getItem("user"), 
                                                 pass: sessionStorage.getItem("pass")})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
-                                            .replace('_formulas', 'formulas');
+                                            .replace('_formulas', 'formulas')
+                                            .replace('_auxiliares', 'auxiliares');
 
             const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
                 headers: {'Content-Type': 'application/json'},
@@ -161,13 +163,15 @@ export default {
             ejViga.tramos = this.tramos;
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
+            ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
             const ejercicio = JSON.stringify(
                                     {...ejViga, usuario: sessionStorage.getItem("user"), 
                                                 pass: sessionStorage.getItem("pass")})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
-                                            .replace('_formulas', 'formulas');
+                                            .replace('_formulas', 'formulas')
+                                            .replace('_auxiliares', 'auxiliares');
 
             const respuesta = await fetch('http://localhost:8080/api/ejViga/'+this.$route.params.id, { 
                 headers: {'Content-Type': 'application/json'},

@@ -21,17 +21,14 @@ export function inicializar(){
     }
 
     adaptarFormulas();
-    return calcular();
 }
 
 export function actualizaTramo(pos, valor){
     variables['t_'+pos] = parseFloat(valor);
-    return calcular();
 }
 
 export function actualizaElemento(nom, valor){
     variables[nom.replace(/(\w+)(\d+)/, '$1_$2')] = parseFloat(valor);
-    return calcular();
 }
 
 /**
@@ -45,7 +42,12 @@ function adaptarFormulas(){
     }
 }
 
-function calcular(){
+export function calcular(){
+    for(let i = 0; i < ejViga.auxiliares.length; i++){
+        variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
+    }
+
+
     const resultado= {
         axiles: [],
         cortantes: [],

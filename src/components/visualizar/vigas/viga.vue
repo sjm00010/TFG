@@ -146,8 +146,8 @@ import grafica from '@/components/visualizar/vigas/grafica';
 
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
-import { ejViga } from '@/assets/js/ejercicioJSON.js';
-import { inicializar, actualizaTramo, actualizaElemento } from '@/assets/js/vigas/calculos.js';
+import { ejViga, limpiar } from '@/assets/js/ejercicioJSON.js';
+import { inicializar, actualizaTramo, actualizaElemento, calcular } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",
     data(){
@@ -164,7 +164,9 @@ export default {
                 axiles: [],
                 cortantes: [],
                 flectores: [],
-            }
+            },
+            editado: true,
+            programada: setInterval( this.actualizaGrafica, 1000)
         };
     },
     components:{
@@ -178,23 +180,25 @@ export default {
         cambioTramos(pos, i){
             modificaElemento( pos, calculaSegmento(this.datos.tramos.length));
             redibuja();
-            this.actualizaGrafica(
-                actualizaTramo(i+1, this.datos.tramos[i].valor)
-            );
+            actualizaTramo(i+1, this.datos.tramos[i].valor);
+            this.editado = true;
         },
         cambio(pos, mag, min, max){
             if(!(mag < min || mag > max)){
                 modificaElemento( pos, mag);
                 redibuja();
-                this.actualizaGrafica(
-                    actualizaElemento(this.datos.elementos[pos].nombre, mag)
-                );
+                actualizaElemento(this.datos.elementos[pos].nombre, mag);
+                this.editado = true;
             }
         },
-        actualizaGrafica(resultado){
-            this.datosGraficas.axiles.push(...resultado.axiles);
-            this.datosGraficas.cortantes.push(...resultado.cortantes);
-            this.datosGraficas.flectores.push(...resultado.flectores);
+        actualizaGrafica(){
+            if(this.editado){
+                let resultado = calcular();
+                this.datosGraficas.axiles.splice(0, this.datosGraficas.axiles.length, ...resultado.axiles);
+                this.datosGraficas.cortantes.splice(0, this.datosGraficas.cortantes.length, ...resultado.cortantes);
+                this.datosGraficas.flectores.splice(0, this.datosGraficas.flectores.length, ...resultado.flectores);
+                this.editado = false;
+            }
         }
     },
     mounted() {
@@ -227,6 +231,8 @@ export default {
     },
     beforeDestroy(){
         window.removeEventListener('resize', () => resizeCanvas(this.$refs.editor));
+        clearInterval(this.polling);
+        limpiar();
     }
 }
 </script>
