@@ -1,9 +1,19 @@
 <template>
 <div>
-    <h4 class="text-center"><small class="text-muted">VARIABLES AUXILIARES</small></h4>
+    <h4 class="text-center"><small class="text-muted">FORMULAS DE LAS LEYES</small></h4>
+    <hr/>
+    Para usar las variables anteriormente introducidas se debe introducir:
+    <ul>
+        <li><b>Tramos</b>: para referenciar el valor de un tramo se debe usar <i>t_N</i>, siendo <i>N</i> el numero del tramo.</li>
+        <li><b>Variables</b>: para referenciar el valor de un elemento del dibujo se debe usar el ID de la tabla (#), <br/> por ejemplo <i>P_1</i>, copiando el ID con el subindice de la forma <i>X_N</i>.</li>
+        <li><b>Variables auxiliares</b>: para referenciar el valor de una varables auxilar se debe usar <i>A_N</i>, siendo <i>N</i> el numero de la variable auxiliar.</li>
+    </ul>
+    <small class="text-muted"><mdb-icon icon="info-circle" /> Para acceder a la distancia de las barras usar <i>d_X</i>, siendo <i>X</i> el nº de la barra.</small>
+    <hr/>
+    <h5 class="text-center"><small class="text-muted">VARIABLES AUXILIARES</small></h5>
     <mdb-card-text class="text-center">Introduce las formulas para las variables que necesites.</mdb-card-text>
     <mdb-btn block outline="success" @click="addAuxiliar"><mdb-icon size="lg" icon="plus-circle"/> Añadir variable</mdb-btn>
-    <mdb-row>
+    <mdb-row class="my-3">
         <mdb-col md="12">
             <div class="md-form input-group" v-for="(aux, i) in auxiliares" :key="i">
                 <div class="input-group-prepend">
@@ -15,8 +25,8 @@
             </div>
         </mdb-col>
     </mdb-row>
-    <h4 class="text-center"><small class="text-muted">FORMULAS DE LAS LEYES</small></h4>
-    <mdb-card-text class="text-center">Introduce las formulas (EN LATEX) para realizar el calculo de las gráficas. EJEMPLO \frac{a_i}{1+x}</mdb-card-text>
+    <h5 class="text-center"><small class="text-muted">FUNCIONES DE LOS TRAMOS</small></h5>
+    <mdb-card-text class="text-center">Introduce las formulas (EN LATEX) para realizar el cálculo de las gráficas.</mdb-card-text>
     <mdb-row>
         <mdb-col md="12">
             <mdb-card-text class="text-center">Esfuerzos de axiles</mdb-card-text>

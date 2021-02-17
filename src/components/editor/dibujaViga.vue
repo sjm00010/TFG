@@ -31,8 +31,7 @@
         <canvas id="editor" style="border: 1px solid rgb(211,211,211)"></canvas>
     </div>
 
-    <small class="text-muted"><mdb-icon icon="info-circle" /> Si se actualizan valores de los tramos se debe volver a verificar para actualizar los valores de la tabla.
-    </small>
+    <small class="text-muted"><mdb-icon icon="info-circle" /> Si se actualizan valores de los tramos se debe volver a verificar para actualizar los valores de la tabla.</small>
 
     <mdb-tbl v-if="actualiza">
         <mdb-tbl-head color="black" textWhite>

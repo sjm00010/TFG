@@ -1,15 +1,15 @@
 <template>
 <div>
     <mdb-card class="card-body mb-3" >
-        <mdb-card-text class="text-center">Selecciona el contenido que deseas añadir, las pestañas de explicación y vídeo son los apoyos al ejercicio.</mdb-card-text>
+        <mdb-card-text class="text-center">Selecciona el contenido que deseas añadir, las pestañas de explicación y vídeo son apoyos opcionales al ejercicio. Si no se desea añadir explicación o vídeo al ejercicio dejar en blanco los campos.</mdb-card-text>
         <mdb-card-body class="pt-0">                
             <mdb-btn-group class="w-100">
-                <mdb-btn color="primary" v-show="selecEnun" disabled class="mb-2" @click="selectEnun = false"><mdb-icon size="lg" icon="edit" /> Enunciado</mdb-btn>
-                <mdb-btn color="primary" v-show="!selecEnun" class="mb-2" @click="selecEnun = true, selecVideo = false, selecExp = false"><mdb-icon size="lg" icon="edit" /> Enunciado</mdb-btn>
-                <mdb-btn color="secondary" class="mb-2"  v-show="selecExp" disabled ><mdb-icon size="lg" icon="recycle" /> Explicación </mdb-btn>
-                <mdb-btn color="secondary" class="mb-2" v-show="!selecExp" @click="selecExp = true, selecEnun = false, selecVideo = false"><mdb-icon size="lg" icon="recycle" /> Explicación </mdb-btn>
-                <mdb-btn color="dark-green" class="mb-2" v-show="selecVideo" disabled><mdb-icon size="lg" icon="calculator" /> Vídeo</mdb-btn>
-                <mdb-btn color="dark-green" class="mb-2" v-show="!selecVideo" @click="selecVideo = true, selecExp = false, selecEnun = false"><mdb-icon size="lg" icon="calculator" /> Vídeo</mdb-btn>                   
+                <mdb-btn color="primary" v-show="selecEnun" disabled class="mb-2" @click="selectEnun = false"><mdb-icon size="lg" icon="file-alt" /> Enunciado</mdb-btn>
+                <mdb-btn color="primary" v-show="!selecEnun" class="mb-2" @click="selecEnun = true, selecVideo = false, selecExp = false"><mdb-icon size="lg" icon="file-alt" /> Enunciado</mdb-btn>
+                <mdb-btn color="secondary" class="mb-2"  v-show="selecExp" disabled ><mdb-icon size="lg" icon="question-circle" /> Explicación </mdb-btn>
+                <mdb-btn color="secondary" class="mb-2" v-show="!selecExp" @click="selecExp = true, selecEnun = false, selecVideo = false"><mdb-icon size="lg" icon="question-circle" /> Explicación </mdb-btn>
+                <mdb-btn color="dark-green" class="mb-2" v-show="selecVideo" disabled><mdb-icon fab size="lg" icon="youtube" /> Vídeo</mdb-btn>
+                <mdb-btn color="dark-green" class="mb-2" v-show="!selecVideo" @click="selecVideo = true, selecExp = false, selecEnun = false"><mdb-icon fab size="lg" icon="youtube" /> Vídeo</mdb-btn>                   
             </mdb-btn-group>
         </mdb-card-body>
         
@@ -22,6 +22,7 @@
         </div>
 
         <div v-show="selecVideo"> <!-- Vídeo -->
+        <small class="text-muted"><mdb-icon icon="info-circle" /> La URL debe ser de YouTube.</small>
             <mdb-input label="URL del vídeo" @input="actualizaVideo" v-model="video"/>
         </div>
     </mdb-card>
