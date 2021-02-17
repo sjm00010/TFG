@@ -5,17 +5,17 @@
         <mdb-card-title class="pb-2 h4"><strong>Ejercicio de vigas</strong></mdb-card-title>
         <p class="card-text" v-html="datos.enunciado"></p>
         <mdb-row class="justify-content-center">
-            <mdb-col col="md" class="my-2">
+            <mdb-col col="md" class="my-2" v-show="datos.ayuda && datos.ayuda.length !== 0">
                 <mdb-btn block color="elegant" @click.native="modal1 = true"><mdb-icon class="align-middle" size="2x" icon="journal-whills" /> Explicación</mdb-btn>
             </mdb-col>
-            <mdb-col col="md" class="my-2">
+            <mdb-col col="md" class="my-2" v-show="datos.video && datos.video.length !== 0">
                 <mdb-btn block color="secondary" @click.native="modal2 = true"><mdb-icon class="align-middle" fab size="2x" icon="youtube" /> Vídeo explicativo</mdb-btn>
             </mdb-col>
         </mdb-row>
     </mdb-jumbotron>
 
     <!-- Modal de la explicación -->
-    <mdb-modal size="lg"  :show="modal1" @close="modal1 = false">
+    <mdb-modal size="lg" v-if="datos.ayuda && datos.ayuda.length !== 0"  :show="modal1" @close="modal1 = false">
         <mdb-modal-header>
             <mdb-modal-title>Explicación</mdb-modal-title>
         </mdb-modal-header>
@@ -29,7 +29,7 @@
 
 
     <!-- Modal del vídeo -->
-    <mdb-modal size="lg" :show="modal2" @close="modal2 = false">
+    <mdb-modal size="lg" v-if="datos.video && datos.video.length !== 0" :show="modal2" @close="modal2 = false">
         <mdb-modal-body class="p-0">
             <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
             <iframe class="embed-responsive embed-responsive-16by9 z-depth-1-half"
@@ -202,7 +202,6 @@ export default {
         }
     },
     mounted() {
-        this.actualizaGrafica(inicializar());
         for(let i = 0; i < ejViga.elementos.length; i++){
             if(!isNaN(ejViga.elementos[i].magnitud) && ejViga.elementos[i].tipo !== 'Viga')
                 this.elementos.push({
@@ -228,6 +227,7 @@ export default {
                 type: 'error'
             });
         }
+        this.actualizaGrafica(inicializar());
     },
     beforeDestroy(){
         window.removeEventListener('resize', () => resizeCanvas(this.$refs.editor));

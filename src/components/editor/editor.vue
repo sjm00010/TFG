@@ -3,7 +3,7 @@
     <mdb-card color="rgba-blue-slight" class="my-2">
     <mdb-row class="justify-content-between">
         <mdb-col col="auto">
-            <mdb-btn color="elegant" icon="bold fa-lg" class="px-3" @click="texto += '<b>Texto</b>'"/>
+            <mdb-btn color="elegant" icon="bold fa-lg" class="px-3" @click="insertar('b')"/>
             <mdb-btn color="elegant" icon="italic fa-lg" class="px-3" @click="texto += '<i>Texto</i>'"/>
             <mdb-btn color="elegant" icon="underline fa-lg" class="px-3" @click="texto += '<u>Texto</u>'"/>
         </mdb-col>
@@ -62,6 +62,7 @@
 import {mdbCard, mdbCardBody, mdbIcon,
         mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader,
         mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
+import {insertaCaracteres} from '@/assets/js/editor.js'
 export default {
     name: 'editorTexto',
     components: {
@@ -77,7 +78,7 @@ export default {
             ctrl: false,
             modal: false,
             vprevia: false,
-            texto: this.nTexto
+            texto: this.nTexto || ''
         }
     },
     methods:{
@@ -87,58 +88,62 @@ export default {
         },
         actualizar(nTexto){
             this.$emit('actualiza', nTexto);
+        },
+        insertar(meta){
+            switch(meta){
+                case 'b':
+                    insertaCaracteres('<b>', '</b>', this.$refs.textarea);
+                    break;
+                case 'i':
+                    insertaCaracteres('<i>', '</i>', this.$refs.textarea);
+                    break;
+                case 'u':
+                    insertaCaracteres('<u>', '</u>', this.$refs.textarea);
+                    break;
+            }
         }
     },
     mounted(){
         // Controles
         this.$refs.textarea.addEventListener('keydown', (event) => {
-            let posicion = this.$refs.textarea.selectionStart;
             switch(event.key){
                 case 'Control':
                     this.ctrl = true;
                     break;
                 case 'b':
                     if(this.ctrl){
-                        this.texto = [this.texto.slice(0, posicion), 
-                                            '<b>Texto</b>', 
-                                            this.texto.slice(posicion)]
-                                            .join('');
                         event.preventDefault();
+                        insertaCaracteres('<b>', '</b>', this.$refs.textarea);
                     }
-                    this.ctrl = false; 
                     break;
                 case 'i':
                     if(this.ctrl){
-                        this.texto = [this.texto.slice(0, posicion), 
-                                            '<i>Texto</i>', 
-                                            this.texto.slice(posicion)]
-                                            .join('');
                         event.preventDefault();
-                    }
-                    this.ctrl = false; 
+                        insertaCaracteres('<i>', '</i>', this.$refs.textarea);
+                    } 
                     break;
                 case 'u':
                     if(this.ctrl){
-                        this.texto = [this.texto.slice(0, posicion), 
-                                            '<u>Texto</u>', 
-                                            this.texto.slice(posicion)]
-                                            .join('');
                         event.preventDefault();
+                        insertaCaracteres('<u>', '</u>', this.$refs.textarea);
                     }
-                    this.ctrl = false; 
                     break;
                 case 'Enter':
-                    this.texto += '<br/>\n'
-                    event.preventDefault();
-                    break;
-                default:
-                    this.ctrl = false;
+                    if(!this.ctrl){
+                        this.$refs.textarea.setRangeText('<br/>\n', this.$refs.textarea.selectionStart, this.$refs.textarea.selectionEnd, 'end');
+                        event.preventDefault();
+                    }else{
+                        this.$refs.textarea.setRangeText('\n', this.$refs.textarea.selectionStart, this.$refs.textarea.selectionEnd, 'end');
+                    }
                     break;
             }
         });
-        this.$refs.textarea.addEventListener('keyup', () => {
+        this.$refs.textarea.addEventListener('keyup', (event) => {
             if(this.vprevia)
                 this.$refs.previa.$el.innerHTML = this.texto;
+
+            if(event.key === 'Control')
+                this.ctrl = false;
         });
     },
 }

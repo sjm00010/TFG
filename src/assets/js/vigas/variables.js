@@ -44,7 +44,7 @@ export function borraElemento(pos){
 
 let tramos = [];
 export function vincularTramos(nTramos){
-    tramos = nTramos;
+    tramos.splice(0, tramos.length, ...nTramos);
 }
 
 export function numTramos(){

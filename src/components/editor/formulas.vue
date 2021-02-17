@@ -69,6 +69,7 @@ export default {
     },
     methods:{
         cargaTramos(tramos){
+            this.auxiliares.splice(0);
             this.formulas.splice(0);
             for (let i = 0; i < tramos.length; i++) {
                 this.formulas.push({axiles: '', cortantes: '', flectores: ''});
@@ -81,9 +82,6 @@ export default {
         delAuxiliar(pos){
             this.auxiliares.splice(pos, 1);
         }
-    },
-    mounted(){
-        console.log(this.auxiliares)
     }
 
 }

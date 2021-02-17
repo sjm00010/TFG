@@ -81,6 +81,7 @@ export default {
     },
     methods:{
         crearTramos(){
+            this.compTramos = false;
             this.tramos.splice(0);
             for (let i = 0; i < this.numTramos; i++) {
                 this.tramos.push({min: '', max: '', valor: ''});
