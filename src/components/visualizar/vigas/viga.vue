@@ -78,6 +78,12 @@
                     <input  type="range" :min="elemento.min" :max="elemento.max" :step="0.1" class="custom-range"
                             v-model="elemento.magnitud" @input="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)">
                 </mdb-col>
+                <mdb-col md="3" col="md" v-for="(ditancia, i) in d" :key="'d'+i">
+                    <mdb-input type="number" :label="'Distancia de la barra '+(ditancia.pos+1)" :min="ditancia.minD" :max="ditancia.maxD" 
+                                :step="0.01" v-model.number="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)"/>
+                    <input  type="range" :min="ditancia.minD" :max="ditancia.maxD" :step="0.01" class="custom-range"
+                            v-model="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)">
+                </mdb-col>
             </mdb-row>
         </mdb-card-body>
     </mdb-card>
@@ -156,6 +162,7 @@ export default {
             modal1: false,
             modal2: false,
             elementos: [],
+            d: [],
             E: null,
             I: null,
             giro: null,
@@ -203,7 +210,7 @@ export default {
     },
     mounted() {
         for(let i = 0; i < ejViga.elementos.length; i++){
-            if(!isNaN(ejViga.elementos[i].magnitud) && ejViga.elementos[i].tipo !== 'Viga')
+            if(!isNaN(ejViga.elementos[i].magnitud) && ejViga.elementos[i].tipo !== 'Viga'){
                 this.elementos.push({
                     pos: i, 
                     min: ejViga.elementos[i].min, 
@@ -211,6 +218,16 @@ export default {
                     magnitud: ejViga.elementos[i].magnitud,
                     tipo: ejViga.elementos[i].tipo
                 });
+
+                if(ejViga.elementos[i].tipo === 'Barra'){
+                    this.d.push({
+                        pos: i, 
+                        minD: ejViga.elementos[i].minD, 
+                        maxD: ejViga.elementos[i].maxD, 
+                        d: ejViga.elementos[i].d
+                    });
+                }
+            }
         }
         vinculaCanvas(this.$refs.editor);
         window.addEventListener('resize', () => resizeCanvas(this.$refs.editor));

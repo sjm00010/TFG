@@ -281,7 +281,7 @@ export function addBarra(coorX, H, d){
     canvas.add(linea2);
     canvas.add(arrow);
 
-    if(!H < 0){
+    if(H < 0){
         escribir(H.toString()+" kN", x-30,  altura+80, colores.rojo);
         escribir(d.toString()+" m", x+35,  altura+40, colores.rojo);
     }else{

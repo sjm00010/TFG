@@ -51,7 +51,7 @@ export default {
             }
         },
         borrar(){
-            this.$emit('borrar', this.id_bd);
+            this.$emit('borrar', this.id, this.id_bd);
         },
         tipo(){
             switch(this.enlace){

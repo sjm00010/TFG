@@ -26,7 +26,7 @@
         </mdb-col>
     </mdb-row>
     <h5 class="text-center"><small class="text-muted">FUNCIONES DE LOS TRAMOS</small></h5>
-    <mdb-card-text class="text-center">Introduce las formulas (EN LATEX) para realizar el cálculo de las gráficas.</mdb-card-text>
+    <mdb-card-text class="text-center">Introduce las formulas (EN LATEX) para realizar el cálculo de las gráficas. Si se quiere unir dos puntos con una recta se dabe dar la ecuación en función de <i>x</i>.</mdb-card-text>
     <mdb-row>
         <mdb-col md="12">
             <mdb-card-text class="text-center">Esfuerzos de axiles</mdb-card-text>

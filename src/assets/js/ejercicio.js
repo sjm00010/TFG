@@ -7,7 +7,7 @@
  * @param imagen URL de la imagen que se quiere incluir en el enunciado del ejercicio.
  */
 class Ejercicio {
-    constructor( id, dificultad, enunciado, ayuda, video) {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '') {
         this.id = id;
         this.dificultad = dificultad;
         this.enunciado = enunciado;
@@ -17,7 +17,7 @@ class Ejercicio {
 }
 
 export class Viga extends Ejercicio {
-    constructor( id, dificultad, enunciado, ayuda, video, tramos = [], elementos = [], formulas = [], auxiliares = []) {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', tramos = [], elementos = [], formulas = [], auxiliares = []) {
         super(id, dificultad, enunciado, ayuda, video);
         this._tramos = tramos;
         this._elementos = elementos;
@@ -87,10 +87,10 @@ export async function cargaEjVigas(){
 // FUNCION PARA BORRAR UN EJERCICIO DE VIGAS DE LA BBDD
 export async function borrarEjViga(id){
     const respuesta = await fetch('http://localhost:8080/api/ejViga/'+id, { 
-        headers: {'Content-Type': 'application/json'},
-        method: 'DELETE',
-        body: JSON.stringify({  usuario: sessionStorage.getItem("user"), 
-                                pass: sessionStorage.getItem("pass")})
+        headers: {'Content-Type': 'application/json', 
+                  'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+        },
+        method: 'DELETE'
     });
     
     if(respuesta.ok){

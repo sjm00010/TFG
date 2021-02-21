@@ -19,6 +19,8 @@
 <script>
 import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/editor/formularioViga';
+import { limpiar } from '@/assets/js/ejercicioJSON.js';
+
 export default {
     components: {
        mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
@@ -28,6 +30,9 @@ export default {
         return{
             tipo: ''
         }
+    },
+    beforeDestroy(){
+        limpiar();
     }
 }
 </script>

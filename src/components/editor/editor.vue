@@ -139,6 +139,8 @@ export default {
         }
     },
     mounted(){
+        if(this.nTexto !== '')
+            this.$refs.textarea.value = this.nTexto;
         // Controles
         this.$refs.textarea.addEventListener('keydown', (event) => {
             switch(event.key){

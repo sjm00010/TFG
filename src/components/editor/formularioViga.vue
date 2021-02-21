@@ -132,16 +132,16 @@ export default {
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify(
-                                    {...ejViga, usuario: sessionStorage.getItem("user"), 
-                                                pass: sessionStorage.getItem("pass")})
+            const ejercicio = JSON.stringify(...ejViga)
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
             const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
-                headers: {'Content-Type': 'application/json'},
+                headers: {'Content-Type': 'application/json', 
+                          'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+                },
                 method: 'POST',
                 body: ejercicio
             });
@@ -166,16 +166,16 @@ export default {
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify(
-                                    {...ejViga, usuario: sessionStorage.getItem("user"), 
-                                                pass: sessionStorage.getItem("pass")})
+            const ejercicio = JSON.stringify(...ejViga)
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
             const respuesta = await fetch('http://localhost:8080/api/ejViga/'+this.$route.params.id, { 
-                headers: {'Content-Type': 'application/json'},
+                headers: {'Content-Type': 'application/json',
+                          'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+                },
                 method: 'PUT',
                 body: ejercicio
             });

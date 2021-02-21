@@ -42,8 +42,8 @@ export default {
         }
     },
     methods:{
-        borrar(id){
-            if(confirm("¿Esta seguro de eliminar el ejercicio"+ id +"?"))
+        borrar(num, id){
+            if(confirm("¿Esta seguro de eliminar el ejercicio "+ num +"?"))
                 if (!borrarEjViga(id))
                     this.$notify({
                         group: 'app',

@@ -93,9 +93,10 @@ export default {
     },
     async login(){
       const respuesta = await fetch('http://localhost:8080/api/usuario/login', { 
-        headers: {'Content-Type': 'application/json'},
-        method: 'POST',
-        body: JSON.stringify({ usuario: this.user, pass: this.pass })
+        headers: {'Content-Type': 'application/json', 
+                  'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+        },
+        method: 'POST'
       });
 
       if(respuesta.ok){ // Usuario y contraseña válidos
