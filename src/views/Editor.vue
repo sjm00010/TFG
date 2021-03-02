@@ -7,8 +7,8 @@
             <select class="browser-default custom-select custom-select-lg mb-3" v-model="tipo">
                 <option value="" selected>Selecciona un tipo</option>
                 <option value="Vigas">Vigas</option>
-                <option value="Matrices">Matrices</option>
-                <option value="Otro">Otro</option>
+                <!-- <option value="Matrices">Matrices</option>
+                <option value="Otro">Otro</option> -->
             </select>
 		</mdb-card-body>
 	</mdb-card>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
+import { mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/editor/formularioViga';
 import { limpiar } from '@/assets/js/ejercicioJSON.js';
 

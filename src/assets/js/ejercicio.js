@@ -1,3 +1,5 @@
+import {URL} from '@/assets/js/api.config.js';
+
 /**
  * Clase con la información básica de un ejercicio
  * @type Ejercicio
@@ -71,12 +73,11 @@ export function compruebaTramos(tramos){
     return error;
 }
 
-// FUNCION PARA CARGAR TODOS LOS EJERCICIOS DE LA BBDD
-
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
 export var vigas = [];
 export async function cargaEjVigas(){
-    const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
+    console.log(URL)
+    const respuesta = await fetch(URL+'/ejViga/', { 
         headers: {'Content-Type': 'application/json'},
         method: 'GET'
     });
@@ -86,7 +87,7 @@ export async function cargaEjVigas(){
 
 // FUNCION PARA BORRAR UN EJERCICIO DE VIGAS DE LA BBDD
 export async function borrarEjViga(id){
-    const respuesta = await fetch('http://localhost:8080/api/ejViga/'+id, { 
+    const respuesta = await fetch(URL+'/ejViga/'+id, { 
         headers: {'Content-Type': 'application/json', 
                   'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
         },

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Inicio from '@/views/Inicio';
+import Accesibilidad from '@/views/Accesibilidad';
 import ListaEjercicios from '@/views/ListaEjercicios';
 import Editor from '@/views/Editor';
 import Modificador from '@/views/Modificador';
@@ -14,6 +15,11 @@ export default new Router({
       path: '/',
       name: 'Inicio',
       component: Inicio
+    },
+    {
+      path: '/accesibilidad',
+      name: 'Accesibilidad',
+      component: Accesibilidad
     },
     {
       path: '/ejercicios',

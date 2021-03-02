@@ -1,4 +1,5 @@
 import {Viga} from './ejercicio.js';
+import {URL} from '@/assets/js/api.config.js';
 
 export let ejViga = new Viga();
 export function limpiar(){
@@ -12,7 +13,7 @@ export async function cargaEjercicio(id, tipo){
     switch(tipo){
         case 'Vigas':
         case 'viga':
-            url = 'http://localhost:8080/api/ejViga/'+id;
+            url = URL+'/ejViga/'+id;
             break;
     }
 

@@ -5,10 +5,12 @@
         <div class="py-5">
           <h1 class="green-text"><mdb-icon icon="pencil-ruler" /> Cálculo y teoría de estructuras</h1>
           <h2 class="card-title h2 my-4 py-2" v-show="!prof">¡Bienvenidos!</h2>
-          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">Para más información consultar docencia virtual.</p>
+          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">Si se desea conocer mas sobre la accesibilidad del sitio web acceda a la seccion de accesibilidad.</p>
           <h2 class="card-title h2 my-4 py-2" v-show="prof">¡Bienvenido Fernando!</h2>
           <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="prof">Para ver las opciones de edición dirigete al listado de ejercicios.</p>
+          <!-- <router-link to="/accesibilidad" class="btn" style="background-color: #007E33" v-show="!prof"><mdb-icon fab size="lg" icon="accessible-icon" /> Accesibilidad</router-link> -->
           <mdb-btn class="blue-grey-text" tag="a" gradient="dusty-grass" icon="key" href="https://dv.ujaen.es/" v-show="!prof">Docencia virtual</mdb-btn>
+
         </div>
       </div>
     </mdb-card>
@@ -68,6 +70,7 @@ import {  mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMa
           mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
           mdbModalFooter, mdbInput} from 'mdbvue';
 import {profesor, getUser, logout} from '@/assets/js/identificacion.js';
+import {URL} from '@/assets/js/api.config.js';
 export default {
   name: 'Inicio',
   components: {
@@ -92,11 +95,11 @@ export default {
       this.error = false;
     },
     async login(){
-      const respuesta = await fetch('http://localhost:8080/api/usuario/login', { 
+      const respuesta = await fetch(URL+'/usuario/login', { 
         headers: {'Content-Type': 'application/json', 
-                  'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+                  'Authorization': "Basic " + btoa(this.user +':'+this.pass)
         },
-        method: 'POST'
+        method: 'GET'
       });
 
       if(respuesta.ok){ // Usuario y contraseña válidos

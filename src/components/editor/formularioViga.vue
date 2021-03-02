@@ -59,6 +59,7 @@ import formulas from '@/components/editor/formulas';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, cargaEjVigas } from '@/assets/js/ejercicio.js';
 import { ejViga } from '@/assets/js/ejercicioJSON.js';
+import {URL} from '@/assets/js/api.config.js';
 export default {
     name: 'formularioViga',
     components: {
@@ -132,13 +133,13 @@ export default {
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify(...ejViga)
+            const ejercicio = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
-            const respuesta = await fetch('http://localhost:8080/api/ejViga/', { 
+            const respuesta = await fetch(URL+'/ejViga/', { 
                 headers: {'Content-Type': 'application/json', 
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
@@ -166,13 +167,13 @@ export default {
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify(...ejViga)
+            const ejercicio = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
-            const respuesta = await fetch('http://localhost:8080/api/ejViga/'+this.$route.params.id, { 
+            const respuesta = await fetch(URL+'/ejViga/'+this.$route.params.id, { 
                 headers: {'Content-Type': 'application/json',
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
