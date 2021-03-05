@@ -1,5 +1,5 @@
-import {Viga} from './ejercicio.js';
-import {URL} from '@/assets/js/api.config.js';
+import {Viga} from '@/assets/js/formulario/ejercicio.js';
+import {URL} from '@/assets/js/config/api.config.js';
 
 export let ejViga = new Viga();
 export function limpiar(){

@@ -57,9 +57,9 @@ import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/editor/dibujaViga';
 import formulas from '@/components/editor/formulas';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
-import { compruebaTramos, cargaEjVigas } from '@/assets/js/ejercicio.js';
-import { ejViga } from '@/assets/js/ejercicioJSON.js';
-import {URL} from '@/assets/js/api.config.js';
+import { compruebaTramos, cargaEjVigas } from '@/assets/js/formulario/ejercicio.js';
+import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
+import {URL} from '@/assets/js/config/api.config.js';
 export default {
     name: 'formularioViga',
     components: {

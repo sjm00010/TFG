@@ -19,7 +19,7 @@
 <script>
 import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/editor/formularioViga';
-import { ejViga, cargaEjercicio, limpiar } from '@/assets/js/ejercicioJSON.js';
+import { ejViga, cargaEjercicio, limpiar } from '@/assets/js/formulario/ejercicioJSON.js';
 
 export default {
     components: {

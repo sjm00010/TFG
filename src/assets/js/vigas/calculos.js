@@ -1,5 +1,5 @@
 import evaluatex from "evaluatex/dist/evaluatex";
-import { ejViga } from '@/assets/js/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
 import { calculaSegmento } from '@/assets/js/vigas/variables.js';
 
 const DENSIDAD_PUNTOS = 1000;

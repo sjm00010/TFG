@@ -1,4 +1,4 @@
-import { ejViga } from '@/assets/js/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
 /*******************
  *     Variables   *
  *******************/

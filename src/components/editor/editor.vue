@@ -63,7 +63,7 @@
 import {mdbCard, mdbCardBody, mdbIcon,
         mdbRow, mdbCol, mdbBtn, mdbModal, mdbModalHeader,
         mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
-import {insertaCaracteres} from '@/assets/js/editor.js'
+import {insertaCaracteres} from '@/assets/js/formulario/editor.js'
 export default {
     name: 'editorTexto',
     components: {

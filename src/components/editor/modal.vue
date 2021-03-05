@@ -111,7 +111,6 @@
 </template>
 
 <script>
-// import * as editor from '@/assets/js/vigas/funAuxiliares.js';
 import { mdbBtn, mdbIcon, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
          mdbModalFooter, mdbInput, mdbRow, mdbCol} from 'mdbvue';
 import {numTramos, num} from '@/assets/js/vigas/variables.js';

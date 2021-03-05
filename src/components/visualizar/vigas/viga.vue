@@ -1,54 +1,8 @@
 <template>
 <mdb-container class="my-4">
-    <!-- Jumbotron con el enunciado del problema -->
-    <mdb-jumbotron class="mb-0 text-center">
-        <mdb-card-title class="pb-2 h4"><strong>Ejercicio de vigas</strong></mdb-card-title>
-        <p class="card-text" v-html="datos.enunciado"></p>
-        <mdb-row class="justify-content-center">
-            <mdb-col col="md" class="my-2" v-show="datos.ayuda && datos.ayuda.length !== 0">
-                <mdb-btn block color="elegant" @click.native="modal1 = true"><mdb-icon class="align-middle" size="2x" icon="journal-whills" /> Explicación</mdb-btn>
-            </mdb-col>
-            <mdb-col col="md" class="my-2" v-show="datos.video && datos.video.length !== 0">
-                <mdb-btn block color="secondary" @click.native="modal2 = true"><mdb-icon class="align-middle" fab size="2x" icon="youtube" /> Vídeo explicativo</mdb-btn>
-            </mdb-col>
-        </mdb-row>
-    </mdb-jumbotron>
-
-    <!-- Modal de la explicación -->
-    <mdb-modal size="lg" v-if="datos.ayuda && datos.ayuda.length !== 0"  :show="modal1" @close="modal1 = false">
-        <mdb-modal-header>
-            <mdb-modal-title>Explicación</mdb-modal-title>
-        </mdb-modal-header>
-        <mdb-modal-body v-html="datos.ayuda">
-        </mdb-modal-body>
-        <mdb-modal-footer>
-            <mdb-btn color="danger" @click.native="modal1 = false">Cerrar</mdb-btn>
-        </mdb-modal-footer>
-    </mdb-modal>
-
-
-
-    <!-- Modal del vídeo -->
-    <mdb-modal size="lg" v-if="datos.video && datos.video.length !== 0" :show="modal2" @close="modal2 = false">
-        <mdb-modal-body class="p-0">
-            <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-            <iframe class="embed-responsive embed-responsive-16by9 z-depth-1-half"
-                        :src="'https://www.youtube.com/embed/'
-                            +((datos.video.match(/(?:v=|\.be\/|embed\/)(?<url>\w+)/) 
-                            && datos.video.match(/(?:v=|\.be\/|embed\/)(?<url>\w+)/).groups.url) 
-                            || 'YgGzAKP_HuM')" 
-                        allowfullscreen></iframe>
-            </div>
-        </mdb-modal-body>
-        <mdb-modal-footer >
-            <mdb-btn color="danger" @click.native="modal2 = false">Cerrar</mdb-btn>
-        </mdb-modal-footer>
-    </mdb-modal>
-
     <blockquote class="blockquote bq-primary my-3">
         <p class="bq-title">Solución</p>
-        <p> Interactúa con los distintos elementos interactivos para observar como van cambiando los resultados.
-        </p>
+        <p> Interactúa con los distintos elementos interactivos para observar como van cambiando los resultados.</p>
     </blockquote>
 
     <div class="my-4" ref="editor">
@@ -144,15 +98,14 @@
 </template>
 
 <script>
-import { mdbContainer, mdbJumbotron, mdbCardTitle, mdbInput,
-         mdbBtn, mdbRow, mdbCol, mdbModal, mdbModalBody, mdbCard, 
-         mdbModalTitle, mdbModalFooter, mdbModalHeader, mdbIcon,
+import { mdbContainer, mdbCardTitle, mdbInput,
+         mdbBtn, mdbRow, mdbCol, mdbCard, mdbIcon,
          mdbCardBody, mdbPopover} from 'mdbvue';
 import grafica from '@/components/visualizar/vigas/grafica';
 
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
-import { ejViga, limpiar } from '@/assets/js/ejercicioJSON.js';
+import { ejViga, limpiar } from '@/assets/js/formulario/ejercicioJSON.js';
 import { inicializar, actualizaTramo, actualizaElemento, calcular } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",
@@ -177,9 +130,8 @@ export default {
         };
     },
     components:{
-        mdbContainer, mdbJumbotron, mdbCardTitle, mdbInput,
-        mdbBtn, mdbRow, mdbCol, mdbModal, mdbModalHeader,
-        mdbModalTitle, mdbModalBody, mdbModalFooter, mdbIcon,
+        mdbContainer, mdbCardTitle, mdbInput,
+        mdbBtn, mdbRow, mdbCol, mdbIcon,
         mdbCardBody, mdbCard, mdbPopover,
         grafica
     },

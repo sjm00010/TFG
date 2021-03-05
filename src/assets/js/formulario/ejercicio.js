@@ -1,4 +1,4 @@
-import {URL} from '@/assets/js/api.config.js';
+import {URL} from '@/assets/js/config/api.config.js';
 
 /**
  * Clase con la información básica de un ejercicio
@@ -71,6 +71,18 @@ export function compruebaTramos(tramos){
             error.push(('valor'+(pos+1)));
     });
     return error;
+}
+
+export class Mohr extends Ejercicio {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, B, E, v) {
+        super(id, dificultad, enunciado, ayuda, video);
+        this.sx = sx;
+        this.sy = sy;
+        this.txy = txy;
+        this.B = B;
+        this.E = E;
+        this.v = v;
+    }
 }
 
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD

@@ -6,6 +6,7 @@ import ListaEjercicios from '@/views/ListaEjercicios';
 import Editor from '@/views/Editor';
 import Modificador from '@/views/Modificador';
 import Realizar from '@/views/Realizar';
+import Mohr from '@/components/visualizar/circulosMohr/mohr';
 
 Vue.use(Router);
 
@@ -40,6 +41,10 @@ export default new Router({
       path: '/ejercicios/:tipo/:id',
       name: 'Realizar',
       component: Realizar
+    },{
+      path: '/ejercicios/mohr',
+      name: 'Mohr',
+      component: Mohr
     },
   ]
 });

@@ -19,7 +19,7 @@
 
 <script>
 import { mdbCard, mdbCardBody, mdbCardText, mdbView, mdbIcon, mdbBtn } from 'mdbvue';
-import {profesor, getUser} from '@/assets/js/identificacion.js';
+import {profesor, getUser} from '@/assets/js/login/identificacion.js';
 export default {
     name: 'tarjeta',
     props: {
