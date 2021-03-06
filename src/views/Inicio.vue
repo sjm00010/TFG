@@ -70,7 +70,7 @@ import {  mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMa
           mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
           mdbModalFooter, mdbInput} from 'mdbvue';
 import {profesor, getUser, logout} from '@/assets/js/login/identificacion.js';
-import {URL} from '@/assets/js/config/api.config.js';
+import {URL} from '@/assets/js/auxiliares/api.config.js';
 export default {
   name: 'Inicio',
   components: {

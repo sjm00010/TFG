@@ -25,7 +25,7 @@ import tarjeta from '@/components/listado/TarjetaEjercicio';
 import tipo from '@/components/listado/TipoEjercicios';
 import {mdbContainer, mdbRow, mdbCol, mdbBtn} from 'mdbvue';
 
-import {vigas, cargaEjVigas, borrarEjViga} from '@/assets/js/formulario/ejercicio.js';
+import {vigas, cargaEjVigas, borrarEjViga} from '@/assets/js/auxiliares/ejercicio.js';
 import {profesor, getUser} from '@/assets/js/login/identificacion.js';
 
 export default {

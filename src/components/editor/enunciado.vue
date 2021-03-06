@@ -33,7 +33,7 @@
 import {mdbCard, mdbCardBody, mdbIcon, mdbInput,
         mdbCardText, mdbBtn, mdbBtnGroup } from 'mdbvue';
 import editor from '@/components/editor/editor';
-import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: 'editorTexto',
     components: {

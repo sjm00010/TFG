@@ -64,7 +64,7 @@ import modal from '@/components/editor/modal';
 import { vinculaCanvas, resizeCanvas, addViga, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { resetCanvas } from '@/assets/js/vigas/dibujar.js';
 import { elementos, setElementos, borraElemento } from '@/assets/js/vigas/variables.js';
-import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: 'dibujar',
     components: {

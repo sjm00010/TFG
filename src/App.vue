@@ -9,7 +9,7 @@
 
 <script>
 import cabecera from '@/components/Cabecera';
-import {cargaEjVigas} from '@/assets/js/formulario/ejercicio.js';
+import {cargaEjVigas} from '@/assets/js/auxiliares/ejercicio.js';
 export default {
   name: 'App',
   components: {cabecera},

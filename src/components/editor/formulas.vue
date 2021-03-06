@@ -65,7 +65,7 @@
 <script>
 import 'katex/dist/katex.min.css';
 import { mdbCardText, mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon} from 'mdbvue';
-import { ejViga } from '@/assets/js/formulario/ejercicioJSON.js';
+import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: 'formulas',
     components:{

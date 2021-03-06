@@ -55,7 +55,7 @@ import { mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, mdbCol,
          mdbModalTitle, mdbModalFooter, mdbModalHeader, 
         } from 'mdbvue';
 import viga from '@/components/visualizar/vigas/viga';
-import { cargaEjercicio, ejViga, limpiar } from '@/assets/js/formulario/ejercicioJSON.js';
+import { cargaEjercicio, ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: "EjercicioViga",
     components:{

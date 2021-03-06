@@ -105,7 +105,7 @@ import grafica from '@/components/visualizar/vigas/grafica';
 
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
-import { ejViga, limpiar } from '@/assets/js/formulario/ejercicioJSON.js';
+import { ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import { inicializar, actualizaTramo, actualizaElemento, calcular } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",

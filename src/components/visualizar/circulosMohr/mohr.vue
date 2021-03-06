@@ -6,10 +6,10 @@
         <p> Interactúa con los distintos las entradas de datos para ver como cambia el circulo de Mohr.</p>
         <p> Los datos de entrada para la prueba son: </p>
         <ul>
-            <li>&sigma;<sub>x</sub> : {{this.resultado.datos.sx}} MPa</li>
-            <li>&sigma;<sub>y</sub> : {{this.resultado.datos.sy}} MPa</li>
-            <li>&tau;<sub>xy</sub>  : {{this.resultado.datos.txy}} MPa</li>
-            <li>&beta; : {{this.resultado.datos.B}}º</li>
+            <li>&sigma;<sub>x</sub> : {{this.datos.sx}} MPa</li>
+            <li>&sigma;<sub>y</sub> : {{this.datos.sy}} MPa</li>
+            <li>&tau;<sub>xy</sub>  : {{this.datos.txy}} MPa</li>
+            <li>&beta; : {{this.datos.B}}º</li>
             <li>E : 2,1 · 10<sup>5</sup> MPa</li>
             <li><i>v</i> : 0.3</li>
         </ul>
@@ -75,9 +75,14 @@
             <hr/>
             <katex-element :expression="formula" :throwOnError="false" :display-mode="true"/>
 
-            <div class="my-4" ref="circulo">
-                <canvas id="circulo" style="border: 1px solid rgb(211,211,211)"></canvas>
-            </div>
+            <mdb-row class="my-3" style="box-sizing: none;">
+                <mdb-col class="my-2" md="6" col="md" ref="circulo">
+                    <canvas id="circulo" style="border: 1px solid rgb(211,211,211)"></canvas>
+                </mdb-col>
+                <mdb-col class="my-2" md="6" col="md" ref="cuadrado">
+                    <canvas id="cuadrado" style="border: 1px solid rgb(211,211,211)"></canvas>
+                </mdb-col>
+            </mdb-row>
         </mdb-card-body>
     </mdb-card>
 </mdb-container>
@@ -86,8 +91,9 @@
 <script>
 import { mdbContainer, mdbCard, mdbCardBody,
          mdbCardTitle, mdbRow, mdbCol } from 'mdbvue';
-import * as calculo from '@/assets/js/mohr/calculos.js';
+import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujar.js';
+import { cargaDatos } from '@/assets/js/mohr/funAux.js';
 import 'katex/dist/katex.min.css';
 export default {
     name: 'Morh',
@@ -95,25 +101,28 @@ export default {
                   mdbCardTitle, mdbRow, mdbCol },
     data(){
         return {
-            resultado: calculo,
+            datos: undefined,
+            resultado: cal,
             formula: ''
         };
     },
     methods:{
         actualizaDatos(){
-            calculo.prueba();
-            this.resultado = calculo;
-            this.formula = calculo.calculaTensor();
+            cal.actualizaDatos(this.datos);
+            cal.calcular();
+            this.resultado = cal;
+            this.formula = cal.calculaTensor();
         }
     },
     beforeMount() {
+        this.datos = cargaDatos();
         this.actualizaDatos();
     },
     mounted(){
-        dib.vinculaCanvas(this.$refs.circulo);
+        dib.vinculaCanvas(this.$refs.circulo, this.datos);
 
         // Redimensionar
-        window.addEventListener('resize', () => dib.resizeCanvas(this.$refs.circulo));
+        window.addEventListener('resize', () => dib.resizeCanvas(this.$refs.circulo, this.datos));
     }
 
 }

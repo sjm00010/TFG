@@ -1,4 +1,4 @@
-import {URL} from '@/assets/js/config/api.config.js';
+import {URL} from '@/assets/js/auxiliares/api.config.js';
 
 /**
  * Clase con la información básica de un ejercicio
