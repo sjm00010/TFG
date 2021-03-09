@@ -53,6 +53,18 @@ function calculaU(){
     u = 0.5*(s1*e1 + s2*e2) * 1000000;
 }
 
+export function actualizar(angulo){
+    datosIniciales.B = angulo;
+    calculaSigma1();
+    calculaSigma2();
+    calculaAlfa();
+    calculaRadio();
+    calculaGamma();
+    calculaSigmaA();
+    calculaSigmaAprima();
+    calculaTauA();
+}
+
 export function calcular(){
     calculaSigma1();
     calculaSigma2();

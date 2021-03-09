@@ -74,6 +74,15 @@
             <mdb-card-title class="text-center">Tensor de tensiones</mdb-card-title>
             <hr/>
             <katex-element :expression="formula" :throwOnError="false" :display-mode="true"/>
+            <hr/>
+            <mdb-card-title class="text-center">Angulo &beta;</mdb-card-title>
+            <div>
+                <mdb-input type="number" label="Angulo β" :min="0" :max="180" 
+                            :step="1" v-model.number="datos.B" @input="cambio()"/>
+                <input  type="range" :min="0" :max="180" :step="1" class="custom-range"
+                        v-model="datos.B" @input="cambio()">
+            </div>
+            <hr/>
 
             <mdb-row class="my-3" style="box-sizing: none;">
                 <mdb-col class="my-2" md="6" col="md" ref="circulo">
@@ -90,15 +99,16 @@
 
 <script>
 import { mdbContainer, mdbCard, mdbCardBody,
-         mdbCardTitle, mdbRow, mdbCol } from 'mdbvue';
+         mdbCardTitle, mdbRow, mdbCol, mdbInput } from 'mdbvue';
 import * as cal from '@/assets/js/mohr/calculos.js';
-import * as dib from '@/assets/js/mohr/dibujar.js';
+import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
+import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
 import { cargaDatos } from '@/assets/js/mohr/funAux.js';
 import 'katex/dist/katex.min.css';
 export default {
     name: 'Morh',
     components: { mdbContainer, mdbCard, mdbCardBody,
-                  mdbCardTitle, mdbRow, mdbCol },
+                  mdbCardTitle, mdbRow, mdbCol, mdbInput },
     data(){
         return {
             datos: undefined,
@@ -112,6 +122,15 @@ export default {
             cal.calcular();
             this.resultado = cal;
             this.formula = cal.calculaTensor();
+        },
+        resize(){
+            dib.resizeCanvas(this.$refs.circulo, this.datos);
+            cua.resizeCanvas(this.$refs.cuadrado, this.datos.B);
+        },
+        cambio(){
+            cal.actualizar(parseFloat(this.datos.B));
+            dib.calculaPlano();
+            cua.dibujaCuadrado(this.datos.B);
         }
     },
     beforeMount() {
@@ -120,9 +139,10 @@ export default {
     },
     mounted(){
         dib.vinculaCanvas(this.$refs.circulo, this.datos);
+        cua.vinculaCanvas(this.$refs.cuadrado, this.datos.B);
 
         // Redimensionar
-        window.addEventListener('resize', () => dib.resizeCanvas(this.$refs.circulo, this.datos));
+        window.addEventListener('resize', () => this.resize());
     }
 
 }
