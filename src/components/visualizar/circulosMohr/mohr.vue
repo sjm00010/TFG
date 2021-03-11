@@ -103,7 +103,7 @@ import { mdbContainer, mdbCard, mdbCardBody,
 import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
 import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
-import { cargaDatos } from '@/assets/js/mohr/funAux.js';
+import { cargaDatos } from '@/assets/js/mohr/cargaDatos.js';
 import 'katex/dist/katex.min.css';
 export default {
     name: 'Morh',
@@ -128,9 +128,11 @@ export default {
             cua.resizeCanvas(this.$refs.cuadrado, this.datos.B);
         },
         cambio(){
-            cal.actualizar(parseFloat(this.datos.B));
-            dib.calculaPlano();
-            cua.dibujaCuadrado(this.datos.B);
+            if(this.datos.B >= 0 && this.datos.B <= 180 ){
+                cal.actualizar(parseFloat(this.datos.B));
+                dib.calculaPlano();
+                cua.dibujaCuadradoRotado(this.datos.B);
+            } 
         }
     },
     beforeMount() {

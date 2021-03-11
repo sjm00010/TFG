@@ -2,14 +2,14 @@ import { fabric } from 'fabric';
 import * as datos from '@/assets/js/mohr/calculos.js';
 import { maxX, minX, maxY, actualizaValores,
          addMarcaX, addMarcaY, addTooltip,
-         addPunto, escribir, addCaja, addCajaFlotante } from '@/assets/js/mohr/funAux.js';
+         addPunto, escribir, addCaja, addCajaFlotante 
+        } from '@/assets/js/mohr/funAux.js';
 
 // Configuracion de fabric
 fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
-export let canvas;
-
-let planoA, eq1, eq2, cj1, cj2, centro, ratio;
+// Variables locales
+let canvas, planoA, eq1, eq2, cj1, cj2, centro, ratio, punto1, punto2, punto3;
 
 export function vinculaCanvas(nCanvas, datosIniciales){
     // Creo el canvas de fabric
@@ -59,7 +59,7 @@ function dibujarEjes(datosIniciales){
     punto = minX, x = canvas.width*0.10;
     for(let i = 0; i <= puntosX ; i++){
         if(punto !== 0)
-            addMarcaX( x, canvas.height/2, punto.toString());
+            addMarcaX( canvas, x, canvas.height/2, punto.toString());
         punto += incPuntosX;
         x += incrementoX;
     }
@@ -68,7 +68,7 @@ function dibujarEjes(datosIniciales){
     punto = -maxY, y = canvas.height-canvas.height*0.10;
     for(let i = 0; i <= puntosY ; i++){
         if(punto !== 0)
-            addMarcaY( centro, y, punto.toString());
+            addMarcaY( canvas, centro, y, punto.toString());
         punto += incPuntosY;
         y -= incrementoY;
     }
@@ -88,8 +88,8 @@ function dibujarEjes(datosIniciales){
     }));
     
     // Especifico las unidades del eje X e Y
-    escribir(canvas.width < 500 ? centro+20 : centro+30, canvas.height*0.08, 'τ(MPa)', '#5d6066');
-    escribir(canvas.width < 500 ? canvas.width-20 : canvas.width-30, canvas.width < 500 ? canvas.height/2-12 : canvas.height/2-15, 'σ(MPa)', '#5d6066');
+    escribir(canvas, canvas.width < 500 ? centro+20 : centro+30, canvas.height*0.08, 'τ(MPa)', '#5d6066');
+    escribir(canvas, canvas.width < 500 ? canvas.width-20 : canvas.width-30, canvas.width < 500 ? canvas.height/2-12 : canvas.height/2-15, 'σ(MPa)', '#5d6066');
 
     dibujaEsfera(incrementoX, incPuntosX, centro, datosIniciales);
 }
@@ -110,16 +110,13 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     }));
 
     // Marca s1   
-    addPunto(canvas.width/2, '#16961C',  centro, datos.s1, incrementoX, incPuntoX);
-    addTooltip(canvas.getObjects()[canvas.getObjects().length - 1], 'σ1 : '+datos.s1.toFixed(2), 1, 2);
+    punto1 = addPunto(canvas, canvas.width/2, '#16961C',  centro, datos.s1, incrementoX, incPuntoX);
 
     // Marca s2
-    addPunto(canvas.width/2, '#16961C',  centro, datos.s2, incrementoX, incPuntoX);
-    addTooltip(canvas.getObjects()[canvas.getObjects().length - 1], 'σ2 : '+datos.s2.toFixed(2), 1, 2);
+    punto2 = addPunto(canvas, canvas.width/2, '#16961C',  centro, datos.s2, incrementoX, incPuntoX);
 
     // Marca txymax
-    addPunto(canvas.width/2-nRadio, '#16961C',  centro, datos.centro, incrementoX, incPuntoX);
-    addTooltip(canvas.getObjects()[canvas.getObjects().length - 1], 'τxy,max : '+datos.radio.toFixed(2), 1, 7);
+    punto3 = addPunto(canvas, canvas.width/2-nRadio, '#16961C',  centro, datos.centro, incrementoX, incPuntoX);
 
     // Representacion Eje X e Y
     let ejeX = {x: datosIniciales.sx, y: -datosIniciales.txy};
@@ -155,7 +152,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(-datosIniciales.txy > 0, true, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
+    addCaja(canvas, -datosIniciales.txy > 0, true, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
 
     canvas.add(new fabric.Circle({ 
         radius: 4, 
@@ -167,7 +164,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(datosIniciales.txy > 0, false, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
+    addCaja(canvas, datosIniciales.txy > 0, false, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
 
     calculaPlano();
 }
@@ -211,7 +208,7 @@ export function calculaPlano(){
     });
     canvas.add(eq1);
 
-    cj1 = addCajaFlotante('Plano A: ('+datos.sA.toFixed(1)+', '+(-datos.tA).toFixed(1)+')', '#C3381D', ejeX.x, ejeX.y-20);
+    cj1 = addCajaFlotante(canvas, 'Plano A: ('+datos.sA.toFixed(1)+', '+(-datos.tA).toFixed(1)+')', '#C3381D', ejeX.x, ejeX.y-20);
 
     eq2 = new fabric.Circle({ 
         radius: 4, 
@@ -224,5 +221,13 @@ export function calculaPlano(){
     });
     canvas.add(eq2);
 
-    cj2 = addCajaFlotante("Plano A': ("+datos.sA.toFixed(1)+', '+datos.tA.toFixed(1)+')', '#C3381D', ejeY.x, ejeY.y-20);
+    cj2 = addCajaFlotante(canvas, "Plano A': ("+datos.sAprima.toFixed(1)+', '+datos.tA.toFixed(1)+')', '#C3381D', ejeY.x, ejeY.y-20);
+
+    addTooltips();
+}
+
+function addTooltips(){
+    addTooltip(canvas, punto1, 'σ1 : '+datos.s1.toFixed(2), 1, 2);
+    addTooltip(canvas, punto2, 'σ2 : '+datos.s2.toFixed(2), 1, 2);
+    addTooltip(canvas, punto3, 'τxy,max : '+datos.radio.toFixed(2), 1, 7);
 }
