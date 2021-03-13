@@ -31,7 +31,7 @@ export function resizeCanvas(nCanvas, angulo1) {
 
 let cuadradoRotado, flecha1, flecha2, flecha3, flecha4;
 
-export function dibujaCuadrado(angulo1){
+export function dibujaCuadrado(angulo){
     // Eje Y
     canvas.add( new fabric.Line([ canvas.width/2, 0, canvas.width/2, canvas.height ], {
         stroke: 'rgba(175,175,175,0.7)',
@@ -76,66 +76,74 @@ export function dibujaCuadrado(angulo1){
         evented: false
     }));
     
-    dibujaCuadradoRotado(angulo1);
+    dibujaCuadradoRotado(angulo);
 }
 
-export function dibujaCuadradoRotado(angulo1){
-    canvas.remove(cuadradoRotado, flecha1, flecha2, flecha3, flecha4);
+let grupo; // Borro el grupo si ya lo he dibujado
+
+export function dibujaCuadradoRotado(angulo){
+    if(grupo)
+        canvas.remove(...grupo.getObjects());
+
     cuadradoRotado = new fabric.Rect({
         top: canvas.height/2, 
         left: canvas.width/2, 
         width: canvas.width/3, 
         height: canvas.height/3, 
         fill: 'rgba(0,0,0,0)',
-        stroke: 'red',
+        stroke: 'blue',
         selectable : false,
         evented: false
     });
 
     dibujaLineas();
-    let grupo = new fabric.Group([cuadradoRotado, flecha1, flecha2, flecha3, flecha4]);
-    grupo.rotate(angulo1*2);
+    grupo = new fabric.Group([cuadradoRotado, addTexto(), flecha1, flecha2, flecha3, flecha4]);
+    grupo.rotate(-angulo*2);
     canvas.add(...grupo.getObjects());
 
-    addDesc(canvas, flecha1, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A');
-    addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A');
-    addDesc(canvas, flecha3, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'");
-    addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'");
+    addDesc(canvas, flecha1, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
+            2*canvas.width/3, canvas.height/2, angulo*2);
+    addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
+            canvas.width/3, canvas.height/2, angulo*2);
+    addDesc(canvas, flecha3, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
+            canvas.width/2, canvas.height/3, angulo*2);
+    addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
+            canvas.width/2, 2*canvas.height/3, angulo*2);
 }
 
 function dibujaLineas(){
     let ratio1X = Math.abs(datos.sA)/(datos.radio + Math.abs(datos.centro));
-    let ratio1Y = Math.abs(datos.tA)/(datos.radio + Math.abs(datos.centro));
+    let ratioY = Math.abs(datos.tA)/(datos.radio + Math.abs(datos.centro));
     let ratio2X = Math.abs(datos.sAprima)/(datos.radio + Math.abs(datos.centro));
     let l1 = { x: 0, y: 0}, l2 = { x: 0, y: 0}, l3 = { x: 0, y: 0}, l4 = { x: 0, y: 0};
 
-    l1.x = 6.5*canvas.width/9 + 2*canvas.width/9*ratio1X;
-    l1.y = -datos.tA <= 0 ? canvas.height/2 + canvas.height/6*ratio1Y : canvas.height/2 - canvas.height/6*ratio1Y;
+    l1.x = 6*canvas.width/9 + 2*canvas.width/9*ratio1X;
+    l1.y = datos.sA >=0 && -datos.tA <= 0 || datos.sA <=0 && -datos.tA >= 0 ? canvas.height/2 - canvas.height/6*ratioY : canvas.height/2 + canvas.height/6*ratioY;
 
-    l2.x = 2.5*canvas.width/9 - 2*canvas.width/9*ratio1X;
-    l2.y = -datos.tA >= 0 ? canvas.height/2 + canvas.height/6*ratio1Y : canvas.height/2 - canvas.height/6*ratio1Y;
+    l2.x = 3*canvas.width/9 - 2*canvas.width/9*ratio1X;
+    l2.y = datos.sA >=0 && -datos.tA <= 0 || datos.sA <=0 && -datos.tA >= 0 ? canvas.height/2 + canvas.height/6*ratioY : canvas.height/2 - canvas.height/6*ratioY;
 
-    l3.x = datos.sAprima >=0 && datos.tA <= 0 || datos.sAprima <=0 && datos.tA >= 0 ? canvas.width/2 - canvas.width/6*ratio2X : canvas.width/2 + canvas.width/6*ratio2X;
-    l3.y = 2.5*canvas.height/9 - 2*canvas.height/9*ratio1Y;
+    l3.x = datos.sAprima >=0 && datos.tA <= 0 || datos.sAprima <=0 && datos.tA >= 0 ? canvas.width/2 - canvas.width/6*ratioY : canvas.width/2 + canvas.width/6*ratioY;
+    l3.y = 3*canvas.height/9 - 2*canvas.height/9*ratio2X;
 
-    l4.x = datos.sAprima >=0 && datos.tA <= 0 || datos.sAprima <=0 && datos.tA >= 0 ? canvas.width/2 + canvas.width/6*ratio2X : canvas.width/2 - canvas.width/6*ratio2X;
-    l4.y = 6.5*canvas.height/9 + 2*canvas.height/9*ratio1Y;
+    l4.x = datos.sAprima >=0 && datos.tA <= 0 || datos.sAprima <=0 && datos.tA >= 0 ? canvas.width/2 + canvas.width/6*ratioY : canvas.width/2 - canvas.width/6*ratioY;
+    l4.y = 6*canvas.height/9 + 2*canvas.height/9*ratio2X;
 
     let linea1 = new fabric.Line([ 2*canvas.width/3, canvas.height/2, l1.x, l1.y ], {
-        stroke: 'red',
+        stroke: '#EA3434',
         strokeWidth: 3
     });
     
     let linea2 = new fabric.Line([ canvas.width/3, canvas.height/2, l2.x, l2.y ], {
-        stroke: 'red',
+        stroke: '#EA3434',
         strokeWidth: 3
     });
     let linea3 = new fabric.Line([ canvas.width/2, canvas.height/3, l3.x, l3.y ], {
-        stroke: '#EDB02A',
+        stroke: '#A92929',
         strokeWidth: 3
     });
     let linea4 = new fabric.Line([ canvas.width/2, 2*canvas.height/3, l4.x, l4.y ], {
-        stroke: '#EDB02A',
+        stroke: '#A92929',
         strokeWidth: 3
     });
 
@@ -154,8 +162,8 @@ function dibujaLineas(){
             left: l1.x,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: 'red', 
-            stroke: 'red', 
+            fill: '#EA3434', 
+            stroke: '#EA3434', 
             strokeWidth: 3,
             angle: l1.y < canvas.height/2 ? 90-angulo1 : 90 + angulo1
         });
@@ -167,8 +175,8 @@ function dibujaLineas(){
             left: 2*canvas.width/3,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: 'red', 
-            stroke: 'red', 
+            fill: '#EA3434', 
+            stroke: '#EA3434', 
             strokeWidth: 3,
             angle: l1.y < canvas.height/2 ? 270-angulo1 : 270 + angulo1
         });
@@ -179,8 +187,8 @@ function dibujaLineas(){
             left: l2.x,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: 'red', 
-            stroke: 'red', 
+            fill: '#EA3434', 
+            stroke: '#EA3434', 
             strokeWidth: 3,
             angle: l2.y < canvas.height/2 ? 270+angulo1 : 270-angulo1
         });
@@ -192,8 +200,8 @@ function dibujaLineas(){
             left: canvas.width/3,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: 'red', 
-            stroke: 'red', 
+            fill: '#EA3434', 
+            stroke: '#EA3434', 
             strokeWidth: 3,
             angle: l2.y < canvas.height/2 ? 90+angulo1 : 90-angulo1
         });
@@ -204,8 +212,8 @@ function dibujaLineas(){
             left: l3.x,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: '#EDB02A', 
-            stroke: '#EDB02A', 
+            fill: '#A92929', 
+            stroke: '#A92929', 
             strokeWidth: 3,
             angle: l3.x < canvas.width/2 ? 270+angulo2 : 90-angulo2
         });
@@ -217,8 +225,8 @@ function dibujaLineas(){
             left: canvas.width/2,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: '#EDB02A', 
-            stroke: '#EDB02A', 
+            fill: '#A92929', 
+            stroke: '#A92929', 
             strokeWidth: 3,
             angle: l3.x < canvas.width/2 ? 90+angulo2 : 270-angulo2
         });
@@ -229,8 +237,8 @@ function dibujaLineas(){
             left: l4.x,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: '#EDB02A', 
-            stroke: '#EDB02A', 
+            fill: '#A92929', 
+            stroke: '#A92929', 
             strokeWidth: 3,
             angle: l4.x < canvas.width/2 ? 270-angulo2 : 90+angulo2
         });
@@ -242,8 +250,8 @@ function dibujaLineas(){
             left: canvas.width/2,
             width: canvas.width < 500 ? 5 : 10, 
             height: canvas.width < 500 ? 5 : 10,
-            fill: '#EDB02A', 
-            stroke: '#EDB02A', 
+            fill: '#A92929', 
+            stroke: '#A92929', 
             strokeWidth: 3,
             angle: l4.x < canvas.width/2 ? 90-angulo2 : 270+angulo2
         }); 
@@ -252,4 +260,44 @@ function dibujaLineas(){
     flecha2 = new fabric.Group([linea2, triangulo2],{selectable: false, hoverCursor: canvas.defaultCursor});
     flecha3 = new fabric.Group([linea3, triangulo3],{selectable: false, hoverCursor: canvas.defaultCursor});
     flecha4 = new fabric.Group([linea4, triangulo4],{selectable: false, hoverCursor: canvas.defaultCursor});
+}
+
+function addTexto(){
+    let text1 = new fabric.Text( "A'", {
+        fontSize: 12,
+        left: canvas.width/2,
+        top: canvas.height/3+10,
+        fill: 'rgba(75,75,75,0.7)',
+        selectable : false,
+        evented: false
+    });
+
+    let text2 = new fabric.Text( "A'", {
+        fontSize: 12,
+        left: canvas.width/2,
+        top: 2*canvas.height/3-10,
+        fill: 'rgba(75,75,75,0.7)',
+        selectable : false,
+        evented: false
+    });
+
+    let text3 = new fabric.Text( "A", {
+        fontSize: 12,
+        left: canvas.width/3+10,
+        top: canvas.height/2,
+        fill: 'rgba(75,75,75,0.7)',
+        selectable : false,
+        evented: false
+    });
+
+    let text4 = new fabric.Text( "A", {
+        fontSize: 12,
+        left: 2*canvas.width/3-10,
+        top: canvas.height/2,
+        fill: 'rgba(75,75,75,0.7)',
+        selectable : false,
+        evented: false
+    });
+
+    return new fabric.Group([text1, text2, text3, text4], {selectable: false, evented: false});
 }

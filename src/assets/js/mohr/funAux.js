@@ -234,7 +234,7 @@ export function addCajaFlotante(canvas, texto, color, coorX, coorY){
     return group;
 }
 
-export function addDesc(canvas, objeto, s, t, sigma, tau, letra){
+export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo){
     let rect = new fabric.Rect({
         originX: 'top',
         originY: 'top',
@@ -245,43 +245,18 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra){
         transparentCorners: true
     });
 
-    let cua = new fabric.Rect({
-        left: -10,
-        top: 40,
-        width: 10,
-        height: 60,
-        fill: 'rgba(255, 65, 54, 0.8)',
-        transparentCorners: true
-    });
-    let cua1 = new fabric.Rect({
-        left: -20,
-        top: 6,
-        width: 30,
-        height: 10,
-        fill: 'rgba(255, 65, 54, 0.8)',
-        transparentCorners: true
-    });
-    let cua2 = new fabric.Rect({
-        left: -20,
-        top: 75,
-        width: 30,
-        height: 10,
-        fill: 'rgba(255, 65, 54, 0.8)',
-        transparentCorners: true
-    });
-
     let text1 = new fabric.Text( s, {
         fontSize: 16,
-        top: 35,
-        left: 65,
-        fill: '#3D9970'
+        top: 75,
+        left: -20,
+        fill: '#B10DC9'
     });
 
     let text2 = new fabric.Text( t, {
         fontSize: 15,
-        top: 75,
-        left: 50,
-        fill: '#B10DC9'
+        top: 70,
+        left: 40,
+        fill: '#3D9970'
     });
 
     let text3 = new fabric.Text( 'σ'+letra+' ('+s+', '+t+')', {
@@ -291,47 +266,52 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra){
         fill: 'black'
     }).setSubscript(1, 1+letra.length);
 
-    let linea1 = new fabric.Line([ 10, 50, 75, 50 ], {
+    let linea1 = new fabric.Line([ 10, 50, 70, 50 ], {
         stroke: '#3D9970',
         strokeWidth: 2
     });
 
-    let linea2 = new fabric.Line([ 25, 10, 25, 80 ], {
+    let linea2 = new fabric.Line([ -20, 10, -20, 60 ], {
         stroke: '#B10DC9',
         strokeWidth: 2
     });
 
     let triangulo1 = new fabric.Triangle({
         top: 50,
-        left: sigma ? 5 : 75,
+        left: tau ? 5 : 70,
         width: 5, 
         height: 5,
         fill: '#3D9970', 
         stroke: '#3D9970', 
         strokeWidth: 3,
-        angle: sigma ? -90 : 90,
+        angle: tau ? -90 : 90,
         originY: 'top'
     });
 
     let triangulo2 = new fabric.Triangle({
-        top: tau ? 10 : 80,
-        left: 25,
+        top: sigma ? 60 : 10,
+        left: -20,
         width: 5, 
         height: 5,
         fill: '#B10DC9', 
         stroke: '#B10DC9', 
         strokeWidth: 3,
-        angle: tau ? 0 : 180
+        angle: sigma ? 180 : 0
     });
 
-    let group = new fabric.Group([ cua, cua1, cua2, rect, text1, text2, text3, linea1, linea2, triangulo1, triangulo2 ], {
+    let group = new fabric.Group([ rect, text1, text2, text3,
+                                   linea1, linea2, triangulo1,
+                                   triangulo2 ], {
         left: 0,
         top: 0,
         selectable : false,
         visible: false,
     });
 
-    canvas.add(group);
+    let angle = addAngulo(canvas, x, y, angulo);
+
+    canvas.add(group, angle);
+    canvas.sendToBack(angle)
 
     let color;
 
@@ -346,6 +326,9 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra){
         }
 
         let p = canvas.getPointer(e.e);
+        angle.set({
+            visible: true
+        });
         group.set({
             left: p.x,
             top: p.y-15,
@@ -361,7 +344,81 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra){
 
         group.set({
             visible: false
-        })
+        });
+        angle.set({
+            visible: false
+        });
         canvas.renderAll();
     });
 }
+
+function addAngulo( canvas, x, y, angulo){
+    let coor = rotate(canvas, x, y, angulo);
+    let linea1 = new fabric.Line([ canvas.width/2, canvas.height/2, coor.x, coor.y ], {
+        stroke: 'rgba(0,0,0,0.4)',
+        strokeWidth: 1
+    });
+
+    let linea2 = new fabric.Line([ canvas.width/2, canvas.height/2, x,  y ], {
+        stroke: 'rgba(0,0,0,0.4)',
+        strokeWidth: 1
+    });
+
+    let inicio = 0, fin = 0;
+    if(x > canvas.width/2 && y == canvas.height/2){
+        inicio = angulo != 0 ? (360 - angulo)*Math.PI/180 : 0;
+        fin = 0;
+    }else if(x < canvas.width/2 && y == canvas.height/2){
+        inicio = angulo != 0 ? (180 - angulo)*Math.PI/180 : Math.PI;
+        fin = Math.PI;
+    }else if(x == canvas.width/2 && y > canvas.height/2){
+        inicio = angulo != 0 ? (90 - angulo)*Math.PI/180 : Math.PI/2;
+        fin = Math.PI/2;
+    }else{
+        inicio = angulo != 0 ? (270 - angulo)*Math.PI/180 : 2*Math.PI;
+        fin = -Math.PI/2;
+    }
+
+    let radio = new fabric.Circle({
+        radius: 20,
+        left: canvas.width/2,
+        top: canvas.height/2,
+        startAngle: inicio,
+        endAngle: fin,
+        stroke: 'orange',
+        strokeWidth: 1,
+        fill: ''
+    });
+
+    let text = new fabric.Text( angulo+'º', {
+        fontSize: 13,
+        top:  y - canvas.height/2 > 0 ? canvas.height/2+30 : canvas.height/2-30,
+        left: x - canvas.width/2 > 0 ? canvas.width/2+30 : canvas.width/2-30,
+        fill: 'orange'
+    });
+
+    let group = new fabric.Group([ linea1, linea2, radio, text ], {
+        selectable : false,
+        evented : false,
+        visible: false,
+    });
+
+    canvas.add(group);
+
+    return group;
+}
+
+function rotate(canvas, x, y, angulo) {
+    let radians = (Math.PI / 180) * angulo,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - canvas.width/2)) + (sin * (y - canvas.height/2)) + canvas.width/2,
+        ny = (cos * (y - canvas.height/2)) - (sin * (x - canvas.width/2)) + canvas.height/2;
+    return { x: nx, y: ny};
+}
+
+// function calculaAngulo(oX, oY, dX, dY){
+//     let delta_x = dX - oX;
+//     let delta_y = dY - oY;
+//     return Math.atan2(delta_y, delta_x)* (180/Math.PI);
+// }
