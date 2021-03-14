@@ -14,7 +14,7 @@ function calculaSigma2(){
 }
 
 function calculaAlfa(){
-    alfa = 0.5 * Math.atan2(-datosIniciales.txy, 0.5*(datosIniciales.sx - datosIniciales.sy)) * 180/Math.PI;
+    alfa= 0.5 * Math.atan2(-datosIniciales.txy, 0.5*(datosIniciales.sx - datosIniciales.sy)) * 180/Math.PI;
 }
 
 function calculaRadio(){
@@ -53,6 +53,18 @@ function calculaU(){
     u = 0.5*(s1*e1 + s2*e2) * 1000000;
 }
 
+function calculaSigmaX(){
+    datosIniciales.sx = 0.5*(datosIniciales.s1+datosIniciales.s2) + 0.5*(datosIniciales.s1-datosIniciales.s2)* Math.cos(2*datosIniciales.a*Math.PI/180);
+}
+
+function calculaSigmaY(){
+    datosIniciales.sy = 0.5*(datosIniciales.s1+datosIniciales.s2) - 0.5*(datosIniciales.s1-datosIniciales.s2)* Math.cos(2*datosIniciales.a*Math.PI/180);
+}
+
+function calculaTauxy(){
+    datosIniciales.txy = 0.5*(datosIniciales.s1-datosIniciales.s2) - Math.sin(2*datosIniciales.a*Math.PI/180);
+}
+
 export function actualizar(angulo){
     datosIniciales.B = angulo;
     calculaSigma1();
@@ -66,6 +78,12 @@ export function actualizar(angulo){
 }
 
 export function calcular(){
+    if(!datosIniciales.sx){
+        calculaSigmaX();
+        calculaSigmaY();
+        calculaTauxy();
+    }
+    
     calculaSigma1();
     calculaSigma2();
     calculaAlfa();

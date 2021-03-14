@@ -8,7 +8,7 @@ import {URL} from '@/assets/js/auxiliares/api.config.js';
  * @param enunciado Enunciado completo del ejercicio en HTML.
  * @param imagen URL de la imagen que se quiere incluir en el enunciado del ejercicio.
  */
-class Ejercicio {
+export class Ejercicio {
     constructor( id, dificultad, enunciado = '', ayuda = '', video = '') {
         this.id = id;
         this.dificultad = dificultad;
@@ -74,11 +74,14 @@ export function compruebaTramos(tramos){
 }
 
 export class Mohr extends Ejercicio {
-    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, B, E, v) {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, s1, s2, a, B, E, v) {
         super(id, dificultad, enunciado, ayuda, video);
         this.sx = sx;
         this.sy = sy;
         this.txy = txy;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.a = a;
         this.B = B;
         this.E = E;
         this.v = v;

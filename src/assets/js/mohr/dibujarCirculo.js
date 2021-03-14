@@ -152,7 +152,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(canvas, -datosIniciales.txy > 0, true, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
+    addCaja(canvas, -datosIniciales.txy > 0, datosIniciales.sx < 0, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
 
     canvas.add(new fabric.Circle({ 
         radius: 4, 
@@ -164,7 +164,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(canvas, datosIniciales.txy > 0, false, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
+    addCaja(canvas, datosIniciales.txy > 0, datosIniciales.sy < 0, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
 
     calculaPlano();
 }

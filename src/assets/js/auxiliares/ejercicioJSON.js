@@ -1,8 +1,10 @@
-import {Viga} from '@/assets/js/auxiliares/ejercicio.js';
+import {Ejercicio, Viga} from '@/assets/js/auxiliares/ejercicio.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 
+export let ejercicio = new Ejercicio();
 export let ejViga = new Viga();
 export function limpiar(){
+    ejercicio = new Ejercicio();
     ejViga = new Viga();
 }
 

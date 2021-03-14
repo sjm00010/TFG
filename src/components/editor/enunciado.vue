@@ -33,7 +33,7 @@
 import {mdbCard, mdbCardBody, mdbIcon, mdbInput,
         mdbCardText, mdbBtn, mdbBtnGroup } from 'mdbvue';
 import editor from '@/components/editor/editor';
-import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { ejercicio } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: 'editorTexto',
     components: {
@@ -43,9 +43,9 @@ export default {
     },
     data(){
         return{
-            enunciado: ejViga.enunciado,
-            explicacion: ejViga.ayuda,
-            video: ejViga.video,
+            enunciado: ejercicio.enunciado,
+            explicacion: ejercicio.ayuda,
+            video: ejercicio.video,
             selecEnun: true,
             selecExp: false,
             selecVideo: false,
@@ -57,14 +57,14 @@ export default {
     methods:{
         actualizaEnunciado(texto){
             this.enunciado = texto;
-            ejViga.enunciado = texto;
+            ejercicio.enunciado = texto;
         },
         actualizaExplicacion(texto){
             this.explicacion = texto;
-            ejViga.ayuda = texto;
+            ejercicio.ayuda = texto;
         },
         actualizaVideo(e){
-            ejViga.video = e;
+            ejercicio.video = e;
         }
     }
 }

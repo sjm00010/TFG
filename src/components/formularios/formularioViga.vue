@@ -25,9 +25,9 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                         </div>
-                        <input :ref="'min'+(i+1)" type="number" min="0.1" step="0.1" label="Mínimo" class="form-control" placeholder="Mínimo" v-model="tramo.min">
-                        <input :ref="'max'+(i+1)" type="number" min="0.2" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="tramo.max">
-                        <input :ref="'valor'+(i+1)" type="number" min="0.1" step="0.1" aria-label="Valor por defecto" class="form-control" placeholder="Valor por defecto" v-model="tramo.valor">
+                        <input :ref="'min'+(i+1)" type="number" min="0.1" step="0.1" label="Mínimo" class="form-control" placeholder="Mínimo" v-model="tramo.min" @input="compTramos = false">
+                        <input :ref="'max'+(i+1)" type="number" min="0.2" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="tramo.max" @input="compTramos = false">
+                        <input :ref="'valor'+(i+1)" type="number" min="0.1" step="0.1" aria-label="Valor por defecto" class="form-control" placeholder="Valor por defecto" v-model="tramo.valor" @input="compTramos = false">
                     </div>
                 </mdb-col>
             </mdb-row>
@@ -58,7 +58,7 @@ import dibujar from '@/components/editor/dibujaViga';
 import formulas from '@/components/editor/formulas';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, cargaEjVigas } from '@/assets/js/auxiliares/ejercicio.js';
-import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { ejercicio, ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 export default {
     name: 'formularioViga',
@@ -128,12 +128,15 @@ export default {
         },
         async crear(){
             ejViga.dificultad = this.dificultad;
+            ejViga.enunciado = ejercicio.enunciado;
+            ejViga.ayuda = ejercicio.ayuda;
+            ejViga.video = ejercicio.video;
             ejViga.tramos = this.tramos;
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify({...ejViga})
+            const ej = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
@@ -144,7 +147,7 @@ export default {
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
                 method: 'POST',
-                body: ejercicio
+                body: ej
             });
 
             if(respuesta.ok){
@@ -162,12 +165,15 @@ export default {
         },
         async modificar(){
             ejViga.dificultad = this.dificultad;
+            ejViga.enunciado = ejercicio.enunciado;
+            ejViga.ayuda = ejercicio.ayuda;
+            ejViga.video = ejercicio.video;
             ejViga.tramos = this.tramos;
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
 
-            const ejercicio = JSON.stringify({...ejViga})
+            const ej = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
                                             .replace('_elementos', 'elementos')
                                             .replace('_formulas', 'formulas')
@@ -178,7 +184,7 @@ export default {
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
                 method: 'PUT',
-                body: ejercicio
+                body: ej
             });
 
             if(respuesta.ok){

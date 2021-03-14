@@ -84,14 +84,7 @@
             </div>
             <hr/>
 
-            <mdb-row class="my-3" style="box-sizing: none;">
-                <mdb-col class="my-2" md="6" col="md" ref="circulo">
-                    <canvas id="circulo" style="border: 1px solid rgb(211,211,211)"></canvas>
-                </mdb-col>
-                <mdb-col class="my-2" md="6" col="md" ref="cuadrado">
-                    <canvas id="cuadrado" style="border: 1px solid rgb(211,211,211)"></canvas>
-                </mdb-col>
-            </mdb-row>
+            <dibujos :datos="this.datos"/>
         </mdb-card-body>
     </mdb-card>
 </mdb-container>
@@ -104,11 +97,13 @@ import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
 import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
 import { cargaDatos } from '@/assets/js/mohr/cargaDatos.js';
+import dibujos from '@/components/visualizar/circulosMohr/dibujos';
 import 'katex/dist/katex.min.css';
 export default {
     name: 'Morh',
     components: { mdbContainer, mdbCard, mdbCardBody,
-                  mdbCardTitle, mdbRow, mdbCol, mdbInput },
+                  mdbCardTitle, mdbRow, mdbCol, mdbInput,
+                  dibujos },
     data(){
         return {
             datos: undefined,
@@ -123,10 +118,6 @@ export default {
             this.resultado = cal;
             this.formula = cal.calculaTensor();
         },
-        resize(){
-            dib.resizeCanvas(this.$refs.circulo, this.datos);
-            cua.resizeCanvas(this.$refs.cuadrado, this.datos.B);
-        },
         cambio(){
             if(this.datos.B >= 0 && this.datos.B <= 180 ){
                 cal.actualizar(parseFloat(this.datos.B));
@@ -138,13 +129,6 @@ export default {
     beforeMount() {
         this.datos = cargaDatos();
         this.actualizaDatos();
-    },
-    mounted(){
-        dib.vinculaCanvas(this.$refs.circulo, this.datos);
-        cua.vinculaCanvas(this.$refs.cuadrado, this.datos.B);
-
-        // Redimensionar
-        window.addEventListener('resize', () => this.resize());
     }
 
 }
