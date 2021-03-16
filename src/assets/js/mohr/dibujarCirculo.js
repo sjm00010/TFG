@@ -32,7 +32,8 @@ export function vinculaCanvas(nCanvas, datosIniciales){
     dibujarEjes(datosIniciales);
 }
 
-function dibujarEjes(datosIniciales){
+export function dibujarEjes(datosIniciales){
+    canvas.remove(...canvas.getObjects());
     actualizaValores(datos.s1, datos.s2, datos.radio);
     let incPuntosX = 0, incPuntosY = 0, puntosX, puntosY, punto, x, y;
 
@@ -170,6 +171,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
 }
 
 export function calculaPlano(){
+if(canvas){
     if(planoA)
         canvas.remove(planoA, eq1, eq2, cj1, cj2);
         
@@ -181,7 +183,7 @@ export function calculaPlano(){
     ejeX.x = ratio*Math.abs(ejeX.x);
     ejeX.x = datos.sA < 0 ? centro - ejeX.x : centro + ejeX.x;
     ejeX.y = ratio*Math.abs(ejeX.y);
-    ejeX.y = -datos.tA < 0 ? canvas.height/2 + ejeX.y : canvas.height/2 - ejeX.y;
+    ejeX.y = -datos.tA < 0 ? canvas?.height/2 + ejeX.y : canvas?.height/2 - ejeX.y;
 
     ejeY.x = ratio*Math.abs(ejeY.x);
     ejeY.x = datos.sAprima < 0 ? centro - ejeY.x : centro + ejeY.x;
@@ -224,6 +226,7 @@ export function calculaPlano(){
     cj2 = addCajaFlotante(canvas, "Plano A': ("+datos.sAprima.toFixed(1)+', '+datos.tA.toFixed(1)+')', '#C3381D', ejeY.x, ejeY.y-20);
 
     addTooltips();
+}
 }
 
 function addTooltips(){

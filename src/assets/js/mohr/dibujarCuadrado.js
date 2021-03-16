@@ -32,6 +32,7 @@ export function resizeCanvas(nCanvas, angulo1) {
 let cuadradoRotado, flecha1, flecha2, flecha3, flecha4;
 
 export function dibujaCuadrado(angulo){
+if(canvas){
     // Eje Y
     canvas.add( new fabric.Line([ canvas.width/2, 0, canvas.width/2, canvas.height ], {
         stroke: 'rgba(175,175,175,0.7)',
@@ -78,10 +79,12 @@ export function dibujaCuadrado(angulo){
     
     dibujaCuadradoRotado(angulo);
 }
+}
 
 let grupo; // Borro el grupo si ya lo he dibujado
 
 export function dibujaCuadradoRotado(angulo){
+if(canvas){
     if(grupo)
         canvas.remove(...grupo.getObjects());
 
@@ -98,17 +101,18 @@ export function dibujaCuadradoRotado(angulo){
 
     dibujaLineas();
     grupo = new fabric.Group([cuadradoRotado, addTexto(), flecha1, flecha2, flecha3, flecha4]);
-    grupo.rotate(-angulo*2);
+    grupo.rotate(-angulo);
     canvas.add(...grupo.getObjects());
 
     addDesc(canvas, flecha1, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
-            2*canvas.width/3, canvas.height/2, angulo*2);
-    addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
-            canvas.width/3, canvas.height/2, angulo*2);
+            2*canvas.width/3, canvas.height/2, angulo, -angulo+90);
+    addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA > 0, (-datos.tA) > 0, 'A',
+            canvas.width/3, canvas.height/2, angulo, -angulo+90);
     addDesc(canvas, flecha3, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
-            canvas.width/2, canvas.height/3, angulo*2);
-    addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
-            canvas.width/2, 2*canvas.height/3, angulo*2);
+            canvas.width/2, canvas.height/3, angulo, -angulo);
+    addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima > 0, datos.tA > 0, "A'",
+            canvas.width/2, 2*canvas.height/3, angulo, -angulo);
+}
 }
 
 function dibujaLineas(){

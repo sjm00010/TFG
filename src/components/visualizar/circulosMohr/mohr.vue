@@ -77,9 +77,9 @@
             <hr/>
             <mdb-card-title class="text-center">Angulo &beta;</mdb-card-title>
             <div>
-                <mdb-input type="number" label="Angulo β" :min="0" :max="180" 
-                            :step="1" v-model.number="datos.B" @input="cambio()"/>
-                <input  type="range" :min="0" :max="180" :step="1" class="custom-range"
+                <mdb-input type="number" label="Angulo β" :min="0" :max="360" 
+                            :step="0.1" v-model.number="datos.B" @input="cambio()"/>
+                <input  type="range" :min="0" :max="360" :step="1" class="custom-range"
                         v-model="datos.B" @input="cambio()">
             </div>
             <hr/>
@@ -112,15 +112,16 @@ export default {
         };
     },
     methods:{
-        actualizaDatos(){
+        calcularDatos(){
             cal.actualizaDatos(this.datos);
             cal.calcular();
             this.resultado = cal;
             this.formula = cal.calculaTensor();
         },
         cambio(){
-            if(this.datos.B >= 0 && this.datos.B <= 180 ){
+            if(this.datos.B >= 0 && this.datos.B <= 360 ){
                 cal.actualizar(parseFloat(this.datos.B));
+                this.formula = cal.calculaTensor();
                 dib.calculaPlano();
                 cua.dibujaCuadradoRotado(this.datos.B);
             } 
@@ -128,7 +129,7 @@ export default {
     },
     beforeMount() {
         this.datos = cargaDatos();
-        this.actualizaDatos();
+        this.calcularDatos();
     }
 
 }

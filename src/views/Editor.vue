@@ -7,9 +7,8 @@
             <select class="browser-default custom-select custom-select-lg mb-3" v-model="tipo">
                 <option value="" selected>Selecciona un tipo</option>
                 <option value="Vigas">Vigas</option>
-                <option value="Mohr">Circunferencias de Mohr</option>
-                <!-- <option value="Matrices">Matrices</option>
-                <option value="Otro">Otro</option> -->
+                <option value="Mohr">Circulos de Mohr</option>
+                <!-- <option value="Matrices">Matrices</option> -->
             </select>
 		</mdb-card-body>
 	</mdb-card>

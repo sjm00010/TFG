@@ -102,5 +102,5 @@ export function calculaTensor(){
     let tensor = '\\bar{\\bar{\\sigma}} = \\begin{pmatrix} ';
     tensor += sA.toFixed(2) + ' & ' + tA.toFixed(2) + '\\\\';
     tensor += tA.toFixed(2) + ' & ' + sAprima.toFixed(2);
-    return tensor + ' \\end{pmatrix}';
+    return tensor + ' \\end{pmatrix} MPa';
 }

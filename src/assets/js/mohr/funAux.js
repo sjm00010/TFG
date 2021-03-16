@@ -234,51 +234,46 @@ export function addCajaFlotante(canvas, texto, color, coorX, coorY){
     return group;
 }
 
-export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo){
+export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo, rotacion){
     let rect = new fabric.Rect({
         originX: 'top',
         originY: 'top',
-        width: 120,
-        height: 120,
+        width: 150,
+        height: 150,
         fill: 'rgba(221, 221, 221, 0.7)',
         stroke: 'rgb(75, 75, 75)',
         transparentCorners: true
     });
 
-    let text1 = new fabric.Text( s, {
+    let text1 = new fabric.Text( 'σ' +letra+':'+s, {
         fontSize: 16,
         top: 75,
         left: -20,
         fill: '#B10DC9'
-    });
+    }).setSubscript(1, 1+letra.length);
 
-    let text2 = new fabric.Text( t, {
-        fontSize: 15,
-        top: 70,
-        left: 40,
-        fill: '#3D9970'
-    });
-
-    let text3 = new fabric.Text( 'σ'+letra+' ('+s+', '+t+')', {
+    let text2 = new fabric.Text( 'τ' +letra+':'+t, {
         fontSize: 16,
-        top: 100,
-        left: 20,
+        top: 75,
+        left: 40,
+        fill: '#1C7D29'
+    }).setSubscript(1, 1+letra.length);
+
+    let text3 = new fabric.Text( 'σ' +letra+' ('+s+', '+t+')', {
+        fontSize: 18,
+        top: 120,
+        left: 0,
         fill: 'black'
     }).setSubscript(1, 1+letra.length);
 
-    let linea1 = new fabric.Line([ 10, 50, 70, 50 ], {
+    let linea1 = new fabric.Line([ 10, 40, 55, 40 ], {
         stroke: '#3D9970',
         strokeWidth: 2
     });
 
-    let linea2 = new fabric.Line([ -20, 10, -20, 60 ], {
-        stroke: '#B10DC9',
-        strokeWidth: 2
-    });
-
     let triangulo1 = new fabric.Triangle({
-        top: 50,
-        left: tau ? 5 : 70,
+        top: 40,
+        left: tau ? 10 : 55,
         width: 5, 
         height: 5,
         fill: '#3D9970', 
@@ -288,8 +283,13 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo){
         originY: 'top'
     });
 
+    let linea2 = new fabric.Line([ -20, 10, -20, 50 ], {
+        stroke: '#B10DC9',
+        strokeWidth: 2
+    });
+
     let triangulo2 = new fabric.Triangle({
-        top: sigma ? 60 : 10,
+        top: sigma ? 50 : 10,
         left: -20,
         width: 5, 
         height: 5,
@@ -299,9 +299,32 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo){
         angle: sigma ? 180 : 0
     });
 
+    let flecha1 = new fabric.Group([ linea1, triangulo1 ]);
+    let flecha2 = new fabric.Group([ linea2, triangulo2 ]);
+
+    flecha1.rotate(rotacion);
+    flecha2.rotate(rotacion);
+
+    let linea3 = new fabric.Line([ -60, 110, -40, 110 ], {
+        stroke: 'black',
+        strokeWidth: 1
+    });
+
+    let triangulo3 = new fabric.Triangle({
+        top: 110,
+        left: -40,
+        width: 3, 
+        height: 3,
+        fill: 'black', 
+        stroke: 'black', 
+        strokeWidth: 1,
+        angle: 90
+    });
+
+    let flecha3 = new fabric.Group([ linea3, triangulo3 ]);
+
     let group = new fabric.Group([ rect, text1, text2, text3,
-                                   linea1, linea2, triangulo1,
-                                   triangulo2 ], {
+                                   flecha1, flecha2, flecha3 ], {
         left: 0,
         top: 0,
         selectable : false,
@@ -310,16 +333,17 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo){
 
     let angle = addAngulo(canvas, x, y, angulo);
 
+
     canvas.add(group, angle);
     canvas.sendToBack(angle)
 
     let color;
 
-    objeto.on('mouseover', function(e) {
+    objeto.on('mousemove', function(e) {
         if (e.target != null)
             e.target.hoverCursor = canvas.defaultCursor;
         
-        color = e.target._objects[0].stroke;
+        if(e.target._objects[0].stroke !== '#7FDBFF') color = e.target._objects[0].stroke;
 
         for (let i = 0; i < e.target._objects.length; i++) {
             e.target._objects[i].set({stroke: '#7FDBFF', fill: '#7FDBFF'});    
@@ -375,7 +399,7 @@ function addAngulo( canvas, x, y, angulo){
         inicio = angulo != 0 ? (90 - angulo)*Math.PI/180 : Math.PI/2;
         fin = Math.PI/2;
     }else{
-        inicio = angulo != 0 ? (270 - angulo)*Math.PI/180 : 2*Math.PI;
+        inicio = angulo != 0 ? (270 - angulo)*Math.PI/180 : -Math.PI/2;
         fin = -Math.PI/2;
     }
 
@@ -416,9 +440,3 @@ function rotate(canvas, x, y, angulo) {
         ny = (cos * (y - canvas.height/2)) - (sin * (x - canvas.width/2)) + canvas.height/2;
     return { x: nx, y: ny};
 }
-
-// function calculaAngulo(oX, oY, dX, dY){
-//     let delta_x = dX - oX;
-//     let delta_y = dY - oY;
-//     return Math.atan2(delta_y, delta_x)* (180/Math.PI);
-// }
