@@ -20,14 +20,34 @@
                 <option :value="1">Tipo 1 (&sigma;x, &sigma;y, &tau;xy)</option>
                 <option :value="2">Tipo 2 (&sigma;1, &sigma;2, &alpha;)</option>
             </select>
-            <div class="md-form input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text md-addon">&beta;</span>
-                </div>
-                <input ref="B" type="number" min="0.1" step="0.1" max="360" label="β" class="form-control mb-3" placeholder="en grados(º)" v-model="datos.B">
-            </div>
+            <mdbRow class="my-3">
+                <mdbCol col="md">
+                    <div class="md-form input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text md-addon">&beta;</span>
+                        </div>
+                        <input ref="B" type="number" min="0.1" step="0.1" max="360" label="β" class="form-control mb-3" placeholder="en grados(º)" v-model="datos.B">
+                    </div>
+                </mdbCol>
+                <mdbCol col="md">
+                    <div class="md-form input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text md-addon">E</span>
+                        </div>
+                        <input ref="E" type="number" step="0.1"  label="E" class="form-control mb-3" placeholder="en MPa" v-model="datos.E">
+                    </div>
+                </mdbCol>
+                <mdbCol col="md">
+                    <div class="md-form input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text md-addon"><i>v</i></span>
+                        </div>
+                        <input ref="v" type="number" step="0.1" label="v" class="form-control mb-3" placeholder="en MPa" v-model="datos.v">
+                    </div>
+                </mdbCol>
+            </mdbRow>
             
-            <mdbRow class="my-3" v-if="tipo == 1">
+            <mdbRow class="my-2" v-if="tipo == 1">
                 <mdbCol col="md">
                     <div class="md-form input-group">
                         <div class="input-group-prepend">
@@ -54,7 +74,7 @@
                 </mdbCol>
             </mdbRow>
 
-            <mdbRow class="my-3" v-if="tipo == 2">
+            <mdbRow class="my-2" v-if="tipo == 2">
                 <mdbCol col="md">
                     <div class="md-form input-group">
                         <div class="input-group-prepend">
@@ -94,8 +114,8 @@
             <dibujos ref="dibujo" v-if="dibujar" :datos="this.datos"/>
         </mdb-card-body>
     </mdb-card>
-    <mdb-btn v-if="!modificando" class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
-    <mdb-btn v-if="modificando" class="my-3" block color="unique" @click="modificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
+    <mdb-btn v-if="!modificando" class="my-3" block color="default" @click="comprobarCrear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
+    <mdb-btn v-if="modificando" class="my-3" block color="unique" @click="comprobarModificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
 </div>
 </template>
 
@@ -105,11 +125,12 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
          } from 'mdbvue';
 import enunciado from '@/components/editor/enunciado';
 import dibujos from '@/components/visualizar/circulosMohr/dibujos';
-import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { ejercicio, ejMohr } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { cargaEjMohr } from '@/assets/js/auxiliares/ejercicio.js';
 import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
 import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
-// import {URL} from '@/assets/js/auxiliares/api.config.js';
+import {URL} from '@/assets/js/auxiliares/api.config.js';
 export default {
     name: 'formularioViga',
     components: {
@@ -122,10 +143,10 @@ export default {
     },
     data(){
         return{
-            dificultad: ejViga.dificultad,
-            tipo: 1,
-            datos: { sx: undefined , sy: undefined, txy: undefined, B: undefined,
-                     s1: undefined, s2: undefined, a: undefined},
+            dificultad: ejMohr.dificultad,
+            tipo: isNaN(ejMohr.sx) ? 2 : 1,
+            datos: { sx: ejMohr.sx , sy: ejMohr.sy, txy: ejMohr.txy, B: ejMohr.B,
+                     s1: ejMohr.s1, s2: ejMohr.s2, a: ejMohr.a, E: ejMohr.E, v: ejMohr.v},
             dibujar: false
         }
     },
@@ -138,8 +159,26 @@ export default {
                 this.error('Valor inválido', 'El valor de &beta; no es válido. Revise el campo.');
                 error = true;
             }else{
-                this.$refs.B.classList.remove('invalid');
-                this.$refs.B.classList.add('valid');
+                this.$refs.E.classList.remove('invalid');
+                this.$refs.E.classList.add('valid');
+            }
+            if(isNaN(this.datos.E)){
+                this.$refs.E.classList.remove('valid');
+                this.$refs.E.classList.add('invalid');
+                this.error('Valor inválido', 'El valor de E no es válido. Revise el campo.');
+                error = true;
+            }else{
+                this.$refs.E.classList.remove('invalid');
+                this.$refs.E.classList.add('valid');
+            }
+            if(isNaN(this.datos.v)){
+                this.$refs.v.classList.remove('valid');
+                this.$refs.v.classList.add('invalid');
+                this.error('Valor inválido', 'El valor de <i>v<i> no es válido. Revise el campo.');
+                error = true;
+            }else{
+                this.$refs.v.classList.remove('invalid');
+                this.$refs.v.classList.add('valid');
             }
 
             if(this.tipo === 1){
@@ -211,18 +250,26 @@ export default {
                 type: 'error'
             });
         },
-        crear(){
-            this.verificar();
+        comprobarCrear(){
+            this.toNumber();
+            if(!this.verificar()){
+                this.crear();
+            }
         },
-        modificar(){
-
+        comprobarModificar(){
+            this.toNumber();
+            if(!this.verificar()){
+                this.modificar();
+            }
         },
         toNumber(){
+            this.datos.B = parseFloat(this.datos.B);
+            this.datos.E = parseFloat(this.datos.E);
+            this.datos.v = parseFloat(this.datos.v);
             if(this.tipo === 1){
                 this.datos.sx = parseFloat(this.datos.sx);
                 this.datos.sy = parseFloat(this.datos.sy);
                 this.datos.txy = parseFloat(this.datos.txy);
-                this.datos.B = parseFloat(this.datos.B);
                 this.datos.s1 = undefined;
                 this.datos.s2 = undefined;
                 this.datos.a = undefined;
@@ -230,7 +277,6 @@ export default {
                 this.datos.s1 = parseFloat(this.datos.s1);
                 this.datos.s2 = parseFloat(this.datos.s2);
                 this.datos.a = parseFloat(this.datos.a);
-                this.datos.B = parseFloat(this.datos.B);
                 this.datos.sx = undefined;
                 this.datos.sy = undefined;
                 this.datos.txy = undefined;
@@ -250,6 +296,85 @@ export default {
                 this.error('Error al dibujar','Hubo un error al verificar los datos, por favor revíselos y compruebe que estan correctos.')
             }
         },
+        async crear(){
+            ejMohr.dificultad = this.dificultad;
+            ejMohr.enunciado = ejercicio.enunciado;
+            ejMohr.ayuda = ejercicio.ayuda;
+            ejMohr.video = ejercicio.video;
+            ejMohr.sx = this.datos.sx;
+            ejMohr.sy = this.datos.sy;
+            ejMohr.txy = this.datos.txy;
+            ejMohr.s1 = this.datos.s1;
+            ejMohr.s2 = this.datos.s2;
+            ejMohr.a = this.datos.a;
+            ejMohr.B = this.datos.B;
+            ejMohr.E = this.datos.E;
+            ejMohr.v = this.datos.v;
+
+            console.log(ejMohr);
+
+            const ej = JSON.stringify({...ejMohr});
+
+            const respuesta = await fetch(URL+'/ejMohr/', { 
+                headers: {'Content-Type': 'application/json', 
+                          'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+                },
+                method: 'POST',
+                body: ej
+            });
+
+            if(respuesta.ok){
+                // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
+                this.$router.push('/ejercicios');
+            }else{
+                this.$notify({
+                    group: 'log',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de creación</b>',
+                    text: '<i style="font-size:15px"> No se pudo crear los ejercicios. Revise los datos.</i>',
+                    duration: 5000,
+                    type: 'error'
+                });
+            }
+        },
+        async modificar(){
+            ejMohr.dificultad = this.dificultad;
+            ejMohr.enunciado = ejercicio.enunciado;
+            ejMohr.ayuda = ejercicio.ayuda;
+            ejMohr.video = ejercicio.video;
+            ejMohr.sx = this.datos.sx;
+            ejMohr.sy = this.datos.sy;
+            ejMohr.txy = this.datos.txy;
+            ejMohr.s1 = this.datos.s1;
+            ejMohr.s2 = this.datos.s2;
+            ejMohr.a = this.datos.a;
+            ejMohr.B = this.datos.B;
+            ejMohr.E = this.datos.E;
+            ejMohr.v = this.datos.v;
+
+            const ej = JSON.stringify({...ejMohr});
+
+            const respuesta = await fetch(URL+'/ejMohr/'+this.$route.params.id, { 
+                headers: {'Content-Type': 'application/json',
+                          'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+                },
+                method: 'PUT',
+                body: ej
+            });
+
+            if(respuesta.ok){
+                // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
+                await cargaEjMohr();
+                this.$router.push('/ejercicios');
+            }else{
+                this.$notify({
+                    group: 'log',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error de creación</b>',
+                    text: '<i style="font-size:15px"> No se pudo crear los ejercicios. Revise los datos.</i>',
+                    duration: 5000,
+                    type: 'error'
+                });
+            }
+        }
     }
 }
 </script>

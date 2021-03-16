@@ -33,6 +33,7 @@ export function vinculaCanvas(nCanvas, datosIniciales){
 }
 
 export function dibujarEjes(datosIniciales){
+    if(canvas == undefined) return;
     canvas.remove(...canvas.getObjects());
     actualizaValores(datos.s1, datos.s2, datos.radio);
     let incPuntosX = 0, incPuntosY = 0, puntosX, puntosY, punto, x, y;

@@ -1,18 +1,8 @@
 <template>
 <mdb-container class="my-4">
-    <h1>Enunciado...</h1><hr/>
     <blockquote class="blockquote bq-primary my-3">
         <p class="bq-title">Solución</p>
-        <p> Interactúa con los distintos las entradas de datos para ver como cambia el circulo de Mohr.</p>
-        <p> Los datos de entrada para la prueba son: </p>
-        <ul>
-            <li>&sigma;<sub>x</sub> : {{this.datos.sx}} MPa</li>
-            <li>&sigma;<sub>y</sub> : {{this.datos.sy}} MPa</li>
-            <li>&tau;<sub>xy</sub>  : {{this.datos.txy}} MPa</li>
-            <li>&beta; : {{this.datos.B}}º</li>
-            <li>E : 2,1 · 10<sup>5</sup> MPa</li>
-            <li><i>v</i> : 0.3</li>
-        </ul>
+        <p> Interactúa con las distintas entradas de datos para ver como cambia el círculo de Mohr.</p>
     </blockquote>  
 
     <mdb-card class="my-2">
@@ -96,7 +86,7 @@ import { mdbContainer, mdbCard, mdbCardBody,
 import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
 import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
-import { cargaDatos } from '@/assets/js/mohr/cargaDatos.js';
+import { ejMohr, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import dibujos from '@/components/visualizar/circulosMohr/dibujos';
 import 'katex/dist/katex.min.css';
 export default {
@@ -106,7 +96,7 @@ export default {
                   dibujos },
     data(){
         return {
-            datos: undefined,
+            datos: ejMohr,
             resultado: cal,
             formula: ''
         };
@@ -128,8 +118,10 @@ export default {
         }
     },
     beforeMount() {
-        this.datos = cargaDatos();
         this.calcularDatos();
+    },
+    beforeDestroy(){
+        limpiar();
     }
 
 }

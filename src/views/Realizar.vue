@@ -2,7 +2,7 @@
 <div>
     <!-- Jumbotron con el enunciado del problema -->
     <mdb-jumbotron class="mb-0 text-center">
-        <mdb-card-title class="pb-2 h4"><strong>Ejercicio de vigas</strong></mdb-card-title>
+        <mdb-card-title class="pb-2 h4"><strong>Ejercicio de {{this.tipo === 'mohr' ? 'círculos de Mohr' : this.tipo}}</strong></mdb-card-title>
         <p class="card-text" v-html="datos.enunciado"></p>
         <mdb-row class="justify-content-center">
             <mdb-col col="md" class="my-2" v-show="datos.ayuda && datos.ayuda.length !== 0">
@@ -46,6 +46,7 @@
     </mdb-modal>
 
     <viga v-if="this.tipo === 'viga'"/>
+    <mohr v-if="this.tipo === 'mohr'"/>
 </div>
 </template>
 
@@ -55,24 +56,35 @@ import { mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, mdbCol,
          mdbModalTitle, mdbModalFooter, mdbModalHeader, 
         } from 'mdbvue';
 import viga from '@/components/visualizar/vigas/viga';
-import { cargaEjercicio, ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import mohr from '@/components/visualizar/circulosMohr/mohr';
+import { cargaEjercicio, ejViga, ejMohr, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: "EjercicioViga",
     components:{
         mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, 
         mdbCol, mdbModal, mdbModalHeader, mdbIcon,
         mdbModalTitle, mdbModalBody, mdbModalFooter, 
-        viga
+        viga, mohr
     },
     data(){
         return {
             tipo: this.$route.params.tipo,
-            datos: ejViga
+            datos: undefined
         };
     },
     async beforeRouteEnter (to, from, next) {
         await cargaEjercicio(to.params.id, to.params.tipo);
         next();
+    },
+    beforeMount(){
+        switch (this.tipo){
+            case 'viga':
+                this.datos = ejViga;
+                break;
+            case 'mohr':
+                this.datos = ejMohr;
+                break;
+        }
     },
     beforeDestroy(){
         limpiar();

@@ -51,12 +51,14 @@ export default {
             }
         },
         borrar(){
-            this.$emit('borrar', this.id, this.id_bd);
+            this.$emit('borrar', this.id, this.id_bd, this.enlace);
         },
         tipo(){
             switch(this.enlace){
                 case 'viga':
                     return 'Vigas';
+                case 'mohr':
+                    return 'Mohr';
                 default:
                     this.$notify({
                         group: 'app',

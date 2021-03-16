@@ -73,25 +73,9 @@ export function compruebaTramos(tramos){
     return error;
 }
 
-export class Mohr extends Ejercicio {
-    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, s1, s2, a, B, E, v) {
-        super(id, dificultad, enunciado, ayuda, video);
-        this.sx = sx;
-        this.sy = sy;
-        this.txy = txy;
-        this.s1 = s1;
-        this.s2 = s2;
-        this.a = a;
-        this.B = B;
-        this.E = E;
-        this.v = v;
-    }
-}
-
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
 export var vigas = [];
 export async function cargaEjVigas(){
-    console.log(URL)
     const respuesta = await fetch(URL+'/ejViga/', { 
         headers: {'Content-Type': 'application/json'},
         method: 'GET'
@@ -115,4 +99,46 @@ export async function borrarEjViga(id){
     }else
         return false;
 }
-// FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MATRICES DE LA BBDD
+
+// Ejercicio de Mohr
+export class Mohr extends Ejercicio {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, s1, s2, a, B, E, v) {
+        super(id, dificultad, enunciado, ayuda, video);
+        this.sx = sx;
+        this.sy = sy;
+        this.txy = txy;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.a = a;
+        this.B = B;
+        this.E = E;
+        this.v = v;
+    }
+}
+
+// FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MOHR DE LA BBDD
+export var mohr = [];
+export async function cargaEjMohr(){
+    const respuesta = await fetch(URL+'/ejMohr/', { 
+        headers: {'Content-Type': 'application/json'},
+        method: 'GET'
+    });
+
+    mohr.splice(0, mohr.length, ...await respuesta.json());
+}
+
+// FUNCION PARA BORRAR UN EJERCICIO DE MOHR DE LA BBDD
+export async function borrarEjMohr(id){
+    const respuesta = await fetch(URL+'/ejMohr/'+id, { 
+        headers: {'Content-Type': 'application/json', 
+                  'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
+        },
+        method: 'DELETE'
+    });
+    
+    if(respuesta.ok){
+        cargaEjMohr();
+        return true;
+    }else
+        return false;
+}
