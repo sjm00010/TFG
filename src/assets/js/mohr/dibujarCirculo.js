@@ -1,8 +1,8 @@
 import { fabric } from 'fabric';
 import * as datos from '@/assets/js/mohr/calculos.js';
-import { maxX, minX, maxY, actualizaValores,
+import { maxX, minX, actualizaValores,
          addMarcaX, addMarcaY, addTooltip,
-         addPunto, escribir, addCaja, addCajaFlotante 
+         addPunto, escribir, addCaja, addCajaFlotante,
         } from '@/assets/js/mohr/funAux.js';
 
 // Configuracion de fabric
@@ -36,7 +36,7 @@ export function dibujarEjes(datosIniciales){
     if(canvas == undefined) return;
     canvas.remove(...canvas.getObjects());
     actualizaValores(datos.s1, datos.s2, datos.radio);
-    let incPuntosX = 0, incPuntosY = 0, puntosX, puntosY, punto, x, y;
+    let incPuntosX = 0, puntosX, punto, x;
 
     //  Calculo las marcas en el eje X
     do{
@@ -44,18 +44,13 @@ export function dibujarEjes(datosIniciales){
         puntosX = Math.abs( maxX - minX)/incPuntosX;
     }while(puntosX > 10);
     
-    let incrementoX = (canvas.width-canvas.width*0.20) / puntosX;
-
-    //  Calculo las marcas en el eje Y
-    do{
-        incPuntosY += 10;
-        puntosY = maxY*2/incPuntosY;
-    }while(puntosY > 10);
-    
-    let incrementoY = (canvas.width-canvas.width*0.20) / puntosY;
+    let incrementoX = canvas.width*0.8 / puntosX;
 
     // Calculo el centro de los ejes
-    centro = canvas.width*0.10+(Math.abs(minX) / incPuntosX)*incrementoX;
+    if(minX < 0 && maxX > 0)
+        centro = canvas.width*0.10+(Math.abs(minX) / incPuntosX)*incrementoX;
+    else
+        centro = canvas.width*0.10;
 
     // Dibujo las marcas en el eje X
     punto = minX, x = canvas.width*0.10;
@@ -67,24 +62,32 @@ export function dibujarEjes(datosIniciales){
     }
 
     // Dibujo las marcas en el eje Y
-    punto = -maxY, y = canvas.height-canvas.height*0.10;
-    for(let i = 0; i <= puntosY ; i++){
-        if(punto !== 0)
-            addMarcaY( canvas, centro, y, punto.toString());
-        punto += incPuntosY;
-        y -= incrementoY;
+    incrementoX = canvas.width*0.8 / (puntosX);
+    punto = incPuntosX, x = canvas.width/2 - incrementoX;
+    for(let i = 0; i < puntosX / 2 -1; i++){
+        addMarcaY( canvas, centro, x, punto.toString());
+        punto += incPuntosX;
+        x -= incrementoX;
+    }
+
+    punto = -incPuntosX, x = canvas.width/2 + incrementoX;
+    for(let i = 0; i < puntosX / 2 -1; i++){
+        addMarcaY( canvas, centro, x, punto.toString());
+        punto -= incPuntosX;
+        x += incrementoX;
     }
 
     // Eje Y
-    canvas.add(new fabric.Line([centro, 0, centro, canvas.height], {
-        stroke: 'black',
-        selectable : false,
-        evented: false
-    }));
+    if(minX < 0 && maxX > 0)
+        canvas.add(new fabric.Line([centro, 0, centro, canvas.height], {
+            stroke: '#7d8085',
+            selectable : false,
+            evented: false
+        }));
 
     // Eje X
     canvas.add(new fabric.Line([0, canvas.height/2, canvas.width, canvas.height/2], {
-        stroke: 'black',
+        stroke: '#7d8085',
         selectable : false,
         evented: false
     }));
@@ -99,7 +102,10 @@ export function dibujarEjes(datosIniciales){
 function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     let nRadio = datos.radio*incrementoX/incPuntoX;
     let coorX = incrementoX/incPuntoX*Math.abs(datos.centro);
-    coorX = datos.centro < 0 ? centro - coorX : centro + coorX;
+    if (minX < 0 && maxX > 0)
+        coorX = datos.centro < 0 ? centro - coorX : centro + coorX;
+    else
+        coorX = Math.abs(Math.abs(minX)-Math.abs(datos.centro))*incrementoX/incPuntoX+canvas.width*0.10;
 
     canvas.add(new fabric.Circle({ 
         radius: nRadio, 
@@ -112,13 +118,13 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     }));
 
     // Marca s1   
-    punto1 = addPunto(canvas, canvas.width/2, '#16961C',  centro, datos.s1, incrementoX, incPuntoX);
+    punto1 = addPunto(canvas, '#16961C', canvas.width/2, coorX+nRadio);
 
     // Marca s2
-    punto2 = addPunto(canvas, canvas.width/2, '#16961C',  centro, datos.s2, incrementoX, incPuntoX);
+    punto2 = addPunto(canvas, '#16961C', canvas.width/2, coorX-nRadio);
 
     // Marca txymax
-    punto3 = addPunto(canvas, canvas.width/2-nRadio, '#16961C',  centro, datos.centro, incrementoX, incPuntoX);
+    punto3 = addPunto(canvas, '#16961C', canvas.width/2-nRadio, coorX);
 
     // Representacion Eje X e Y
     let ejeX = {x: datosIniciales.sx, y: -datosIniciales.txy};
@@ -126,13 +132,17 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
 
     // Calculo las coordenadas de la recta
     ratio = incrementoX/incPuntoX;
-    ejeX.x = ratio*Math.abs(ejeX.x);
-    ejeX.x = datosIniciales.sx < 0 ? centro - ejeX.x : centro + ejeX.x;
+    if (minX < 0 && maxX > 0)
+        ejeX.x = datosIniciales.sx < 0 ? centro - ratio*Math.abs(ejeX.x) : centro + ratio*Math.abs(ejeX.x);
+    else
+        ejeX.x = Math.abs(Math.abs(minX)-Math.abs(ejeX.x))*ratio+canvas.width*0.10;
     ejeX.y = ratio*Math.abs(ejeX.y);
     ejeX.y = -datosIniciales.txy < 0 ? canvas.height/2 + ejeX.y : canvas.height/2 - ejeX.y;
 
-    ejeY.x = ratio*Math.abs(ejeY.x);
-    ejeY.x = datosIniciales.sy < 0 ? centro - ejeY.x : centro + ejeY.x;
+    if (minX < 0 && maxX > 0)
+        ejeY.x = datosIniciales.sy < 0 ? centro - ratio*Math.abs(ejeY.x) : centro + ratio*Math.abs(ejeY.x);
+    else
+        ejeY.x = Math.abs(Math.abs(minX)-Math.abs(ejeY.x))*ratio+canvas.width*0.10;
     ejeY.y = ratio*Math.abs(ejeY.y);
     ejeY.y = datosIniciales.txy < 0 ? canvas.height/2 + ejeY.y : canvas.height/2 - ejeY.y;
 
@@ -154,7 +164,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(canvas, -datosIniciales.txy > 0, datosIniciales.sx < 0, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
+    addCaja(canvas, 'Eje X: ('+datosIniciales.sx.toFixed(0)+', '+(-datosIniciales.txy).toFixed(0)+')', '#EDB02A', ejeX.x, ejeX.y);
 
     canvas.add(new fabric.Circle({ 
         radius: 4, 
@@ -166,7 +176,7 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
         evented: false 
     }));
 
-    addCaja(canvas, datosIniciales.txy > 0, datosIniciales.sy < 0, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
+    addCaja(canvas, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
 
     calculaPlano();
 }
@@ -181,13 +191,17 @@ if(canvas){
     let ejeY = {x: datos.sAprima, y: datos.tA};
 
     // Calculo las coordenadas de la recta
-    ejeX.x = ratio*Math.abs(ejeX.x);
-    ejeX.x = datos.sA < 0 ? centro - ejeX.x : centro + ejeX.x;
+    if (minX < 0 && maxX > 0)
+        ejeX.x = datos.sA < 0 ? centro - ratio*Math.abs(ejeX.x) : centro + ratio*Math.abs(ejeX.x);
+    else
+        ejeX.x = Math.abs(Math.abs(minX)-Math.abs(ejeX.x))*ratio+canvas.width*0.10;
     ejeX.y = ratio*Math.abs(ejeX.y);
     ejeX.y = -datos.tA < 0 ? canvas?.height/2 + ejeX.y : canvas?.height/2 - ejeX.y;
 
-    ejeY.x = ratio*Math.abs(ejeY.x);
-    ejeY.x = datos.sAprima < 0 ? centro - ejeY.x : centro + ejeY.x;
+    if (minX < 0 && maxX > 0)
+        ejeY.x = datos.sAprima < 0 ? centro - ratio*Math.abs(ejeY.x) : centro + ratio*Math.abs(ejeY.x);
+    else
+        ejeY.x = Math.abs(Math.abs(minX)-Math.abs(ejeY.x))*ratio+canvas.width*0.10;
     ejeY.y = ratio*Math.abs(ejeY.y);
     ejeY.y = datos.tA < 0 ? canvas.height/2 + ejeY.y : canvas.height/2 - ejeY.y;
 

@@ -148,10 +148,6 @@ export function addSoporteSimple(coorX){
         });
     canvas.add(group);
 
-    group.on('mouseup', function(e) {
-        console.log(e.pointer);
-    });
-
     addMarca(x, coorX.toString(), 'grey');
 }
 

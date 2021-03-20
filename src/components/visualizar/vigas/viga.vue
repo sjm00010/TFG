@@ -171,7 +171,7 @@ export default {
                     tipo: ejViga.elementos[i].tipo
                 });
 
-                if(ejViga.elementos[i].tipo === 'Barra'){
+                if(ejViga.elementos[i].tipo === 'Voladizo vertical'){
                     this.d.push({
                         pos: i, 
                         minD: ejViga.elementos[i].minD, 

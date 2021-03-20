@@ -62,11 +62,18 @@ function calculaSigmaY(){
 }
 
 function calculaTauxy(){
-    datosIniciales.txy = 0.5*(datosIniciales.s1-datosIniciales.s2) - Math.sin(2*datosIniciales.a*Math.PI/180);
+    datosIniciales.txy = -0.5*(datosIniciales.s1-datosIniciales.s2) * Math.sin(2*datosIniciales.a*Math.PI/180);
 }
 
 export function actualizar(angulo){
     datosIniciales.B = angulo;
+
+    if(!datosIniciales.sx){
+        calculaSigmaX();
+        calculaSigmaY();
+        calculaTauxy();
+    }
+
     calculaSigma1();
     calculaSigma2();
     calculaAlfa();
@@ -83,7 +90,7 @@ export function calcular(){
         calculaSigmaY();
         calculaTauxy();
     }
-    
+
     calculaSigma1();
     calculaSigma2();
     calculaAlfa();

@@ -7,7 +7,7 @@ let variables = { };
 
 export function inicializar(){
     for(let i = 0; i < ejViga.tramos.length; i++){
-        variables['t_'+(i+1) ] = ejViga.tramos[i].valor;
+        variables['L_'+(i+1) ] = ejViga.tramos[i].valor;
     }
 
     for(let i = 0; i < ejViga.elementos.length; i++){
@@ -15,7 +15,7 @@ export function inicializar(){
             variables[ejViga.elementos[i].nombre.replace(/(\w+)(\d+)/, '$1_$2')] = parseFloat(ejViga.elementos[i].magnitud);
         }
 
-        if(ejViga.elementos[i].tipo === 'Barra'){
+        if(ejViga.elementos[i].tipo === 'Voladizo vertical'){
             variables[ejViga.elementos[i].nombre.replace(/(\w+)(\d+)/, 'd_$2')] = parseFloat(ejViga.elementos[i].d);
         }
     }
@@ -24,7 +24,7 @@ export function inicializar(){
 }
 
 export function actualizaTramo(pos, valor){
-    variables['t_'+pos] = parseFloat(valor);
+    variables['L_'+pos] = parseFloat(valor);
 }
 
 export function actualizaElemento(nom, valor){
@@ -54,19 +54,19 @@ export function calcular(){
         flectores: []
     }
 
-    let x = 0.0;
     const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
-    const vueltas = DENSIDAD_PUNTOS / ejViga.formulas.length;
 
+    let tramo = 0, total = ejViga.tramos[0].valor;
     try{
-        for (const formula of ejViga.formulas) {
-            for (let i = 0; i < vueltas; i++) {
-                resultado.axiles.push([parseFloat(x.toFixed(3)), evaluatex(formula.axiles, { ...variables, x}, { latex: true })()]);
-                resultado.cortantes.push([parseFloat(x.toFixed(3)), evaluatex(formula.cortantes, { ...variables, x}, { latex: true })()]);
-                resultado.flectores.push([parseFloat(x.toFixed(3)), evaluatex(formula.flectores, { ...variables, x}, { latex: true })()]);
+        for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
+            resultado.axiles.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()]);
+            resultado.cortantes.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()]);
+            resultado.flectores.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()]);
 
-                x += incremento;
-            }
+            if(x >= total){
+                tramo++;
+                total += ejViga.tramos[tramo].valor;
+            } 
         }
     }catch(err){
         console.log("ERROR AL CALCULAR LOS DATOS")

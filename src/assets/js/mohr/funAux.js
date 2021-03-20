@@ -1,11 +1,13 @@
 import { fabric } from 'fabric';
 
-export let maxX, minX, maxY;
+export let maxX, minX; // maxY;
 
-export function actualizaValores(s1, s2, radio){
+export function actualizaValores(s1, s2){ //, radio){
     maxX = (s1 < 0 ? -1 : 1)*Math.ceil((s1 < 0 ? -s1 : s1)/10)*10;
+    if(Math.trunc(s2)%10 !== 0)
+        s2 = s2-10;
     minX = (s2 < 0 ? -1 : 1)*Math.ceil((s2 < 0 ? -s2 : s2)/10)*10;
-    maxY = Math.ceil(radio/10)*10;
+    // maxY = Math.ceil(radio/10)*10; // No hace falta ya que es un circulo perferto
 }
 
 /**
@@ -53,7 +55,7 @@ export function addMarcaX(canvas, coorX, coorY, texto){
         evented: false
     }));
 
-    canvas.add(new fabric.Line([ coorX, canvas.width*0.10, coorX, canvas.height-canvas.width*0.10 ], {
+    canvas.add(new fabric.Line([ coorX, canvas.width*0.1, coorX, canvas.height*0.9 ], {
         stroke: 'rgba(175,175,175,0.5)',
         strokeWidth: 1,
         selectable: false,
@@ -86,7 +88,7 @@ export function addMarcaY(canvas, coorX, coorY, texto){
         evented: false
     }));
 
-    canvas.add(new fabric.Line([ canvas.width*0.10, coorY, canvas.width-canvas.width*0.10, coorY ], {
+    canvas.add(new fabric.Line([ canvas.width*0.1, coorY, canvas.width*0.9, coorY ], {
         stroke: 'rgba(175,175,175,0.5)',
         strokeWidth: 1,
         selectable: false,
@@ -140,16 +142,13 @@ export function addTooltip(canvas, objeto, texto, inSub, finSub){
     });
 }
 
-export function addPunto(canvas, top, color,  centroEjes, centroMohr, incrementoX, incPuntoX ){
-    let coorX = incrementoX/incPuntoX*Math.abs(centroMohr);
-    coorX = centroMohr < 0 ? centroEjes - coorX : centroEjes + coorX;
-
+export function addPunto(canvas, color, top, left){
     let punto = new fabric.Circle({ 
         radius: 5, 
         fill: color,
         stroke: 'black',
         top: top,
-        left: coorX,
+        left: left,
         selectable: false
     });
     canvas.add(punto);
@@ -157,11 +156,11 @@ export function addPunto(canvas, top, color,  centroEjes, centroMohr, incremento
     return punto;
 }
 
-export function addCaja(canvas, top, left, texto, color, toX, toY){
+export function addCaja(canvas, texto, color, toX, toY){
     let coorX, coorY;
 
-    coorY = top ? 13 : canvas.height-13;
-    coorX = left ? 45 : canvas.width-45;
+    coorY = toY > canvas.height/2 ? canvas.height-13 : 13;
+    coorX = toX > canvas.width/2 ? canvas.width-45 : 45;
 
     let rect = new fabric.Rect({
         originX: 'center',

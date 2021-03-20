@@ -6,7 +6,7 @@
     <mdb-card-text class="text-center">Dibuja la figura con los datos requeridos para que cambie cuando los alumnos ajusten los valores.</mdb-card-text>
     <mdb-row class="justify-content-center">
         <mdb-col col="md" class="my-2">
-            <mdb-btn block color="primary" @click.native="modal.visible = true, $refs.mimodal.visualiza('Punto de carga');"><mdb-icon size="lg" icon="plus"/> Punto de carga</mdb-btn>
+            <mdb-btn block color="primary" @click.native="modal.visible = true, $refs.mimodal.visualiza('Carga puntual');"><mdb-icon size="lg" icon="plus"/> Carga puntual</mdb-btn>
         </mdb-col>
         <mdb-col col="md" class="my-2">
             <mdb-btn block color="amber" @click.native="modal.visible = true, $refs.mimodal.visualiza('Momento');"><mdb-icon size="lg" icon="plus"/> Momento</mdb-btn>
@@ -17,13 +17,13 @@
     </mdb-row>
     <mdb-row class="justify-content-center">
         <mdb-col col="md" class="my-2">
-            <mdb-btn block color="purple" @click.native="modal.visible = true, $refs.mimodal.visualiza('Normal');"><mdb-icon size="lg" icon="plus"/> Normal</mdb-btn>
+            <mdb-btn block color="purple" @click.native="modal.visible = true, $refs.mimodal.visualiza('Axil');"><mdb-icon size="lg" icon="plus"/> Axil</mdb-btn>
         </mdb-col>
         <mdb-col col="md" class="my-2">
-            <mdb-btn block color="blue-grey" @click.native="modal.visible = true, $refs.mimodal.visualiza('Soporte');"><mdb-icon size="lg" icon="plus"/> Soporte</mdb-btn>
+            <mdb-btn block color="blue-grey" @click.native="modal.visible = true, $refs.mimodal.visualiza('Apoyo');"><mdb-icon size="lg" icon="plus"/> Apoyo</mdb-btn>
         </mdb-col>
         <mdb-col col="md" class="my-2">
-            <mdb-btn block color="red" @click.native="modal.visible = true, $refs.mimodal.visualiza('Barra');"><mdb-icon size="lg" icon="plus"/> Barra</mdb-btn>
+            <mdb-btn block color="red" @click.native="modal.visible = true, $refs.mimodal.visualiza('Voladizo vertical');"><mdb-icon size="lg" icon="plus"/> Voladizo vertical</mdb-btn>
         </mdb-col>
     </mdb-row>
 

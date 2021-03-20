@@ -41,7 +41,6 @@ export default {
                 this.tipo = 'Vigas';
                 break;
             case 'mohr':
-                // console.log(ejMohr)
                 if(ejMohr.id === undefined)
                     this.$router.push('/ejercicios');
                 this.tipo = 'Mohr';

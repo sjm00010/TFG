@@ -4,7 +4,7 @@
         <mdb-card-body>
             <mdb-card-title>Datos del ejercicio</mdb-card-title>
             <mdb-card-text>Introduce los datos requeridos. Cuando los hayas introducido verificalos para continuar, si todos los datos han sido verificados se habilitará la opción de crear ejercicio.</mdb-card-text>
-            <h4 class="text-center"><small class="text-muted">DIFICUALTAD</small></h4>
+            <h4 class="text-center"><small class="text-muted">DIFICULTAD</small></h4>
             <mdb-card-text class="text-center">Seleccione una dificultad:</mdb-card-text>
             <select class="browser-default custom-select" v-model="dificultad">
                 <option selected value="undefined">Selecciona una dificultad</option>
@@ -31,21 +31,13 @@
                     </div>
                 </mdb-col>
             </mdb-row>
+            <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
             <dibujar ref="dibujo" v-show="compTramos"/>
             <formulas ref="formulas" v-show="compTramos" />
         </mdb-card-body>
     </mdb-card>
-    <mdb-row>
-        <mdb-col>
-            <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
-        </mdb-col>
-        <mdb-col v-if="compTramos && !modificando">
-            <mdb-btn class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
-        </mdb-col>
-        <mdb-col v-if="compTramos && modificando">
-            <mdb-btn class="my-3" block color="unique" @click="modificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
-        </mdb-col>
-    </mdb-row>
+    <mdb-btn v-if="compTramos && !modificando" class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
+    <mdb-btn v-if="compTramos && modificando" class="my-3" block color="unique" @click="modificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
 </div>
 </template>
 
@@ -54,8 +46,8 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
         mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon,
          } from 'mdbvue';
 import enunciado from '@/components/editor/enunciado';
-import dibujar from '@/components/editor/dibujaViga';
-import formulas from '@/components/editor/formulas';
+import dibujar from '@/components/auxVigas/dibujaViga';
+import formulas from '@/components/auxVigas/formulas';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, cargaEjVigas } from '@/assets/js/auxiliares/ejercicio.js';
 import { ejercicio, ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';

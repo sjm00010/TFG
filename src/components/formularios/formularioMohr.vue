@@ -4,7 +4,7 @@
         <mdb-card-body>
             <mdb-card-title>Datos del ejercicio</mdb-card-title>
             <mdb-card-text>Introduce los datos requeridos. Cuando los hayas introducido verificalos para continuar, si todos los datos han sido verificados se habilitará la opción de crear ejercicio.</mdb-card-text>
-            <h4 class="text-center"><small class="text-muted">DIFICUALTAD</small></h4>
+            <h4 class="text-center"><small class="text-muted">DIFICULTAD</small></h4>
             <mdb-card-text class="text-center">Seleccione una dificultad:</mdb-card-text>
             <select class="browser-default custom-select" v-model="dificultad">
                 <option selected value="undefined">Selecciona una dificultad</option>
@@ -144,7 +144,7 @@ export default {
     data(){
         return{
             dificultad: ejMohr.dificultad,
-            tipo: isNaN(ejMohr.sx) ? 2 : 1,
+            tipo: isNaN(ejMohr.sx) ? 1 : 2,
             datos: { sx: ejMohr.sx , sy: ejMohr.sy, txy: ejMohr.txy, B: ejMohr.B,
                      s1: ejMohr.s1, s2: ejMohr.s2, a: ejMohr.a, E: ejMohr.E, v: ejMohr.v},
             dibujar: false
@@ -159,8 +159,8 @@ export default {
                 this.error('Valor inválido', 'El valor de &beta; no es válido. Revise el campo.');
                 error = true;
             }else{
-                this.$refs.E.classList.remove('invalid');
-                this.$refs.E.classList.add('valid');
+                this.$refs.B.classList.remove('invalid');
+                this.$refs.B.classList.add('valid');
             }
             if(isNaN(this.datos.E)){
                 this.$refs.E.classList.remove('valid');
@@ -310,8 +310,6 @@ export default {
             ejMohr.B = this.datos.B;
             ejMohr.E = this.datos.E;
             ejMohr.v = this.datos.v;
-
-            console.log(ejMohr);
 
             const ej = JSON.stringify({...ejMohr});
 

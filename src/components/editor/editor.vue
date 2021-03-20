@@ -124,7 +124,7 @@ export default {
             if(url !== null){
                 url = url.match(/d\/(?<id>\w+)\//)?.groups.id;
                 if (url) {
-                    this.$refs.textarea.value += `<img src='https://drive.google.com/uc?export=view&id=${url}' alt='Figura 1' class='img-fluid my-2'>`
+                    this.$refs.textarea.value += `<img src='https://drive.google.com/uc?export=view&id=${url}' alt='Figura 1' class='img-fluid my-2' style="max-width: 75%; max-height: 200px">`
                     this.actualizar();
                 }else{
                     this.$notify({

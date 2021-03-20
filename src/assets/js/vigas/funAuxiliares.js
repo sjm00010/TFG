@@ -37,19 +37,19 @@ export function redibuja(outerCanvasContainer){
             case 'Viga':
                 dibujo.addViga(elemento.magnitud);
                 break;
-            case 'Soporte fijo':
+            case 'Apoyo fijo':
                 dibujo.addSoporteFijo(val.calculaSegmento(elemento.segmento));
                 break;
-            case 'Soporte simple':
+            case 'Apoyo simple':
                 dibujo.addSoporteSimple(val.calculaSegmento(elemento.segmento));
                 break;
-            case 'Soporte móvil':
+            case 'Apoyo móvil':
                 dibujo.addSoporteMovil(val.calculaSegmento(elemento.segmento));
                 break;
-            case 'Punto de carga':
+            case 'Carga puntual':
                 dibujo.addPuntoCarga( val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
-            case 'Barra':
+            case 'Voladizo vertical':
                 dibujo.addBarra( val.calculaSegmento(elemento.segmento), elemento.magnitud, elemento.d);
                 break;
             case 'Momento':
@@ -58,7 +58,7 @@ export function redibuja(outerCanvasContainer){
             case 'Carga distribuida':
                 dibujo.addCargaDistribuida( val.calculaSegmento(elemento.segmento), val.calculaSegmento(elemento.segmentoFinal), elemento.magnitud);
                 break;
-            case 'Normal':
+            case 'Axil':
                 dibujo.addNormal(val.calculaSegmento(elemento.segmento), elemento.magnitud);
                 break;
         }
@@ -76,7 +76,7 @@ export function redibuja(outerCanvasContainer){
     let tam = val.calculaSegmento(val.numTramos()); // Tamaño de la viga
     dibujo.addViga(tam);
     val.vinculaViga(tam);
-    val.pushElemento("Viga", {nombre: 'V', magnitud : tam});
+    val.pushElemento("Viga", {nombre: 'L', magnitud : tam});
 }
 
 /**
@@ -89,7 +89,7 @@ export function addSoporte(nom, tipo, seg){
     let coorX = val.calculaSegmento(seg);
     let error = val.verificaSoporte(tipo, coorX);
     if(error.existe) return error;
-    val.pushElemento("Soporte " + tipo, 
+    val.pushElemento("Apoyo " + tipo, 
                     {nombre: nom, magnitud: tipo, segmento: seg});
     switch(tipo){
         case 'simple':
@@ -117,7 +117,7 @@ export function addPuntoCarga(nom, seg, P, min, max){
     let error = val.verificaPuntoC(P, min, max);
     if(error.existe) return error;
     dibujo.addPuntoCarga(coorX, P);
-    val.pushElemento("Punto de carga", { nombre: nom, magnitud: P, segmento: seg, min:  min, max: max});
+    val.pushElemento("Carga puntual", { nombre: nom, magnitud: P, segmento: seg, min:  min, max: max});
 }
 
 /**
@@ -136,7 +136,7 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
     if(error.existe) return error;
     let coorX = val.calculaSegmento(seg);
     dibujo.addBarra(coorX, H, d);
-    val.pushElemento("Barra", {
+    val.pushElemento("Voladizo vertical", {
         nombre: nom,
         magnitud: H,
         min: min,
@@ -150,6 +150,7 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
 
 /**
  * Función que dibuja la normal
+ * @param {String} nom Nombre del elemento
  * @param {Int} seg Posición del vector tramos del segmento asociado
  * @param {Int} N Valor de la carga
  * @param {Int} min Valor mínimo de la carga
@@ -158,8 +159,8 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
 export function addNormal(nom, seg, N, min, max){
     let error = val.verificaNormal(N, min, max);
     if(error.existe) return error;
-    dibujo.addNormal( seg == "inicio" ? true : false, N);
-    val.pushElemento("Normal", {nombre: nom, segmento: seg, magnitud: N, min: min, max: max});
+    dibujo.addNormal( seg == 1, N);
+    val.pushElemento("Axil", {nombre: nom, segmento: seg, magnitud: N, min: min, max: max});
 }
 
 /**

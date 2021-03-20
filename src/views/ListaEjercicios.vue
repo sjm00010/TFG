@@ -7,7 +7,7 @@
         </div>
         <mdb-btn block color="info" @click="cargarEjercicios">Recargar ejercicios</mdb-btn>
         <hr/>        
-        <tipo class="mb-3" titulo="Cálculo de apoyo en vigas" color="aqua-gradient"></tipo>
+        <tipo class="mb-3" titulo="Diagramas de esfuerzos en vigas" color="aqua-gradient"></tipo>
         <mdb-row v-if="this.ejVigas.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"

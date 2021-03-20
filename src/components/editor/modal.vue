@@ -46,13 +46,13 @@
                 
                 <p>Introduzca los datos de la carga requeridos:</p>
                 <mdb-input label="Valor por defecto" class="mb-3" type="number" v-model="datos.magnitud" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> kN{{this.modal.momento ? '·m' : ''}}{{this.modal.cDist ? '/m' : ''}}</span>
                 </mdb-input>
                 <mdb-input label="Valor mínimo" class="mb-3 red-text" type="number" v-model="datos.min" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> kN{{this.modal.momento ? '·m' : ''}}{{this.modal.cDist ? '/m' : ''}}</span>
                 </mdb-input>
                 <mdb-input label="Valor máximo" class="mb-3" type="number" v-model="datos.max" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> kN{{this.modal.momento ? '·m' : ''}}{{this.modal.cDist ? '/m' : ''}}</span>
                 </mdb-input>
             </div>
 
@@ -74,11 +74,17 @@
                 </mdb-row>
             </div>
 
-            <p>Seleccione el tramo al que está ligado (se dibujará al final del tramo, si desea pintarla en al inicio seleccione <i>inicio</i>):</p>
-            <select class="browser-default custom-select my-2" v-model="datos.segmento">
+            <p>Seleccione el tramo al que está ligado (se dibujará al final del tramo, si desea pintarla al inicio, seleccione <i>Inicio</i>):</p>
+            <select v-if="!this.modal.normal" class="browser-default custom-select my-2" v-model="datos.segmento">
                 <option selected value=''>Seleccione uno...</option>
                 <option value='0'>Inicio (0)</option>
                 <option v-for="(tramo, i) in tramos" :key="i" :value="i+1">{{i+1}}</option>
+            </select>
+
+            <select v-if="this.modal.normal" class="browser-default custom-select my-2" v-model="datos.segmento">
+                <option selected value=''>Seleccione uno...</option>
+                <option value='0'>Inicio</option>
+                <option value='1'>Final</option>
             </select>
 
             <div v-show="this.modal.cDist"><!-- carga distribuida -->
@@ -90,15 +96,15 @@
             </div>
 
             <div v-show="this.modal.barra"><!-- barra -->
-                <p class="mt-3">Introduzca los datos de la separación con la viga:</p>
+                <p class="mt-3">Introduzca los datos de la longitud del voladizo:</p>
                 <mdb-input label="Valor por defecto" class="mb-3" type="number" v-model="datos.d" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
                 <mdb-input label="Valor mínimo" class="mb-3 red-text" type="number" v-model="datos.minD" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
                 <mdb-input label="Valor máximo" class="mb-3" type="number" v-model="datos.maxD" @keyup.enter.native="redirige">
-                    <span class="input-group-text md-addon" slot="append"> kN</span>
+                    <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
             </div>
         </mdb-modal-body>
@@ -164,12 +170,12 @@ export default {
         visualiza(t){
             this.tramos = numTramos();
             this.tipo = t; // Asigno el tipo de modal
-            this.modal.pCarga = t == 'Punto de carga';
+            this.modal.pCarga = t == 'Carga puntual';
             this.modal.momento = t == 'Momento';
             this.modal.cDist = t == 'Carga distribuida';
-            this.modal.normal = t == 'Normal';
-            this.modal.soporte = t == 'Soporte';
-            this.modal.barra = t == 'Barra';
+            this.modal.normal = t == 'Axil';
+            this.modal.soporte = t == 'Apoyo';
+            this.modal.barra = t == 'Voladizo vertical';
         },
         redirige(){
             if(this.mostrar.edicion)
@@ -181,8 +187,8 @@ export default {
             if(!this.verificaInputs()){
                 let error;
                 switch (this.tipo.toString()){
-                    case 'Punto de carga':
-                        error = aux.addPuntoCarga('P'+ num('Punto de carga'), parseInt(this.datos.segmento), 
+                    case 'Carga puntual':
+                        error = aux.addPuntoCarga('P'+ num('Carga puntual'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max));
                         break;
@@ -196,18 +202,18 @@ export default {
                                     parseInt(this.datos.segmentoFinal), parseInt(this.datos.magnitud),
                                     parseInt(this.datos.min), parseInt(this.datos.max));
                         break;
-                    case 'Normal':
-                        error = aux.addNormal('N'+ num('Normal'), parseInt(this.datos.segmento), 
+                    case 'Axil':
+                        error = aux.addNormal('N'+ num('Axil'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max));
                         break;
-                    case 'Barra':
-                        error = aux.addBarra( 'H'+ num('Barra'), parseInt(this.datos.segmento), 
+                    case 'Voladizo vertical':
+                        error = aux.addBarra( 'H'+ num('Voladizo vertical'), parseInt(this.datos.segmento), 
                                     parseInt(this.datos.magnitud), parseInt(this.datos.min), 
                                     parseInt(this.datos.max), parseInt(this.datos.d),
                                     parseInt(this.datos.minD), parseInt(this.datos.maxD));
                         break;
-                    case 'Soporte':
+                    case 'Apoyo':
                         error = aux.addSoporte('S', this.datos.tipo , parseInt(this.datos.segmento));
                         break;
                 }
@@ -239,7 +245,7 @@ export default {
         },
         verificaInputs(){
             let error = false;
-            if(this.tipo !== 'Soporte')
+            if(this.tipo !== 'Apoyo')
                 if(this.datos.magnitud === '' || this.datos.min === '' || this.datos.max === ''){
                     this.$notify({
                             group: 'app',
@@ -251,7 +257,7 @@ export default {
                     error= true;
                 }
 
-            if(this.tipo === 'Soporte')
+            if(this.tipo === 'Apoyo')
                 if(this.datos.tipo === ''){
                     this.$notify({
                         group: 'app',
@@ -287,7 +293,7 @@ export default {
                 }
             }
 
-            if (this.tipo === 'Barra'){
+            if (this.tipo === 'Voladizo vertical'){
                 if(this.datos.d === '' || this.datos.minD === '' || this.datos.maxD === ''){
                     this.$notify({
                             group: 'app',

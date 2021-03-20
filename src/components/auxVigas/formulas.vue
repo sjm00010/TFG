@@ -1,17 +1,17 @@
 <template>
 <div>
-    <h4 class="text-center"><small class="text-muted">FORMULAS DE LAS LEYES</small></h4>
+    <h4 class="text-center"><small class="text-muted">FÓRMULAS DE LAS LEYES</small></h4>
     <hr/>
     Para usar las variables anteriormente introducidas se debe introducir:
     <ul>
-        <li><b>Tramos</b>: para referenciar el valor de un tramo se debe usar <i>t_N</i>, siendo <i>N</i> el numero del tramo.</li>
-        <li><b>Variables</b>: para referenciar el valor de un elemento del dibujo se debe usar el ID de la tabla (#), <br/> por ejemplo <i>P_1</i>, copiando el ID con el subindice de la forma <i>X_N</i>.</li>
-        <li><b>Variables auxiliares</b>: para referenciar el valor de una varables auxilar se debe usar <i>A_N</i>, siendo <i>N</i> el numero de la variable auxiliar.</li>
+        <li><b>Tramos</b>: para referenciar el valor de un tramo se debe usar <i>L_N</i>, siendo <i>N</i> el número del tramo.</li>
+        <li><b>Variables</b>: para referenciar el valor de un elemento del dibujo se debe usar el ID de la tabla (#), <br/> por ejemplo <i>P_1</i>, copiando el ID con el subíndice de la forma <i>X_N</i>.</li>
+        <li><b>Variables auxiliares</b>: para referenciar el valor de una variables auxilar se debe usar <i>A_N</i>, siendo <i>N</i> el número de la variable auxiliar.</li>
     </ul>
     <small class="text-muted"><mdb-icon icon="info-circle" /> Para acceder a la distancia de las barras usar <i>d_X</i>, siendo <i>X</i> el nº de la barra.</small>
     <hr/>
     <h5 class="text-center"><small class="text-muted">VARIABLES AUXILIARES</small></h5>
-    <mdb-card-text class="text-center">Introduce las formulas para las variables que necesites.</mdb-card-text>
+    <mdb-card-text class="text-center">Introduce las fórmulas para las variables que necesites.</mdb-card-text>
     <mdb-btn block outline="success" @click="addAuxiliar"><mdb-icon size="lg" icon="plus-circle"/> Añadir variable</mdb-btn>
     <mdb-row class="my-3">
         <mdb-col md="12">
@@ -20,31 +20,31 @@
                     <mdb-btn outline="white" class="z-depth-0 px-0 py-0" flat size="lg" @click="delAuxiliar(i)"><mdb-icon color="red" size="lg" icon="minus-circle"/></mdb-btn>
                     <span class="input-group-text md-addon"><b>A<sub>{{i+1}}</sub></b></span>
                 </div>
-                <mdb-input type="text" label="Formula del tramo" v-model="auxiliares[i]"/>
+                <mdb-input type="text" label="Fórmula del tramo" v-model="auxiliares[i]"/>
                 <katex-element :expression="'A_{'+(i+1)+'}='+aux" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
     </mdb-row>
     <h5 class="text-center"><small class="text-muted">FUNCIONES DE LOS TRAMOS</small></h5>
-    <mdb-card-text class="text-center">Introduce las formulas (EN LATEX) para realizar el cálculo de las gráficas. Si se quiere unir dos puntos con una recta se dabe dar la ecuación en función de <i>x</i>.</mdb-card-text>
+    <mdb-card-text class="text-center">Introduce las fórmulas (EN LATEX) para realizar el cálculo de las gráficas. Si se quiere unir dos puntos con una recta se debe dar la ecuación en función de <i>x</i>.</mdb-card-text>
     <mdb-row>
         <mdb-col md="12">
-            <mdb-card-text class="text-center">Esfuerzos de axiles</mdb-card-text>
+            <mdb-card-text class="text-center">Esfuerzos axiles</mdb-card-text>
             <div class="md-form input-group" v-for="(formula, i) in formulas" :key="i">
                 <div class="input-group-prepend">
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
-                <mdb-input type="text" label="Formula del tramo" v-model="formula.axiles"/>
+                <mdb-input type="text" label="Fórmula del tramo" v-model="formula.axiles"/>
                 <katex-element :expression="formula.axiles" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
         <mdb-col md="12">
-            <mdb-card-text class="text-center">Esfuerzos de cortantes</mdb-card-text>
+            <mdb-card-text class="text-center">Esfuerzos cortantes</mdb-card-text>
             <div class="md-form input-group" v-for="(formula, i) in formulas" :key="i">
                 <div class="input-group-prepend">
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
-                <mdb-input type="text" label="Formula del tramo" v-model="formula.cortantes"/>
+                <mdb-input type="text" label="Fórmula del tramo" v-model="formula.cortantes"/>
                 <katex-element :expression="formula.cortantes" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
@@ -54,7 +54,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text md-addon"><b>Tramo {{i+1}}</b></span>
                 </div>
-                <mdb-input type="text" label="Formula del tramo" v-model="formula.flectores"/>
+                <mdb-input type="text" label="Fórmula del tramo" v-model="formula.flectores"/>
                 <katex-element :expression="formula.flectores" :throwOnError="false" :display-mode="true"/>
             </div>
         </mdb-col>
