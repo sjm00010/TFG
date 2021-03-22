@@ -118,6 +118,7 @@ export default {
             }
         },
         async crear(){
+            if(!this.verificar()) return;
             ejViga.dificultad = this.dificultad;
             ejViga.enunciado = ejercicio.enunciado;
             ejViga.ayuda = ejercicio.ayuda;
@@ -126,6 +127,8 @@ export default {
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
+            ejViga.E = this.$refs.formulas.E;
+            ejViga.I = this.$refs.formulas.I;
 
             const ej = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
@@ -155,6 +158,7 @@ export default {
             }
         },
         async modificar(){
+            if(!this.verificar()) return;
             ejViga.dificultad = this.dificultad;
             ejViga.enunciado = ejercicio.enunciado;
             ejViga.ayuda = ejercicio.ayuda;
@@ -163,6 +167,8 @@ export default {
             ejViga.elementos = elementos;
             ejViga.formulas = this.$refs.formulas.formulas;
             ejViga.auxiliares = this.$refs.formulas.auxiliares;
+            ejViga.E = this.$refs.formulas.E;
+            ejViga.I = this.$refs.formulas.I;
 
             const ej = JSON.stringify({...ejViga})
                                             .replace('_tramos', 'tramos')
@@ -191,6 +197,19 @@ export default {
                     type: 'error'
                 });
             }
+        },
+        verificar(){
+            if(!this.$refs.formulas.verificar()){
+                this.$notify({
+                    group: 'log',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error en la deformada</b>',
+                    text: '<i style="font-size:15px"> Se han proporcionado los datos para la deformada, pero estan incompletos.</i>',
+                    duration: 5000,
+                    type: 'error'
+                });
+                return false;
+            }
+            return true;
         }
     }
 }

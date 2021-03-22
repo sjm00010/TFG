@@ -19,12 +19,14 @@ export class Ejercicio {
 }
 
 export class Viga extends Ejercicio {
-    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', tramos = [], elementos = [], formulas = [], auxiliares = []) {
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', tramos = [], elementos = [], formulas = [], auxiliares = [], E, I) {
         super(id, dificultad, enunciado, ayuda, video);
         this._tramos = tramos;
         this._elementos = elementos;
         this._formulas = formulas;
         this._auxiliares = auxiliares;
+        this.E = E;
+        this.I = I;
     }
 
     set tramos(nTramos){

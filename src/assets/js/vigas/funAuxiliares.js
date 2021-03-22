@@ -159,7 +159,7 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
 export function addNormal(nom, seg, N, min, max){
     let error = val.verificaNormal(N, min, max);
     if(error.existe) return error;
-    dibujo.addNormal( seg == 1, N);
+    dibujo.addNormal( val.calculaSegmento(seg), N);
     val.pushElemento("Axil", {nombre: nom, segmento: seg, magnitud: N, min: min, max: max});
 }
 

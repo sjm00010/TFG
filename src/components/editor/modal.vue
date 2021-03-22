@@ -75,16 +75,10 @@
             </div>
 
             <p>Seleccione el tramo al que está ligado (se dibujará al final del tramo, si desea pintarla al inicio, seleccione <i>Inicio</i>):</p>
-            <select v-if="!this.modal.normal" class="browser-default custom-select my-2" v-model="datos.segmento">
+            <select class="browser-default custom-select my-2" v-model="datos.segmento">
                 <option selected value=''>Seleccione uno...</option>
                 <option value='0'>Inicio (0)</option>
                 <option v-for="(tramo, i) in tramos" :key="i" :value="i+1">{{i+1}}</option>
-            </select>
-
-            <select v-if="this.modal.normal" class="browser-default custom-select my-2" v-model="datos.segmento">
-                <option selected value=''>Seleccione uno...</option>
-                <option value='0'>Inicio</option>
-                <option value='1'>Final</option>
             </select>
 
             <div v-show="this.modal.cDist"><!-- carga distribuida -->

@@ -42,44 +42,6 @@
         </mdb-card-body>
     </mdb-card>
 
-    <mdb-card class="my-3">
-        <mdb-card-body>
-            <mdb-row>
-                <mdb-col xl="6" class="mb-3">
-                    <p class="lead">Módulo elástico <i>E</i> (· 10<sup>7</sup> kN/m<sup>2</sup>)</p>
-                    <select class="browser-default custom-select" v-model="E">
-                        <option value="null" selected>Selecciona un módulo...</option>
-                        <option value="Aluminio">Aluminio (7)</option>
-                        <option value="Cobre">Cobre (10)</option>
-                        <option value="Acero">Acero (21)</option>
-                    </select>
-                </mdb-col>
-                <mdb-col xl="6" class="mb-3">
-                    <p class="lead">Momento de inercia <i>I</i> (· 10<sup>-8</sup> kN/m<sup>4</sup>)</p>
-                    <select class="browser-default custom-select" v-model="I">
-                        <option value="null" selected>Selecciona un momento...</option>
-                        <option value="120">IPN 120 (328)</option>
-                        <option value="160">IPN 160 (935)</option>
-                        <option value="200">IPN 200 (2140)</option>
-                        <option value="240">IPN 240 (4250)</option>
-                        <option value="280">IPN 280 (7590)</option>
-                        <option value="320">IPN 320 (12510)</option>
-                        <option value="360">IPN 360 (19610)</option>
-                        <option value="400">IPN 400 (29210)</option>
-                    </select>
-                </mdb-col>
-            </mdb-row>
-            <mdb-row>
-                <mdb-col xl="6" class="mb-3" v-show="this.giro != null">
-                    <p class="lead blue-grey-text">Giro en C : {{this.giro}} rad</p>
-                </mdb-col>
-                <mdb-col xl="6" class="mb-3" v-show="this.flecha != null">
-                    <p class="lead blue-grey-text">Fecha en D : {{this.flecha}} metros</p>
-                </mdb-col>
-            </mdb-row>
-        </mdb-card-body>
-    </mdb-card>
-
     <div class="d-flex">
         <mdb-popover class="ml-auto" trigger="hover">
             <span slot="header">Sabías que...</span>
@@ -90,9 +52,32 @@
         </mdb-popover>
     </div>
 
-    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzo de axiles" color="rgb(41, 128, 185)" :invertida="false" ></grafica>
-    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzo cortantes" color="rgb(231, 76, 60)" :invertida="false" ></grafica>
-    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" ></grafica>
+    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN"></grafica>
+    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN"></grafica>
+    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m"></grafica>
+
+    <mdb-card class="my-3" v-if="datos.E">
+        <mdb-card-body>
+            <mdb-row>
+                <mdb-col xl="6" class="mb-3">
+                    <p class="lead">Módulo elástico <i>E</i> (· 10<sup>7</sup> kN/m<sup>2</sup>)</p>
+                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.E" placeholder="Módulo elástico" @input="cambiaEoI('E', datos.E)">
+                        <span class="input-group-text md-addon" slot="prepend"><i>E = </i></span>
+                        <span class="input-group-text md-addon" slot="append">· 10<sup>7</sup> kN/m<sup>2</sup></span>
+                    </mdb-input>
+                </mdb-col>
+                <mdb-col xl="6" class="mb-3">
+                    <p class="lead">Momento de inercia <i>I</i> (· 10<sup>-8</sup> m<sup>4</sup>)</p>
+                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.I" placeholder="Momento de inercia" @input="cambiaEoI('I', datos.I)">
+                        <span class="input-group-text md-addon" slot="prepend"><i>I = </i></span>
+                        <span class="input-group-text md-addon" slot="append">· 10<sup>-8</sup> m<sup>4</sup></span>
+                    </mdb-input>
+                </mdb-col>
+            </mdb-row>
+        </mdb-card-body>
+    </mdb-card>
+
+    <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm"></grafica>
 
 </mdb-container>
 </template>
@@ -106,7 +91,8 @@ import grafica from '@/components/visualizar/vigas/grafica';
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
 import { ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
-import { inicializar, actualizaTramo, actualizaElemento, calcular } from '@/assets/js/vigas/calculos.js';
+import { inicializar, actualizaTramo, actualizaElemento, 
+         actualizaEeI, calcular, calculaDeformada } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",
     data(){
@@ -116,14 +102,11 @@ export default {
             modal2: false,
             elementos: [],
             d: [],
-            E: null,
-            I: null,
-            giro: null,
-            flecha: null,
             datosGraficas: {
                 axiles: [],
                 cortantes: [],
                 flectores: [],
+                deformada: []
             },
             editado: true,
             programada: setInterval( this.actualizaGrafica, 1000)
@@ -152,12 +135,29 @@ export default {
         },
         actualizaGrafica(){
             if(this.editado){
-                let resultado = calcular();
-                this.datosGraficas.axiles.splice(0, this.datosGraficas.axiles.length, ...resultado.axiles);
-                this.datosGraficas.cortantes.splice(0, this.datosGraficas.cortantes.length, ...resultado.cortantes);
-                this.datosGraficas.flectores.splice(0, this.datosGraficas.flectores.length, ...resultado.flectores);
+                let resultado = calcular(this.datos.E);
+                if(resultado){
+                    this.datosGraficas.axiles.splice(0, this.datosGraficas.axiles.length, ...resultado.axiles);
+                    this.datosGraficas.cortantes.splice(0, this.datosGraficas.cortantes.length, ...resultado.cortantes);
+                    this.datosGraficas.flectores.splice(0, this.datosGraficas.flectores.length, ...resultado.flectores);
+                    this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...resultado.deformada);
+                }else{
+                    this.$notify({
+                        group: 'log',
+                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al calcular los datos del ejercicio</b>',
+                        text: '<i style="font-size:15px"> Ocurrio un problema al tratar de calcular los datos de las gráficas.</i>',
+                        duration: 7000,
+                        type: 'error'
+                    });
+                }
+                
                 this.editado = false;
             }
+        },
+        cambiaEoI(variable, valor){
+            console.log(variable, valor)
+            actualizaEeI(variable, valor);
+            this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...calculaDeformada());
         }
     },
     mounted() {

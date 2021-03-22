@@ -20,6 +20,11 @@ export function inicializar(){
         }
     }
 
+    if(ejViga.E){
+        variables['mE'] = ejViga.E * Math.pow(10, 7);
+        variables['I'] = ejViga.I * Math.pow(10, -8);
+    }
+
     adaptarFormulas();
 }
 
@@ -32,6 +37,13 @@ export function actualizaElemento(nom, valor){
     variables[nom.replace(/(\w+)(\d+)/, '$1_$2')] = parseFloat(valor);
 }
 
+export function actualizaEeI(variable, valor){
+    if(variable === 'E')
+        variables['mE'] = parseFloat(valor) * Math.pow(10, 7);
+    else
+        variables[variable] = parseFloat(valor) * Math.pow(10, -8);
+}
+
 /**
  * Función para transformar algunos parametros de Katex para que Evaluatex los puede evaluar
  */
@@ -40,10 +52,14 @@ function adaptarFormulas(){
         ejViga.formulas[i].axiles = ejViga.formulas[i].axiles.replace('\\pi', 'PI');
         ejViga.formulas[i].cortantes = ejViga.formulas[i].cortantes.replace('\\pi', 'PI');
         ejViga.formulas[i].flectores = ejViga.formulas[i].flectores.replace('\\pi', 'PI');
+        if(ejViga.E){
+            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('\\pi', 'PI');
+            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('E', 'mE');
+        }
     }
 }
 
-export function calcular(){
+export function calcular(deforma){
     for(let i = 0; i < ejViga.auxiliares.length; i++){
         variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
     }
@@ -51,34 +67,59 @@ export function calcular(){
     const resultado= {
         axiles: [],
         cortantes: [],
-        flectores: []
+        flectores: [], 
+        deformada: []
     }
 
     const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
 
-    let tramo = 0, total = ejViga.tramos[0].valor;
+    let tramo = 0, total = parseFloat(ejViga.tramos[0].valor);
     try{
         for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
             resultado.axiles.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()).toFixed(3))]);
             resultado.cortantes.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()).toFixed(3))]);
             resultado.flectores.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()).toFixed(3))]);
+            if(deforma)
+                resultado.deformada.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()).toExponential(3))]);
 
-            if(x >= total){
+            if(x > total){
                 tramo++;
-                total += ejViga.tramos[tramo].valor;
+                total += parseFloat(ejViga.tramos[tramo].valor);
             } 
         }
     }catch(err){
         console.log("ERROR AL CALCULAR LOS DATOS")
         console.log(err)
-        return false;
+        return null;
     }
 
     return resultado;
 }
 
 
-export function calculaIyE(){
-    
+export function calculaDeformada(){
+    for(let i = 0; i < ejViga.auxiliares.length; i++){
+        variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
+    }
+
+    const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
+    let tramo = 0, total = parseFloat(ejViga.tramos[0].valor), resultado= [];
+
+    try{
+        for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
+            resultado.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()).toFixed(3))]);
+
+            if(x > total){
+                tramo++;
+                total += parseFloat(ejViga.tramos[tramo].valor);
+            } 
+        }
+    }catch(err){
+        console.log("ERROR AL CALCULAR LOS DATOS")
+        console.log(err)
+        return null;
+    }
+
+    return resultado;
 }
     

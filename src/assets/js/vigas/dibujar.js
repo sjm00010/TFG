@@ -20,7 +20,7 @@ let altura = 150;
   * @param {int} tam Tamaño de la viga
   */
  export function addViga(tam){
-    tamViga = tam;
+    tamViga = parseFloat(tam);
     
     // Creo y añado la viga
     const viga = new fabric.Line([ inicio, altura, fin, altura ], {
@@ -77,7 +77,15 @@ let altura = 150;
     canvas.add(linea);
     canvas.add(arrow);
 
-    escribir("x(m)", fin+50, 250, "black");
+    canvas.add(new fabric.Text("x(m)", {
+        fontFamily: 'arial',
+        fill: "black",
+        fontSize: 20,
+        left: fin+50,
+        top: 250,
+        selectable: false,
+        evented: false
+    }));
     addMarca(inicio, "0", 'black');
     addMarca(fin, tamViga.toString(), 'black');
 }
@@ -438,22 +446,18 @@ export function addCargaDistribuida(desdeX, hastaX, q){
 
 /**
  * Función que dibuja la normal
- * @param {boolean} derecha Donde dibujarla
+ * @param {int} coorX Coordenada con respecto a la viga
  * @param {int} N Valor de la carga
  */
-export function addNormal(derecha, N){
-    let x, linea, arrow;
+export function addNormal(coorX, N){
+    let x = recalculaX(coorX);
+    if(coorX === 0) x = x - 40;
+    if(coorX === tamViga) x = x + 40;
 
-    if(derecha){
-        x = recalculaX(tamViga);
-        linea = new fabric.Line([ x+10, altura, x+50, altura ], {
-            stroke: colores.morado,
-            strokeWidth: 2,
-            selectable: false,
-            evented: false,
-        });
+    let arrow;
+    if(N > 0){
         arrow = new fabric.Triangle({
-            left: x+50,
+            left: x+20,
             top: altura,
             originX: 'center',
             originY: 'center',
@@ -471,15 +475,8 @@ export function addNormal(derecha, N){
             evented: false,
         });
     }else{
-        x = recalculaX(0);
-        linea = new fabric.Line([ x-50, altura, x-10, altura ], {
-            stroke: colores.morado,
-            strokeWidth: 2,
-            selectable: false,
-            evented: false,
-        });
         arrow = new fabric.Triangle({
-            left: x-50,
+            left: x-20,
             top: altura,
             originX: 'center',
             originY: 'center',
@@ -497,14 +494,20 @@ export function addNormal(derecha, N){
             evented: false,
         });
     }
-    canvas.add(linea);
+    canvas.add(new fabric.Line([ x-20, altura, x+20, altura ], {
+        stroke: colores.morado,
+        strokeWidth: 2,
+        selectable: false,
+        evented: false,
+    }));
     canvas.add(arrow);
 
-    if(derecha)
-        escribir(N.toString()+" kN", x+40,  altura-15, colores.morado);
+    if(coorX > 0 && coorX < tamViga)
+        escribir(N.toString()+" kN", x,  altura+25, colores.morado);
     else
-        escribir(N.toString()+" kN", x-40,  altura-15, colores.morado);
-    addMarca(x, derecha ? tamViga.toString() : '0', colores.morado);
+        escribir(N.toString()+" kN", x,  altura-20, colores.morado);
+
+    addMarca(recalculaX(coorX), coorX.toString(), colores.morado);
 }
 
 // Funciones auxiliares al dibujo
@@ -561,14 +564,6 @@ function escribir( texto, x, y, color) {
  */
 function recalculaX(coorX){
     return (fin-inicio)*coorX/tamViga + inicio;
-}
-
-/**
- * Función que recalcula una cordenada del eje coordedado en relación a la viga
- * @param {int} coorX Coordenada del eje
- */
-export function recalculaCoorX(coorX){
-    return (coorX-inicio)*tamViga/(fin-inicio);
 }
 
 /**

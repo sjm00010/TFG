@@ -4,18 +4,17 @@
     <router-view/>
     <notifications group="log" width='75%' position="top center"/>
     <notifications class="my-2" group="app"/>
+    <footermb/>
   </div>
 </template>
 
 <script>
 import cabecera from '@/components/Cabecera';
+import footermb from '@/components/footer';
 import {cargaEjVigas} from '@/assets/js/auxiliares/ejercicio.js';
 export default {
   name: 'App',
-  components: {cabecera},
-  created(){
-
-  },
+  components: {cabecera, footermb},
   mounted(){
     this.$notify({
       group: 'log',

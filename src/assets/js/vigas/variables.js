@@ -62,52 +62,15 @@ export function num(tipo){
 // Flecha y giro
 export let E = 0, I = 0;
 export function setE(newE) {
-    switch(newE){
-        case "Aluminio":
-            E = 7 * Math.pow(10, 7);
-            break;
-        case "Cobre":
-            E = 10 * Math.pow(10, 7);
-            break;
-        case "Acero":
-            E = 21 * Math.pow(10, 7);
-            break;
-    }
+    E = newE;
 }
 export function setI(newI) {
-    switch(newI){
-        case "120":
-            I = 328 * Math.pow(10, -8);
-            break;
-        case "160":
-            I = 935 * Math.pow(10, -8);
-            break;
-        case "200":
-            I = 2140 * Math.pow(10, -8);
-            break;
-        case "240":
-            I = 4250 * Math.pow(10, -8);
-            break;
-        case "280":
-            I = 7590 * Math.pow(10, -8);
-            break;
-        case "320":
-            I = 12510 * Math.pow(10, -8);
-            break;
-        case "360":
-            I = 19610 * Math.pow(10, -8);
-            break;
-        case "400":
-            I = 29210 * Math.pow(10, -8);
-            break;
-    }
+    I = newI;
 }
 
 export function calculaSegmento(tramo){
     if(tramos.length === 0)
         tramos.splice(0, tramos.length, ...ejViga.tramos);
-    if(tramo === 0)
-        return 0;
     
     let total = 0;
     for (let i = 0; i < tramo; i++) {
@@ -176,7 +139,7 @@ export function verificaPuntoC(magnitud, min, max){
     if ( min > max){
         error.texto = "Datos incorrectos: El valor mínimo para la carga debe ser inferior al del máximo."
         error.existe= true;
-    } else if (Math.abs(magnitud) < min || Math.abs(magnitud) > max){
+    } else if (magnitud < min || magnitud > max){
         error.texto = "Datos incorrectos: El valor de la carga debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     } 
@@ -200,7 +163,7 @@ export function verificaNormal(magnitud, min, max){
     if ( min > max){
         error.texto = "Datos incorrectos: El valor mínimo para la carga debe ser inferior al del máximo."
         error.existe= true;
-    } else if (Math.abs(magnitud) < min || Math.abs(magnitud) > max){
+    } else if (magnitud < min || magnitud > max){
         error.texto = "Datos incorrectos: El valor de la carga debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     } 
@@ -227,7 +190,7 @@ export function verificaBarra(magnitud, min, max, d, minD, maxD){
     if ( min > max){
         error.texto = "Datos incorrectos: El valor mínimo para la carga debe ser inferior al del máximo."
         error.existe= true;
-    } else if (Math.abs(magnitud) < min || Math.abs(magnitud) > max){
+    } else if (magnitud < min || magnitud > max){
         error.texto = "Datos incorrectos: El valor de la carga debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     } 
@@ -291,7 +254,7 @@ export function verificaCargaD(pos, posf, magnitud, min, max){
     } else if ( min > max){
         error.texto = "Datos incorrectos: El valor mínimo para la carga debe ser inferior al del máximo."
         error.existe= true;
-    } else if (Math.abs(magnitud) < min || Math.abs(magnitud) > max){
+    } else if (magnitud < min || magnitud > max){
         error.texto = "Datos incorrectos: El valor de la carga debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     } 

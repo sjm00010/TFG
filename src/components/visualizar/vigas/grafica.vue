@@ -24,6 +24,10 @@ export default {
         invertida: {
             type: Boolean,
             required: true
+        },
+        unidad: {
+            type: String,
+            required: true
         }
     },
     components:{
@@ -38,7 +42,7 @@ export default {
                 yAxis: { // Eje principal
                     reversed: this.invertida,
                     title: {
-                        text: 'Magnitud',
+                        text: 'Magnitud ('+this.unidad+')',
                     },
                     labels: {
                         format: '{value}',
@@ -51,11 +55,11 @@ export default {
                     crosshair: true
                 }],
                 tooltip: {
-                    formatter: function () {
+                    formatter: ((unidad) => function () {
                         return this.points.reduce(function (s, point) {
-                            return s + '<br/><b>' + point.series.name + '</b>: ' + point.y;
-                        }, '<b>x</b>:'+ this.x+' m');
-                    },
+                            return s + '<br/><b>' + point.series.name + '</b>: ' + point.y + ' '+unidad;
+                        }, '<b>x</b>: '+ this.x+' m');
+                    })(this.unidad),
                     shared: true,
                 },
                 series: [
@@ -68,6 +72,5 @@ export default {
             },
         };
     }
-    
 }
 </script>
