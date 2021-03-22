@@ -6,7 +6,7 @@
 			<mdb-card-text>Selecciona un tipo de ejercicio de la lista para que aparezcan los datos requeridos para ese ejercicio.</mdb-card-text>
             <select class="browser-default custom-select custom-select-lg mb-3" v-model="tipo">
                 <option value="" selected>Selecciona un tipo</option>
-                <option value="Vigas">Vigas</option>
+                <option value="Vigas">Diagramas de esfuerzos en vigas</option>
                 <option value="Mohr">Circulos de Mohr</option>
                 <!-- <option value="Matrices">Matrices</option> -->
             </select>

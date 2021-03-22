@@ -6,7 +6,7 @@
 			<mdb-card-text>Tipo de ejercicio :</mdb-card-text>
             <select class="browser-default custom-select custom-select-lg mb-3" v-model="tipo" disabled>
                 <option value="" selected>Selecciona un tipo</option>
-                <option value="Vigas">Vigas</option>
+                <option value="Vigas">Diagramas de esfuerzos en vigas</option>
                 <option value="Matrices">Matrices</option>
                 <option value="Mohr">Círculos de Mohr</option>
             </select>

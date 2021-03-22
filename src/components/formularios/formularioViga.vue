@@ -12,7 +12,6 @@
                 <option :value="2">Normal</option>
                 <option :value="3">Difícil</option>
             </select>
-            <h4 class="text-center"><small class="text-muted">ENUNCIADO</small></h4>
             <enunciado/>
             <h4 class="text-center mt-3"><small class="text-muted">DATOS DE LOS TRAMOS</small></h4>
             <mdb-row>

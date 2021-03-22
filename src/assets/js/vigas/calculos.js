@@ -24,6 +24,7 @@ export function inicializar(){
 }
 
 export function actualizaTramo(pos, valor){
+    variables['L'] = variables['L'] - variables['L_'+pos] + parseFloat(valor);
     variables['L_'+pos] = parseFloat(valor);
 }
 
@@ -47,7 +48,6 @@ export function calcular(){
         variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
     }
 
-
     const resultado= {
         axiles: [],
         cortantes: [],
@@ -59,9 +59,9 @@ export function calcular(){
     let tramo = 0, total = ejViga.tramos[0].valor;
     try{
         for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
-            resultado.axiles.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()]);
-            resultado.cortantes.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()]);
-            resultado.flectores.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()]);
+            resultado.axiles.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()).toFixed(3))]);
+            resultado.cortantes.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()).toFixed(3))]);
+            resultado.flectores.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()).toFixed(3))]);
 
             if(x >= total){
                 tramo++;
@@ -71,7 +71,14 @@ export function calcular(){
     }catch(err){
         console.log("ERROR AL CALCULAR LOS DATOS")
         console.log(err)
+        return false;
     }
 
     return resultado;
 }
+
+
+export function calculaIyE(){
+    
+}
+    
