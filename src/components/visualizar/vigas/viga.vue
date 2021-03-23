@@ -52,9 +52,9 @@
         </mdb-popover>
     </div>
 
-    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN"></grafica>
-    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN"></grafica>
-    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m"></grafica>
+    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3"></grafica>
+    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3"></grafica>
+    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3"></grafica>
 
     <mdb-card class="my-3" v-if="datos.E">
         <mdb-card-body>
@@ -77,7 +77,7 @@
         </mdb-card-body>
     </mdb-card>
 
-    <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm"></grafica>
+    <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
 
 </mdb-container>
 </template>
@@ -155,7 +155,6 @@ export default {
             }
         },
         cambiaEoI(variable, valor){
-            console.log(variable, valor)
             actualizaEeI(variable, valor);
             this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...calculaDeformada());
         }

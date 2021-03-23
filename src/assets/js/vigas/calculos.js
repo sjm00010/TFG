@@ -76,11 +76,11 @@ export function calcular(deforma){
     let tramo = 0, total = parseFloat(ejViga.tramos[0].valor);
     try{
         for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
-            resultado.axiles.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()).toFixed(3))]);
-            resultado.cortantes.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()).toFixed(3))]);
-            resultado.flectores.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()).toFixed(3))]);
+            resultado.axiles.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()]);
+            resultado.cortantes.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()]);
+            resultado.flectores.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()]);
             if(deforma)
-                resultado.deformada.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()).toExponential(3))]);
+                resultado.deformada.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()]);
 
             if(x > total){
                 tramo++;
@@ -96,6 +96,15 @@ export function calcular(deforma){
     return resultado;
 }
 
+export function linea0(){
+    const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
+    
+    let resultado= [];
+    for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento)
+        resultado.push([parseFloat(x.toFixed(3)), 0]);
+
+    return resultado;
+}
 
 export function calculaDeformada(){
     for(let i = 0; i < ejViga.auxiliares.length; i++){
@@ -107,7 +116,7 @@ export function calculaDeformada(){
 
     try{
         for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
-            resultado.push([parseFloat(x.toFixed(3)), parseFloat((evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()).toFixed(3))]);
+            resultado.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()]);
 
             if(x > total){
                 tramo++;
