@@ -177,71 +177,69 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     }));
 
     addCaja(canvas, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
-
-    calculaPlano();
 }
 
 export function calculaPlano(){
-if(canvas){
-    if(planoA)
-        canvas.remove(planoA, eq1, eq2, cj1, cj2);
-        
-    // Representacion Eje X e Y
-    let ejeX = {x: datos.sA, y: -datos.tA};
-    let ejeY = {x: datos.sAprima, y: datos.tA};
+    if(canvas){
+        if(planoA)
+            canvas.remove(planoA, eq1, eq2, cj1, cj2);
+            
+        // Representacion Eje X e Y
+        let ejeX = {x: datos.sA, y: -datos.tA};
+        let ejeY = {x: datos.sAprima, y: datos.tA};
 
-    // Calculo las coordenadas de la recta
-    if (minX < 0 && maxX > 0)
-        ejeX.x = datos.sA < 0 ? centro - ratio*Math.abs(ejeX.x) : centro + ratio*Math.abs(ejeX.x);
-    else
-        ejeX.x = Math.abs(Math.abs(minX)-Math.abs(ejeX.x))*ratio+canvas.width*0.10;
-    ejeX.y = ratio*Math.abs(ejeX.y);
-    ejeX.y = -datos.tA < 0 ? canvas?.height/2 + ejeX.y : canvas?.height/2 - ejeX.y;
+        // Calculo las coordenadas de la recta
+        if (minX < 0 && maxX > 0)
+            ejeX.x = datos.sA < 0 ? centro - ratio*Math.abs(ejeX.x) : centro + ratio*Math.abs(ejeX.x);
+        else
+            ejeX.x = Math.abs(Math.abs(minX)-Math.abs(ejeX.x))*ratio+canvas.width*0.10;
+        ejeX.y = ratio*Math.abs(ejeX.y);
+        ejeX.y = -datos.tA < 0 ? canvas?.height/2 + ejeX.y : canvas?.height/2 - ejeX.y;
 
-    if (minX < 0 && maxX > 0)
-        ejeY.x = datos.sAprima < 0 ? centro - ratio*Math.abs(ejeY.x) : centro + ratio*Math.abs(ejeY.x);
-    else
-        ejeY.x = Math.abs(Math.abs(minX)-Math.abs(ejeY.x))*ratio+canvas.width*0.10;
-    ejeY.y = ratio*Math.abs(ejeY.y);
-    ejeY.y = datos.tA < 0 ? canvas.height/2 + ejeY.y : canvas.height/2 - ejeY.y;
+        if (minX < 0 && maxX > 0)
+            ejeY.x = datos.sAprima < 0 ? centro - ratio*Math.abs(ejeY.x) : centro + ratio*Math.abs(ejeY.x);
+        else
+            ejeY.x = Math.abs(Math.abs(minX)-Math.abs(ejeY.x))*ratio+canvas.width*0.10;
+        ejeY.y = ratio*Math.abs(ejeY.y);
+        ejeY.y = datos.tA < 0 ? canvas.height/2 + ejeY.y : canvas.height/2 - ejeY.y;
 
-    planoA = new fabric.Line([ ejeX.x, ejeX.y, ejeY.x, ejeY.y ], {
-        stroke: '#C3381D',
-        strokeWidth: 3,
-        selectable: false,
-        evented: false,
-    })
-    canvas.add(planoA);
+        planoA = new fabric.Line([ ejeX.x, ejeX.y, ejeY.x, ejeY.y ], {
+            stroke: '#C3381D',
+            strokeWidth: 3,
+            selectable: false,
+            evented: false,
+        })
+        canvas.add(planoA);
 
-    // Marcas del nuevo eje
-    eq1 = new fabric.Circle({ 
-        radius: 4, 
-        fill: '#C3381D',
-        stroke: 'black',
-        top: ejeX.y,
-        left: ejeX.x,
-        selectable: false,
-        evented: false 
-    });
-    canvas.add(eq1);
+        // Marcas del nuevo eje
+        eq1 = new fabric.Circle({ 
+            radius: 4, 
+            fill: '#C3381D',
+            stroke: 'black',
+            top: ejeX.y,
+            left: ejeX.x,
+            selectable: false,
+            evented: false 
+        });
+        canvas.add(eq1);
 
-    cj1 = addCajaFlotante(canvas, 'Plano A: ('+datos.sA.toFixed(1)+', '+(-datos.tA).toFixed(1)+')', '#C3381D', ejeX.x, ejeX.y-20);
+        cj1 = addCajaFlotante(canvas, 'Plano A: ('+datos.sA.toFixed(1)+', '+(-datos.tA).toFixed(1)+')', '#C3381D', ejeX.x, ejeX.y-20);
 
-    eq2 = new fabric.Circle({ 
-        radius: 4, 
-        fill: '#C3381D',
-        stroke: 'black',
-        top: ejeY.y,
-        left: ejeY.x,
-        selectable: false,
-        evented: false 
-    });
-    canvas.add(eq2);
+        eq2 = new fabric.Circle({ 
+            radius: 4, 
+            fill: '#C3381D',
+            stroke: 'black',
+            top: ejeY.y,
+            left: ejeY.x,
+            selectable: false,
+            evented: false 
+        });
+        canvas.add(eq2);
 
-    cj2 = addCajaFlotante(canvas, "Plano A': ("+datos.sAprima.toFixed(1)+', '+datos.tA.toFixed(1)+')', '#C3381D', ejeY.x, ejeY.y-20);
+        cj2 = addCajaFlotante(canvas, "Plano A': ("+datos.sAprima.toFixed(1)+', '+datos.tA.toFixed(1)+')', '#C3381D', ejeY.x, ejeY.y-20);
 
-    addTooltips();
-}
+        addTooltips();
+    }
 }
 
 function addTooltips(){

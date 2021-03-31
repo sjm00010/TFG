@@ -5,6 +5,10 @@ import { calculaSegmento } from '@/assets/js/vigas/variables.js';
 const DENSIDAD_PUNTOS = 1000;
 let variables = { };
 
+export function limpiar(){
+    variables = {};
+}
+
 export function inicializar(){
     for(let i = 0; i < ejViga.tramos.length; i++){
         variables['L_'+(i+1) ] = ejViga.tramos[i].valor;
@@ -21,7 +25,7 @@ export function inicializar(){
     }
 
     if(ejViga.E){
-        variables['mE'] = ejViga.E * Math.pow(10, 7);
+        variables['me'] = ejViga.E * Math.pow(10, 7);
         variables['I'] = ejViga.I * Math.pow(10, -8);
     }
 
@@ -39,7 +43,7 @@ export function actualizaElemento(nom, valor){
 
 export function actualizaEeI(variable, valor){
     if(variable === 'E')
-        variables['mE'] = parseFloat(valor) * Math.pow(10, 7);
+        variables['me'] = parseFloat(valor) * Math.pow(10, 7);
     else
         variables[variable] = parseFloat(valor) * Math.pow(10, -8);
 }
@@ -54,9 +58,17 @@ function adaptarFormulas(){
         ejViga.formulas[i].flectores = ejViga.formulas[i].flectores.replace('\\pi', 'PI');
         if(ejViga.E){
             ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('\\pi', 'PI');
-            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('E', 'mE');
+            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('E', 'me');
         }
     }
+}
+
+/**
+ * Función para transformar algunos parametros de Katex para que Evaluatex los puede evaluar
+ */
+ function restaurarFormulas(){
+    for (let i = 0; i < ejViga.formulas.length; i++)
+        ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('me', 'E');
 }
 
 export function calcular(deforma){
@@ -92,6 +104,9 @@ export function calcular(deforma){
         console.log(err)
         return null;
     }
+
+    if(ejViga.E)
+        restaurarFormulas();
 
     return resultado;
 }
@@ -131,4 +146,3 @@ export function calculaDeformada(){
 
     return resultado;
 }
-    

@@ -87,7 +87,6 @@ import { mdbContainer, mdbCardTitle, mdbInput,
          mdbBtn, mdbRow, mdbCol, mdbCard, mdbIcon,
          mdbCardBody, mdbPopover} from 'mdbvue';
 import grafica from '@/components/visualizar/vigas/grafica';
-
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
 import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
 import { ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';

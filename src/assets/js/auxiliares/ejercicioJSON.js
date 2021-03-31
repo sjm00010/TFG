@@ -17,11 +17,11 @@ export async function cargaEjercicio(id, tipo){
     switch(tipo){
         case 'Vigas':
         case 'viga':
-            url = URL+'/ejViga/'+id;
+            url = URL+'/ejercicio/viga/'+id;
             break;
         case 'Mohr':
         case 'mohr':
-            url = URL+'/ejMohr/'+id;
+            url = URL+'/ejercicio/mohr/'+id;
             break;
     }
 

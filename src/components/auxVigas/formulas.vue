@@ -133,11 +133,14 @@ export default {
         },
         verificar(){
             let listo = true;
-            if(this.E || this.I){
-                for (let i = 0; i < this.formulas.length; i++) {
+            for (let i = 0; i < this.formulas.length; i++) {
+                if(this.formulas[i].axiles.length === 0 ||
+                    this.formulas[i].cortantes.length === 0 || 
+                    this.formulas[i].flectores.length === 0)
+                    listo = false;
+                if(this.E || this.I)
                     if(this.formulas[i].deformada.length === 0)
                         listo = false;
-                }
             }
             return listo;
         }

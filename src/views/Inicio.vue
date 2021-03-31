@@ -5,10 +5,9 @@
         <div class="py-5">
           <h1 class="green-text"><mdb-icon icon="pencil-ruler" /> Cálculo y teoría de estructuras</h1>
           <h2 class="card-title h2 my-4 py-2" v-show="!prof">¡Bienvenidos!</h2>
-          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">Si se desea conocer mas sobre la accesibilidad del sitio web acceda a la seccion de accesibilidad.</p>
-          <h2 class="card-title h2 my-4 py-2" v-show="prof">¡Bienvenido Fernando!</h2>
+          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">Para ver los ejercicios ve a la sección <i>Ejercicios</i> que aparece arriba a la derecha.</p>
+          <h2 class="card-title h2 my-4 py-2" v-show="prof">¡Bienvenido profesor!</h2>
           <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="prof">Para ver las opciones de edición dirigete al listado de ejercicios.</p>
-          <!-- <router-link to="/accesibilidad" class="btn" style="background-color: #007E33" v-show="!prof"><mdb-icon fab size="lg" icon="accessible-icon" /> Accesibilidad</router-link> -->
           <mdb-btn class="blue-grey-text" tag="a" gradient="dusty-grass" icon="key" href="https://dv.ujaen.es/" v-show="!prof">Docencia virtual</mdb-btn>
 
         </div>
@@ -50,25 +49,26 @@
 
       <mdb-modal centered :show="modal" @close="modal = false">
         <mdb-modal-header>
-          <mdb-modal-title>Identificacion</mdb-modal-title>
+          <mdb-modal-title>Identificación del profesorado</mdb-modal-title>
         </mdb-modal-header>
-        <mdb-modal-body class="py-0">
-          <mdb-input label="Usuario" v-model="user" />
-          <mdb-input type="password" label="Contraseña" v-model="pass" @keyup.enter.native="login"/>
+        <mdb-modal-body class="py-0 grey-text">
+          <mdb-input label="Usuario" icon="user" v-model="user" />
+          <mdb-input type="password" icon="lock" label="Contraseña" v-model="pass" @keyup.enter.native="login"/>
         </mdb-modal-body>
-        <mdb-modal-footer>
+        <div class="text-center my-3">
           <mdb-btn color="success" @click.native="login">Identificarse</mdb-btn>
-          <mdb-btn outline="danger" @click.native="modal = false, error = false">Cerrar</mdb-btn>
-        </mdb-modal-footer>
+        </div>
       </mdb-modal>
     </mdb-container>
+    <footermb/>
   </div>
 </template>
 
 <script>
 import {  mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMask, 
           mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
-          mdbModalFooter, mdbInput} from 'mdbvue';
+          mdbInput} from 'mdbvue';
+import footermb from '@/components/footer';
 import {profesor, getUser, logout} from '@/assets/js/login/identificacion.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 export default {
@@ -76,13 +76,12 @@ export default {
   components: {
     mdbCard, mdbBtn, mdbJumbotron, mdbRow, mdbCol, mdbView, mdbIcon, mdbMask, 
     mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, 
-    mdbModalFooter, mdbInput
+    mdbInput,
+    footermb
   },
   data() {
     return {
       modal: false,
-      ip: '',
-      city: '',
       user: '',
       pass: '',
       error: false,

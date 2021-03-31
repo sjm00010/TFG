@@ -33,6 +33,21 @@
             <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
             <dibujar ref="dibujo" v-show="compTramos"/>
             <formulas ref="formulas" v-show="compTramos" />
+            <mdbRow class="my-3">
+                <mdbCol col="md">
+                    <mdb-btn v-if="!previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="pencil-alt"/> Vista previa de las gráficas</mdb-btn>
+                    <mdb-btn v-if="previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="edit"/> Actualizar gráficas</mdb-btn>
+                </mdbCol>
+                <mdbCol col="md" v-if="previa">
+                    <mdb-btn class="my-3" block color="blue-grey" @click="previa = false"><mdb-icon size="lg" icon="eye-slash"/> Ocultar gráficas</mdb-btn>
+                </mdbCol>
+            </mdbRow>
+            <div v-if="previa">
+                <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3"></grafica>
+                <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3"></grafica>
+                <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3"></grafica>
+                <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
+            </div>
         </mdb-card-body>
     </mdb-card>
     <mdb-btn v-if="compTramos && !modificando" class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
@@ -47,6 +62,8 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
 import enunciado from '@/components/editor/enunciado';
 import dibujar from '@/components/auxVigas/dibujaViga';
 import formulas from '@/components/auxVigas/formulas';
+import grafica from '@/components/visualizar/vigas/grafica';
+import { inicializar, calcular } from '@/assets/js/vigas/calculos.js';
 import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, cargaEjVigas } from '@/assets/js/auxiliares/ejercicio.js';
 import { ejercicio, ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
@@ -58,7 +75,8 @@ export default {
        mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon, 
        enunciado,
        dibujar,
-       formulas
+       formulas,
+       grafica
     },
     props:{
         modificando: Boolean
@@ -68,7 +86,14 @@ export default {
             dificultad: ejViga.dificultad,
             numTramos: ejViga.tramos.length || undefined,
             tramos: ejViga.tramos,
-            compTramos: ejViga.tramos.length > 0
+            compTramos: ejViga.tramos.length > 0,
+            datosGraficas: {
+                axiles: [],
+                cortantes: [],
+                flectores: [],
+                deformada: []
+            },
+            previa: false
         }
     },
     methods:{
@@ -136,7 +161,7 @@ export default {
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
-            const respuesta = await fetch(URL+'/ejViga/', { 
+            const respuesta = await fetch(URL+'/ejercicio/viga/', { 
                 headers: {'Content-Type': 'application/json', 
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
@@ -176,7 +201,7 @@ export default {
                                             .replace('_formulas', 'formulas')
                                             .replace('_auxiliares', 'auxiliares');
 
-            const respuesta = await fetch(URL+'/ejViga/'+this.$route.params.id, { 
+            const respuesta = await fetch(URL+'/ejercicio/viga/'+this.$route.params.id, { 
                 headers: {'Content-Type': 'application/json',
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
@@ -202,14 +227,42 @@ export default {
             if(!this.$refs.formulas.verificar()){
                 this.$notify({
                     group: 'log',
-                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error en la deformada</b>',
-                    text: '<i style="font-size:15px"> Se han proporcionado los datos para la deformada, pero estan incompletos.</i>',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h3">Error al verificar las fórmulas</b>',
+                    text: '<i style="font-size:15px"> Los datos de las formulas estan incompletos.</i>',
                     duration: 5000,
                     type: 'error'
                 });
                 return false;
             }
             return true;
+        },
+        vistaPrevia(){
+            if(this.verificar()){
+                ejViga.tramos = this.tramos;
+                ejViga.elementos = elementos;
+                ejViga.formulas = this.$refs.formulas.formulas;
+                ejViga.auxiliares = this.$refs.formulas.auxiliares;
+                ejViga.E = this.$refs.formulas.E;
+                ejViga.I = this.$refs.formulas.I;
+                inicializar();
+                let resultado = calcular(this.$refs.formulas.E);
+                if(resultado){
+                    this.datosGraficas.axiles.splice(0, this.datosGraficas.axiles.length, ...resultado.axiles);
+                    this.datosGraficas.cortantes.splice(0, this.datosGraficas.cortantes.length, ...resultado.cortantes);
+                    this.datosGraficas.flectores.splice(0, this.datosGraficas.flectores.length, ...resultado.flectores);
+                    this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...resultado.deformada);
+                    this.previa = true;
+                }else{
+                    this.$notify({
+                        group: 'log',
+                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al calcular los datos del ejercicio</b>',
+                        text: '<i style="font-size:15px"> Ocurrio un problema al tratar de calcular los datos de las gráficas. Revise las fórmulas y compruebe que las variables son las correctas.</i>',
+                        duration: 7000,
+                        type: 'error'
+                    });
+                    this.previa = false;
+                }
+            }
         }
     }
 }

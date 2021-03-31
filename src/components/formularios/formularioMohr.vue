@@ -109,7 +109,7 @@
                     <mdb-btn class="my-3" block color="blue-grey" @click="dibujar = false"><mdb-icon size="lg" icon="eye-slash"/> Ocultar</mdb-btn>
                 </mdbCol>
             </mdbRow>
-            <small v-if="dibujar" class="text-muted"><mdb-icon icon="info-circle" /> Valores aleatorios pueden dar lugar a representaciones incoherentes. Si algo no se representa correctamente revise los valores proporcionados.</small>
+            <small v-if="dibujar" class="text-muted"><mdb-icon icon="info-circle" /> Para circulos de radio menor que 10 no se representa el eje correctamente.</small>
             <dibujos ref="dibujo" v-if="dibujar" :datos="this.datos"/>
         </mdb-card-body>
     </mdb-card>
@@ -143,7 +143,7 @@ export default {
     data(){
         return{
             dificultad: ejMohr.dificultad,
-            tipo: isNaN(ejMohr.sx) ? 1 : 2,
+            tipo: !isNaN(ejMohr.s1) ? 2 : 1,
             datos: { sx: ejMohr.sx , sy: ejMohr.sy, txy: ejMohr.txy, B: ejMohr.B,
                      s1: ejMohr.s1, s2: ejMohr.s2, a: ejMohr.a, E: ejMohr.E, v: ejMohr.v},
             dibujar: false
@@ -312,7 +312,7 @@ export default {
 
             const ej = JSON.stringify({...ejMohr});
 
-            const respuesta = await fetch(URL+'/ejMohr/', { 
+            const respuesta = await fetch(URL+'/ejercicio/mohr/', { 
                 headers: {'Content-Type': 'application/json', 
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },
@@ -350,7 +350,7 @@ export default {
 
             const ej = JSON.stringify({...ejMohr});
 
-            const respuesta = await fetch(URL+'/ejMohr/'+this.$route.params.id, { 
+            const respuesta = await fetch(URL+'/ejercicio/mohr/'+this.$route.params.id, { 
                 headers: {'Content-Type': 'application/json',
                           'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
                 },

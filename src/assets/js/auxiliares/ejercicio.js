@@ -78,7 +78,7 @@ export function compruebaTramos(tramos){
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
 export var vigas = [];
 export async function cargaEjVigas(){
-    const respuesta = await fetch(URL+'/ejViga/', { 
+    const respuesta = await fetch(URL+'/ejercicio/viga/', { 
         headers: {'Content-Type': 'application/json'},
         method: 'GET'
     });
@@ -88,7 +88,7 @@ export async function cargaEjVigas(){
 
 // FUNCION PARA BORRAR UN EJERCICIO DE VIGAS DE LA BBDD
 export async function borrarEjViga(id){
-    const respuesta = await fetch(URL+'/ejViga/'+id, { 
+    const respuesta = await fetch(URL+'/ejercicio/viga/'+id, { 
         headers: {'Content-Type': 'application/json', 
                   'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
         },
@@ -121,7 +121,7 @@ export class Mohr extends Ejercicio {
 // FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MOHR DE LA BBDD
 export var mohr = [];
 export async function cargaEjMohr(){
-    const respuesta = await fetch(URL+'/ejMohr/', { 
+    const respuesta = await fetch(URL+'/ejercicio/mohr/', { 
         headers: {'Content-Type': 'application/json'},
         method: 'GET'
     });
@@ -131,7 +131,7 @@ export async function cargaEjMohr(){
 
 // FUNCION PARA BORRAR UN EJERCICIO DE MOHR DE LA BBDD
 export async function borrarEjMohr(id){
-    const respuesta = await fetch(URL+'/ejMohr/'+id, { 
+    const respuesta = await fetch(URL+'/ejercicio/mohr/'+id, { 
         headers: {'Content-Type': 'application/json', 
                   'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
         },
