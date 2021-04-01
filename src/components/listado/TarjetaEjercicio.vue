@@ -8,7 +8,7 @@
             
         </mdb-view>
         <mdb-card-body class="text-center">
-            <mdb-card-text>{{this.descripcion}}</mdb-card-text>
+            <mdb-card-text style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis" v-html="this.descripcion"></mdb-card-text>
             <hr/>
             <router-link tag="button" class="btn btn-block elegant-color text-white" :to="{ path: this.enlace+'/'+this.id_bd}" append >Realizar</router-link>
             <router-link tag="button" v-show="prof" class="btn btn-block secondary-color text-white my-2" :to="{ path: 'modificar/'+this.enlace+'/'+this.id_bd}" append >Modificar</router-link>
@@ -23,11 +23,26 @@ import {profesor, getUser} from '@/assets/js/login/identificacion.js';
 export default {
     name: 'tarjeta',
     props: {
-        id: Number,
-        dificultad: Number,
-        descripcion: String,
-        enlace: String,
-        id_bd: String
+        id: {
+            type: Number,
+            require: true
+        },
+        dificultad: {
+            type: Number,
+            require: true
+        },
+        descripcion: {
+            type: String,
+            require: true
+        },
+        enlace: {
+            type: String,
+            require: true
+        },
+        id_bd: {
+            type: String,
+            require: true
+        }
     },
     components: {
         mdbCard, mdbCardBody, mdbCardText, mdbView, mdbIcon, mdbBtn

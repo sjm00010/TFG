@@ -44,7 +44,7 @@
         </mdb-row>
       </mdb-jumbotron>
 
-      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin">Solo para profesores</mdb-btn>
+      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin">Solo para docentes</mdb-btn>
       <mdb-btn block v-show="prof" outline="warning" @click="logout">Cerrar sesión</mdb-btn>
 
       <mdb-modal centered :show="modal" @close="modal = false">

@@ -7,7 +7,7 @@
             <select class="browser-default custom-select custom-select-lg mb-3" v-model="tipo" disabled>
                 <option value="" selected>Selecciona un tipo</option>
                 <option value="Vigas">Diagramas de esfuerzos en vigas</option>
-                <option value="Matrices">Matrices</option>
+                <option value="Matrices">Matricial</option>
                 <option value="Mohr">Círculos de Mohr</option>
             </select>
 		</mdb-card-body>

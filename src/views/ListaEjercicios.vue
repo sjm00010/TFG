@@ -11,7 +11,7 @@
         <mdb-row v-if="this.ejVigas.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
-                    :descripcion="ej.desc" enlace="viga" @borrar="borrar"></tarjeta>
+                    :descripcion="ej.enunciado" enlace="viga" @borrar="borrar"></tarjeta>
             </mdb-col>
         </mdb-row>
         <div class="text-center my-5" v-else-if="this.ejVigas.length == 0">
@@ -22,7 +22,7 @@
         <mdb-row v-if="this.ejMohr.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejMohr" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
-                    :descripcion="ej.desc" enlace="mohr" @borrar="borrar"></tarjeta>
+                    :descripcion="ej.enunciado" enlace="mohr" @borrar="borrar"></tarjeta>
             </mdb-col>
         </mdb-row>
         <div class="text-center my-5" v-else-if="this.ejMohr.length == 0">

@@ -31,22 +31,24 @@
                 </mdb-col>
             </mdb-row>
             <mdb-btn class="my-3" block color="light-green" @click="comprobarTramos"><mdb-icon size="lg" icon="check"/> Verificar</mdb-btn>
-            <dibujar ref="dibujo" v-show="compTramos"/>
-            <formulas ref="formulas" v-show="compTramos" />
-            <mdbRow class="my-3">
-                <mdbCol col="md">
-                    <mdb-btn v-if="!previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="pencil-alt"/> Vista previa de las gráficas</mdb-btn>
-                    <mdb-btn v-if="previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="edit"/> Actualizar gráficas</mdb-btn>
-                </mdbCol>
-                <mdbCol col="md" v-if="previa">
-                    <mdb-btn class="my-3" block color="blue-grey" @click="previa = false"><mdb-icon size="lg" icon="eye-slash"/> Ocultar gráficas</mdb-btn>
-                </mdbCol>
-            </mdbRow>
-            <div v-if="previa">
-                <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3"></grafica>
-                <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3"></grafica>
-                <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3"></grafica>
-                <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
+            <div v-show="compTramos">
+                <dibujar ref="dibujo"/>
+                <formulas ref="formulas"/>
+                <mdbRow class="my-3">
+                    <mdbCol col="md">
+                        <mdb-btn v-if="!previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="pencil-alt"/> Vista previa de las gráficas</mdb-btn>
+                        <mdb-btn v-if="previa" class="my-3" block color="secondary" @click="vistaPrevia"><mdb-icon size="lg" icon="edit"/> Actualizar gráficas</mdb-btn>
+                    </mdbCol>
+                    <mdbCol col="md" v-if="previa">
+                        <mdb-btn class="my-3" block color="blue-grey" @click="previa = false"><mdb-icon size="lg" icon="eye-slash"/> Ocultar gráficas</mdb-btn>
+                    </mdbCol>
+                </mdbRow>
+                <div v-if="previa">
+                    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3"></grafica>
+                    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3"></grafica>
+                    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3"></grafica>
+                    <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
+                </div>
             </div>
         </mdb-card-body>
     </mdb-card>
