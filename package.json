@@ -1,5 +1,9 @@
 {
   "name": "WIPACE",
+  "author": {
+    "name": "Sergio Jiménez Moreno",
+    "email": "sjm00010@red.ujaen.es"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {

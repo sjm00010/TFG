@@ -222,7 +222,7 @@ export function verificaMomento(magnitud, min, max){
     if ( min > max){
         error.texto = "Datos incorrectos: El valor mínimo para la carga debe ser inferior al del máximo."
         error.existe= true;
-    } else if (Math.abs(magnitud) < min || Math.abs(magnitud) > max){
+    } else if (magnitud < min || magnitud > max){
         error.texto = "Datos incorrectos: El valor de la carga debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     } 

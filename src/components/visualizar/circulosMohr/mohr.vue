@@ -70,7 +70,7 @@
                 <mdb-input type="number" label="Angulo β" :min="0" :max="360" 
                             :step="0.1" v-model.number="datos.B" @input="cambio()"/>
                 <input  type="range" :min="0" :max="360" :step="1" class="custom-range"
-                        v-model="datos.B" @input="cambio()">
+                        v-model="datos.B" @input="cambio()" aria-label="Angulo β">
             </div>
             <hr/>
 

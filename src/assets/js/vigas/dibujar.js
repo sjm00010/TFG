@@ -242,7 +242,7 @@ export function addPuntoCarga(coorX, P){
  * @param {int} coorX Coordenada con respecto a la viga
  * @param {boolean} sentido Sentido de la carga
  * @param {int} H Valor de la carga
- * @param {int} d Valor de la carga
+ * @param {int} d Distancia del voladizo
  */
 export function addBarra(coorX, H, d){
     
@@ -263,7 +263,7 @@ export function addBarra(coorX, H, d){
         evented: false,
     });
     const arrow = new fabric.Triangle({
-        left: x-10,
+        left: H > 0 ? x-10 : x-45,
         top: y2,
         originX: 'center',
         originY: 'center',
@@ -273,7 +273,7 @@ export function addBarra(coorX, H, d){
         lockScalingY: true,
         lockRotation: true,
         pointType: 'arrow_start',
-        angle: 90,
+        angle: H > 0 ? 90 : 270,
         width: 15,
         height: 15,
         fill: colores.rojo,
@@ -285,13 +285,8 @@ export function addBarra(coorX, H, d){
     canvas.add(linea2);
     canvas.add(arrow);
 
-    if(H < 0){
-        escribir(H.toString()+" kN", x-30,  altura+80, colores.rojo);
-        escribir(d.toString()+" m", x+35,  altura+40, colores.rojo);
-    }else{
-        escribir(H.toString()+" kN", x-20,  altura-75, colores.rojo);
-        escribir(d.toString()+" m", x+35,  altura-30, colores.rojo);
-    }
+    escribir(H.toString()+" kN", H < 0 ? x-30 : x-20,  H < 0 ? altura+80 : altura-75, colores.rojo);
+    escribir(d.toFixed(2)+" m", x+35, H < 0 ? altura+40 : altura-30, colores.rojo);
     addMarca(x, coorX.toString(), colores.rojo);
 }
 
@@ -358,7 +353,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     let x2 = recalculaX(hastaX);
 
     // Flecha desde X
-    let linea1 = new fabric.Line([ x1, altura-80, x1, altura-20 ], {
+    let linea1 = new fabric.Line([ x1, q >= 0 ? altura-80 : altura+20, x1, q >= 0 ? altura-20 : altura+80 ], {
         stroke: colores.verde,
         strokeWidth: 2,
         selectable: false,
@@ -375,7 +370,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
         lockScalingY: true,
         lockRotation: true,
         pointType: 'arrow_start',
-        angle: 180,
+        angle: q >= 0 ? 180 : 0,
         width: 15,
         height: 15,
         fill: colores.verde,
@@ -384,7 +379,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     });
 
     // Flecha desde X
-    let linea2 = new fabric.Line([ x2, altura-80, x2, altura-20 ], {
+    let linea2 = new fabric.Line([ x2, q >= 0 ? altura-80 : altura+20, x2, q >= 0 ? altura-20 : altura+80 ], {
         stroke: colores.verde,
         strokeWidth: 2,
         selectable: false,
@@ -401,7 +396,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
         lockScalingY: true,
         lockRotation: true,
         pointType: 'arrow_start',
-        angle: 180,
+        angle: q >= 0 ? 180 : 0,
         width: 15,
         height: 15,
         fill: colores.verde,
@@ -410,7 +405,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     });
 
     // Linea que une las cargas
-    let lineaUnion = new fabric.Line([ x1, altura-80, x2, altura-80 ], {
+    let lineaUnion = new fabric.Line([ x1, q >= 0 ? altura-80 : altura+80, x2, q >= 0 ? altura-80 : altura+80 ], {
         stroke: colores.verde,
         strokeWidth: 2,
         selectable: false,
@@ -419,11 +414,11 @@ export function addCargaDistribuida(desdeX, hastaX, q){
 
     let fondo = new fabric.Rect({
         left: x1,
-        top: altura-10,
+        top: q >= 0 ? altura-10 : altura+10,
         originX: 'left',
         originY: 'top',
         width: x2-x1,
-        height: -70,
+        height: q >= 0 ? -70 : 70,
         angle: 0,
         fill: "rgba(35,160,58,0.2)",
         transparentCorners: false,

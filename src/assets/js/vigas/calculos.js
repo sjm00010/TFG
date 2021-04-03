@@ -25,8 +25,8 @@ export function inicializar(){
     }
 
     if(ejViga.E){
-        variables['me'] = ejViga.E * Math.pow(10, 7);
-        variables['I'] = ejViga.I * Math.pow(10, -8);
+        variables['me'] = ejViga.E; //* Math.pow(10, 7);
+        variables['I'] = ejViga.I;// * Math.pow(10, -8);
     }
 
     adaptarFormulas();
@@ -43,9 +43,9 @@ export function actualizaElemento(nom, valor){
 
 export function actualizaEeI(variable, valor){
     if(variable === 'E')
-        variables['me'] = parseFloat(valor) * Math.pow(10, 7);
+        variables['me'] = parseFloat(valor);// * Math.pow(10, 7);
     else
-        variables[variable] = parseFloat(valor) * Math.pow(10, -8);
+        variables[variable] = parseFloat(valor);// * Math.pow(10, -8);
 }
 
 /**

@@ -22,7 +22,9 @@
                         <span class="input-group-text md-addon" slot="prepend"><b>A<sub>{{i+1}}</sub></b></span>
                     </mdb-input>
                 </div>
-                <katex-element :expression="'A_{'+(i+1)+'}='+aux" :throwOnError="false" :display-mode="true"/>
+                <div class="overflow-auto">
+                    <katex-element :expression="'A_{'+(i+1)+'}='+aux" :throwOnError="false" :display-mode="true"/>
+                </div>
             </div>
         </mdb-col>
     </mdb-row>
@@ -35,7 +37,7 @@
                 <mdb-input class="mt-0 mb-3" type="text" placeholder="Fórmula del tramo" v-model="formula.axiles">
                     <span class="input-group-text md-addon" slot="prepend"><b>Tramo {{i+1}}</b></span>
                 </mdb-input>
-                <div class="container">
+                <div class="container overflow-auto">
                     <katex-element :expression="formula.axiles" :throwOnError="false" :display-mode="true"/>
                 </div>                
             </div>
@@ -46,7 +48,7 @@
                 <mdb-input class="mt-0 mb-3" type="text" placeholder="Fórmula del tramo" v-model="formula.cortantes">
                     <span class="input-group-text md-addon" slot="prepend"><b>Tramo {{i+1}}</b></span>
                 </mdb-input>
-                <div class="container">
+                <div class="container overflow-auto">
                     <katex-element :expression="formula.cortantes" :throwOnError="false" :display-mode="true"/>
                 </div>
             </div>
@@ -57,7 +59,7 @@
                 <mdb-input class="mt-0 mb-3" type="text" placeholder="Fórmula del tramo" v-model="formula.flectores">
                     <span class="input-group-text md-addon" slot="prepend"><b>Tramo {{i+1}}</b></span>
                 </mdb-input>
-                <div class="container">
+                <div class="container overflow-auto">
                     <katex-element :expression="formula.flectores" :throwOnError="false" :display-mode="true" :max-expand="10"/>
                 </div>
             </div>
@@ -90,7 +92,7 @@
                 <mdb-input class="mt-0 mb-3" type="text" placeholder="Fórmula del tramo" v-model="formula.deformada">
                     <span class="input-group-text md-addon" slot="prepend"><b>Tramo {{i+1}}</b></span>
                 </mdb-input>
-                <div class="container">
+                <div class="container overflow-auto">
                     <katex-element :expression="formula.deformada" :throwOnError="false" :display-mode="true" :max-expand="10"/>
                 </div>
             </div>

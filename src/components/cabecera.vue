@@ -1,5 +1,5 @@
 <template>
-    <mdb-navbar expand="large" dark color="stylish">
+    <mdb-navbar expand="large" dark color="elegant">
         <mdb-navbar-brand router-link to="/" v-on:click.native="cambiar('/')">
             <img :src="require('@/assets/img/logo.png')" height="50px" alt="Logo">
         </mdb-navbar-brand>

@@ -3,9 +3,9 @@
         <h1 class="text-muted text-center mb-4">Listado de ejercicios</h1>
         <div v-show="prof">
             <hr/>
-            <router-link tag="button" class="btn btn-block success-color text-white" :to="{ path: 'nuevo' }" append>Crear ejercicio</router-link>
+            <router-link tag="button" class="btn btn-block success-color text-white" :to="{ path: 'nuevo' }" append><i class="fas fa-plus mr-1"></i>Crear ejercicio</router-link>
         </div>
-        <mdb-btn block color="info" @click="cargarEjercicios">Recargar ejercicios</mdb-btn>
+        <mdb-btn block color="blue-grey" @click="cargarEjercicios"><mdb-icon icon="redo-alt" class="mr-1"/>Recargar ejercicios</mdb-btn>
         <hr/>        
         <tipo class="mb-3" titulo="Diagramas de esfuerzos en vigas" color="aqua-gradient"></tipo>
         <mdb-row v-if="this.ejVigas.length > 0">
@@ -34,7 +34,7 @@
 <script>
 import tarjeta from '@/components/listado/TarjetaEjercicio';
 import tipo from '@/components/listado/TipoEjercicios';
-import {mdbContainer, mdbRow, mdbCol, mdbBtn} from 'mdbvue';
+import {mdbContainer, mdbRow, mdbCol, mdbBtn, mdbIcon} from 'mdbvue';
 
 import {vigas, cargaEjVigas, borrarEjViga,
         mohr, cargaEjMohr, borrarEjMohr} from '@/assets/js/auxiliares/ejercicio.js';
@@ -42,7 +42,7 @@ import {profesor, getUser} from '@/assets/js/login/identificacion.js';
 
 export default {
     components: {
-        mdbContainer, mdbRow, mdbCol, mdbBtn,
+        mdbContainer, mdbRow, mdbCol, mdbBtn, mdbIcon,
         tarjeta,
         tipo
     },

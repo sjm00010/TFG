@@ -3,13 +3,13 @@
     <cabecera/>
     <router-view/>
     <notifications group="log" width='75%' position="top center"/>
-    <notifications class="my-2" group="app"/>
+    <notifications group="app" class="my-2" classes="prueba"/>
   </div>
 </template>
 
 <script>
 import cabecera from '@/components/Cabecera';
-import {cargaEjVigas} from '@/assets/js/auxiliares/ejercicio.js';
+import {cargarEjercicios} from '@/assets/js/auxiliares/ejercicio.js';
 export default {
   name: 'App',
   components: {cabecera},
@@ -20,7 +20,20 @@ export default {
       text: '<i style="font-size:12px"> Para cerrar las notificaciones basta con hacer click en ellas.</i>',
       duration: 5000,
     });
-    cargaEjVigas();
+    cargarEjercicios();
   }
 }
 </script>
+
+<style>
+.prueba {
+  padding: 10px;
+  margin: 0 5px 5px;
+ 
+  font-size: 12px;
+ 
+  color: #ffffff;
+  background: #48729C;
+  border-left: 5px solid #187FE7;
+}
+</style>

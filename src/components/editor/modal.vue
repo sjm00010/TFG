@@ -74,7 +74,8 @@
                 </mdb-row>
             </div>
 
-            <p>Seleccione el tramo al que está ligado (se dibujará al final del tramo, si desea pintarla al inicio, seleccione <i>Inicio</i>):</p>
+            <p v-show="!this.modal.cDist">Indique a continuación el final del tramo en el que comienza la carga (si desea dibujarla al inicio, seleccione <i>Inicio</i>):</p>
+            <p v-show="this.modal.cDist">Indique a continuación el final del tramo en el que comienza la carga y el final del tramo en que termina ( si desea dibujarla al inicio, seleccione <i>Inicio</i>):</p>
             <select class="browser-default custom-select my-2" v-model="datos.segmento">
                 <option selected value=''>Seleccione uno...</option>
                 <option value='0'>Inicio (0)</option>

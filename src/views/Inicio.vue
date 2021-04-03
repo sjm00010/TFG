@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mdb-card class="card-image" style="background-image: url(https://torange.biz/photo/4/HD/constructing-steel-structures-metal-construction-4967.jpg); background-size:cover;">
+    <mdb-card class="card-image" v-bind:style="fondo">
       <div class="text-white text-center rgba-black-strong py-5 px-4">
         <div class="py-5">
           <h1 class="green-text"><mdb-icon icon="pencil-ruler" /> Cálculo y teoría de estructuras</h1>
@@ -23,7 +23,7 @@
             </mdb-view>
           </mdb-col>
           <mdb-col md="7" class="text-left ml-3 mt-3">
-              <h6 class="h6 pb-1 cyan-text"><mdb-icon far icon="question-circle" class="pr-1"/> +Info</h6>
+            <p class="h6 pb-1 indigo-text"><mdb-icon far icon="question-circle" class="pr-1"/> +Info</p>
             <h3 class="h3 mb-4">Fernando Suárez Guerra</h3>
             <h4 class="h4 mb-4">Si necesitas tutoría...</h4>
             <p class="font-weight-normal">
@@ -39,13 +39,13 @@
                 </li>
               </ul>
             </p>
-            <mdb-btn class="ml-0" tag="a" block color="info" href="https://www.ujaen.es/departamentos/ingmec/contactos/suarez-guerra-fernando">Mis tutorías</mdb-btn>
+            <mdb-btn class="ml-0 black-text" tag="a" block color="light-blue" href="https://www.ujaen.es/departamentos/ingmec/contactos/suarez-guerra-fernando"><b>Mis tutorías</b></mdb-btn>
           </mdb-col>
         </mdb-row>
       </mdb-jumbotron>
 
-      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin">Solo para docentes</mdb-btn>
-      <mdb-btn block v-show="prof" outline="warning" @click="logout">Cerrar sesión</mdb-btn>
+      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin"><p class="black-text my-0">Solo para docentes</p></mdb-btn>
+      <mdb-btn block v-show="prof" outline="warning" @click="logout"><p class="black-text my-0">Cerrar sesión</p></mdb-btn>
 
       <mdb-modal centered :show="modal" @close="modal = false">
         <mdb-modal-header>
@@ -86,6 +86,14 @@ export default {
       pass: '',
       error: false,
       prof: false
+    }
+  },
+  computed: {
+    fondo() {
+      return {
+        backgroundImage: `url(${require('@/assets/img/fondo.png')})`,
+        backgroundSize: 'cover'
+      };
     }
   },
   methods:{

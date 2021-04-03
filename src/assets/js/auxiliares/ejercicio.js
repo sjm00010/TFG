@@ -1,5 +1,10 @@
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 
+export function cargarEjercicios(){
+    cargaEjVigas();
+    cargaEjMohr();
+}
+
 /**
  * Clase con la información básica de un ejercicio
  * @type Ejercicio

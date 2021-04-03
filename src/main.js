@@ -4,7 +4,6 @@ import 'mdbvue/lib/css/mdb.min.css'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store'
 import Notifications from 'vue-notification'
 import VueKatex from 'vue-katex'
 
@@ -14,6 +13,5 @@ Vue.use(VueKatex)
 
 new Vue({
   router,
-  store,
   render: h => h(App)
 }).$mount('#app')

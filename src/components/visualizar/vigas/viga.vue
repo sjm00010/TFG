@@ -18,7 +18,7 @@
             <mdb-row>
                 <mdb-col md="3" col="md" v-for="(tramo, i) in datos.tramos" :key="i">
                     <mdb-input type="number" :label="'Tramo '+(i+1)+'(m)'" :min="tramo.min" :max="tramo.max" :step="0.1" v-model.number="tramo.valor" @input="cambioTramos(0, i)"/>
-                    <input type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @input="cambioTramos(0, i)">
+                    <input :aria-label="'Tramo '+(i+1)+'(m)'" type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @input="cambioTramos(0, i)">
                 </mdb-col>
             </mdb-row>
 
@@ -29,13 +29,13 @@
                 <mdb-col md="3" col="md" v-for="(elemento, i) in elementos" :key="i">
                     <mdb-input type="number" :label="elemento.tipo+' '+(i+1)" :min="elemento.min" :max="elemento.max" 
                                 :step="0.1" v-model.number="elemento.magnitud" @input="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)"/>
-                    <input  type="range" :min="elemento.min" :max="elemento.max" :step="0.1" class="custom-range"
+                    <input  type="range" :min="elemento.min" :max="elemento.max" :step="0.1" class="custom-range" :aria-label="elemento.tipo+' '+(i+1)"
                             v-model="elemento.magnitud" @input="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)">
                 </mdb-col>
                 <mdb-col md="3" col="md" v-for="(ditancia, i) in d" :key="'d'+i">
                     <mdb-input type="number" :label="'Distancia de la barra '+(ditancia.pos+1)" :min="ditancia.minD" :max="ditancia.maxD" 
                                 :step="0.01" v-model.number="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)"/>
-                    <input  type="range" :min="ditancia.minD" :max="ditancia.maxD" :step="0.01" class="custom-range"
+                    <input  type="range" :min="ditancia.minD" :max="ditancia.maxD" :step="0.01" class="custom-range" :aria-label="'Distancia de la barra '+(ditancia.pos+1)"
                             v-model="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)">
                 </mdb-col>
             </mdb-row>
@@ -46,8 +46,8 @@
         <mdb-popover class="ml-auto" trigger="hover">
             <span slot="header">Sabías que...</span>
             <span slot="body">Si quieres ocultar una ley solo tienes que pinchar en su nombre.</span>
-            <mdb-btn color="info" class="my-3" slot="reference">
-                <mdb-icon size="2x" icon="question-circle" />
+            <mdb-btn color="info" class="my-3" slot="reference" >
+                <mdb-icon size="2x" icon="question-circle" aria-label="Ayuda gráficas" />
             </mdb-btn>
         </mdb-popover>
     </div>
