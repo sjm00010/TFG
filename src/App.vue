@@ -3,7 +3,7 @@
     <cabecera/>
     <router-view/>
     <notifications group="log" width='75%' position="top center"/>
-    <notifications group="app" class="my-2" classes="prueba"/>
+    <notifications group="app" class="my-2"/>
   </div>
 </template>
 
@@ -24,16 +24,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.prueba {
-  padding: 10px;
-  margin: 0 5px 5px;
- 
-  font-size: 12px;
- 
-  color: #ffffff;
-  background: #48729C;
-  border-left: 5px solid #187FE7;
-}
-</style>

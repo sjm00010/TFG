@@ -116,8 +116,8 @@ export default {
         this.modal = false;
         this.$notify({
           group: 'log',
-          title: '<i class="fas fa-2x fa-user-circle"></i> <b class="h3">Bienvenido Fernando</b>',
-          text: '<i style="font-size:15px"> Te has identificado correctamente. El botón para cerrar sesión esta en el mismo lugar que el de identificarse</i>',
+          title: '<i class="fas fa-2x fa-user-circle"></i> <b class="h3">Bienvenido profesor/a</b>',
+          text: '<i style="font-size:15px"> Se ha identificado correctamente. El botón para cerrar sesión sustituyó al de identificarse</i>',
           duration: 8000,
           type: 'success'
         });
