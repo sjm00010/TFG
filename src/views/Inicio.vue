@@ -3,11 +3,11 @@
     <mdb-card class="card-image" v-bind:style="fondo">
       <div class="text-white text-center rgba-black-strong py-5 px-4">
         <div class="py-5">
-          <h1 class="green-text"><mdb-icon icon="pencil-ruler" /> Cálculo y teoría de estructuras</h1>
-          <h2 class="card-title h2 my-4 py-2" v-show="!prof">¡Bienvenidos!</h2>
-          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">Para ver los ejercicios ve a la sección <i>Ejercicios</i> que aparece arriba a la derecha.</p>
-          <h2 class="card-title h2 my-4 py-2" v-show="prof">¡Bienvenido profesor!</h2>
-          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="prof">Para ver las opciones de edición dirigete al listado de ejercicios.</p>
+          <h1 class="green-text"><mdb-icon icon="pencil-ruler" /> <b>W</b>eb <b>I</b>nteractiva <b>PA</b>ra el <b>C</b>álculo de <b>E</b>structuras</h1>
+          <h2 class="card-title h2 my-4 py-2" v-show="!prof">¡Bienvenid@ a WIPACE!</h2>
+          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="!prof">En la sección <i>Ejercicios</i>, situada arriba a la derecha, podrás consultar todos los ejercicios disponibles.</p>
+          <h2 class="card-title h2 my-4 py-2" v-show="prof">¡Bienvenid@ profesor/a!</h2>
+          <p class="mb-4 pb-2 px-md-5 mx-md-5" v-show="prof">En la sección <i>Ejercicios</i>, situada arriba a la derecha, podrás consultar las opciones de administración.</p>
           <mdb-btn class="blue-grey-text" tag="a" gradient="dusty-grass" icon="key" href="https://dv.ujaen.es/" v-show="!prof">Docencia virtual</mdb-btn>
 
         </div>
@@ -44,7 +44,7 @@
         </mdb-row>
       </mdb-jumbotron>
 
-      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin"><p class="black-text my-0">Solo para docentes</p></mdb-btn>
+      <mdb-btn block v-show="!prof" outline="danger" @click="verLogin"><p class="black-text my-0">Identificación para docentes</p></mdb-btn>
       <mdb-btn block v-show="prof" outline="warning" @click="logout"><p class="black-text my-0">Cerrar sesión</p></mdb-btn>
 
       <mdb-modal centered :show="modal" @close="modal = false">

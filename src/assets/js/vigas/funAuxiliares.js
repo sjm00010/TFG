@@ -131,11 +131,11 @@ export function addPuntoCarga(nom, seg, P, min, max){
  * @param {Int} minD Distancia mínima respecto a la viga
  * @param {Int} maxD Distancia máxima respecto a la viga
  */
-export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
+export function addBarra(nom,  seg, H, min, max, d, minD, maxD, orientacion){
     let error = val.verificaBarra(H, min, max, d, minD, maxD);
     if(error.existe) return error;
     let coorX = val.calculaSegmento(seg);
-    dibujo.addBarra(coorX, H, d);
+    dibujo.addBarra(coorX, H, d, orientacion);
     val.pushElemento("Voladizo vertical", {
         nombre: nom,
         magnitud: H,
@@ -144,7 +144,8 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD){
         segmento: seg,
         d: d,
         minD: minD,
-        maxD: maxD
+        maxD: maxD,
+        orientacion: orientacion
     });
 }
 

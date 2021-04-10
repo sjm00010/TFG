@@ -5,7 +5,7 @@ import { calculaSegmento } from '@/assets/js/vigas/variables.js';
 const DENSIDAD_PUNTOS = 1000;
 let variables = { };
 
-export function limpiar(){
+export function limpiarVar(){
     variables = {};
 }
 
@@ -25,11 +25,9 @@ export function inicializar(){
     }
 
     if(ejViga.E){
-        variables['me'] = ejViga.E; //* Math.pow(10, 7);
-        variables['I'] = ejViga.I;// * Math.pow(10, -8);
+        variables['me'] = ejViga.E * Math.pow(10, 7);
+        variables['I'] = ejViga.I * Math.pow(10, -8);
     }
-
-    adaptarFormulas();
 }
 
 export function actualizaTramo(pos, valor){
@@ -43,9 +41,9 @@ export function actualizaElemento(nom, valor){
 
 export function actualizaEeI(variable, valor){
     if(variable === 'E')
-        variables['me'] = parseFloat(valor);// * Math.pow(10, 7);
+        variables['me'] = parseFloat(valor) * Math.pow(10, 7);
     else
-        variables[variable] = parseFloat(valor);// * Math.pow(10, -8);
+        variables[variable] = parseFloat(valor) * Math.pow(10, -8);
 }
 
 /**
@@ -53,12 +51,12 @@ export function actualizaEeI(variable, valor){
  */
 function adaptarFormulas(){
     for (let i = 0; i < ejViga.formulas.length; i++) {
-        ejViga.formulas[i].axiles = ejViga.formulas[i].axiles.replace('\\pi', 'PI');
-        ejViga.formulas[i].cortantes = ejViga.formulas[i].cortantes.replace('\\pi', 'PI');
-        ejViga.formulas[i].flectores = ejViga.formulas[i].flectores.replace('\\pi', 'PI');
+        ejViga.formulas[i].axiles = ejViga.formulas[i].axiles.replaceAll('\\pi', 'PI');
+        ejViga.formulas[i].cortantes = ejViga.formulas[i].cortantes.replaceAll('\\pi', 'PI');
+        ejViga.formulas[i].flectores = ejViga.formulas[i].flectores.replaceAll('\\pi', 'PI');
         if(ejViga.E){
-            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('\\pi', 'PI');
-            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('E', 'me');
+            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replaceAll('\\pi', 'PI');
+            ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replaceAll('E', 'me');
         }
     }
 }
@@ -68,13 +66,15 @@ function adaptarFormulas(){
  */
  function restaurarFormulas(){
     for (let i = 0; i < ejViga.formulas.length; i++)
-        ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replace('me', 'E');
+        ejViga.formulas[i].deformada = ejViga.formulas[i].deformada.replaceAll('me', 'E');
 }
 
 export function calcular(deforma){
     for(let i = 0; i < ejViga.auxiliares.length; i++){
         variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
     }
+
+    adaptarFormulas();
 
     const resultado= {
         axiles: [],
@@ -87,7 +87,7 @@ export function calcular(deforma){
 
     let tramo = 0, total = parseFloat(ejViga.tramos[0].valor);
     try{
-        for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
+        for (let x = 0.0; x <= calculaSegmento(ejViga.tramos.length); x += incremento) {
             resultado.axiles.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].axiles, { ...variables, x}, { latex: true })()]);
             resultado.cortantes.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].cortantes, { ...variables, x}, { latex: true })()]);
             resultado.flectores.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].flectores, { ...variables, x}, { latex: true })()]);
@@ -115,7 +115,7 @@ export function linea0(){
     const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
     
     let resultado= [];
-    for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento)
+    for (let x = 0.0; x <= calculaSegmento(ejViga.tramos.length); x += incremento)
         resultado.push([parseFloat(x.toFixed(3)), 0]);
 
     return resultado;
@@ -126,12 +126,15 @@ export function calculaDeformada(){
         variables['A_'+(i+1) ] = evaluatex(ejViga.auxiliares[i], variables, { latex: true })();
     }
 
+    adaptarFormulas();
+
     const incremento = calculaSegmento(ejViga.tramos.length) / DENSIDAD_PUNTOS;
     let tramo = 0, total = parseFloat(ejViga.tramos[0].valor), resultado= [];
 
     try{
-        for (let x = 0.0; x < calculaSegmento(ejViga.tramos.length); x += incremento) {
+        for (let x = 0.0; x <= calculaSegmento(ejViga.tramos.length); x += incremento) {
             resultado.push([parseFloat(x.toFixed(3)), evaluatex(ejViga.formulas[tramo].deformada, { ...variables, x}, { latex: true })()]);
+
 
             if(x > total){
                 tramo++;

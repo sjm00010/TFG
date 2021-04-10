@@ -90,15 +90,24 @@
                 </select>
             </div>
 
-            <div v-show="this.modal.barra"><!-- barra -->
-                <p class="mt-3">Introduzca los datos de la longitud del voladizo:</p>
-                <mdb-input label="Valor por defecto" class="mb-3" type="number" v-model="datos.d" @keyup.enter.native="redirige">
+            <div v-show="this.modal.barra" class="mt-3"><!-- barra -->
+                <p>Seleccione la orientación del voladizo:</p>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" name="orientacion" class="custom-control-input" id="positiva" v-model="datos.orientacion" :value="true">
+                    <label class="custom-control-label" for="positiva">Parte superior de la viga</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" name="orientacion" class="custom-control-input" id="negativa" v-model="datos.orientacion" :value="false">
+                    <label class="custom-control-label" for="negativa">Parte superior de la viga</label>
+                </div>
+                <p class="mt-3">Introduzca los datos de la longitud del voladizo (solo valores positivos):</p>
+                <mdb-input label="Valor por defecto" class="mb-3" type="number" :min="0" v-model="datos.d" @keyup.enter.native="redirige">
                     <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
-                <mdb-input label="Valor mínimo" class="mb-3 red-text" type="number" v-model="datos.minD" @keyup.enter.native="redirige">
+                <mdb-input label="Valor mínimo" class="mb-3" type="number" :min="0" v-model="datos.minD" @keyup.enter.native="redirige">
                     <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
-                <mdb-input label="Valor máximo" class="mb-3" type="number" v-model="datos.maxD" @keyup.enter.native="redirige">
+                <mdb-input label="Valor máximo" class="mb-3" type="number" :min="0" v-model="datos.maxD" @keyup.enter.native="redirige">
                     <span class="input-group-text md-addon" slot="append"> m</span>
                 </mdb-input>
             </div>
@@ -157,6 +166,7 @@ export default {
                 d: '', // Magnitud d para la barra (Opcional)
                 minD: '', // Mínimo para d de la barra (Opcional)
                 maxD: '', // Máximo para d de la barra (Opcional)
+                orientacion: true // Orientación d de la barra (Opcional)
             },
             tramos: undefined
         };

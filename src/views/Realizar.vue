@@ -2,7 +2,7 @@
 <div>
     <!-- Jumbotron con el enunciado del problema -->
     <mdb-jumbotron class="mb-0 text-center">
-        <mdb-card-title class="pb-2 h4"><strong>Ejercicio de {{this.tipo === 'mohr' ? 'círculos de Mohr' : this.tipo}}</strong></mdb-card-title>
+        <mdb-card-title class="pb-2 h4"><strong>Ejercicio de {{this.cab}}</strong></mdb-card-title>
         <p class="card-text" v-html="datos.enunciado"></p>
         <mdb-row class="justify-content-center">
             <mdb-col col="md" class="my-2" v-show="datos.ayuda && datos.ayuda.length !== 0">
@@ -57,7 +57,7 @@ import { mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, mdbCol,
         } from 'mdbvue';
 import viga from '@/components/visualizar/vigas/viga';
 import mohr from '@/components/visualizar/circulosMohr/mohr';
-import { cargaEjercicio, ejViga, ejMohr, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { cargaEjercicio, ejViga, ejMatriz, ejMohr, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: "EjercicioViga",
     components:{
@@ -69,6 +69,7 @@ export default {
     data(){
         return {
             tipo: this.$route.params.tipo,
+            cab: '',
             datos: undefined
         };
     },
@@ -80,11 +81,35 @@ export default {
         switch (this.tipo){
             case 'viga':
                 this.datos = ejViga;
+                this.cab = 'diagramas de esfuerzos en vigas';
+                break;
+            case 'matriz':
+                this.datos = ejMatriz;
+                this.cab = 'matrices';
                 break;
             case 'mohr':
                 this.datos = ejMohr;
+                this.cab = 'círculos de Mohr';
+                break;
+            default:
+                this.$notify({
+                    group: 'app',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error durante la carga del ejercicio</b>',
+                    text: '<i style="font-size:15px"> Ocurrió un error, pruebe a recargar los ejercicios y vuelva a intentarlo.</i>',
+                    duration: 7000,
+                    type: 'error'
+                });
+                this.$route.push('/ejercicios');
                 break;
         }
+    },
+    mounted(){
+        this.$notify({
+        group: 'log',
+        title: '<i class="fas fa-2x fa-info-circle"></i></i> <b class="h3">Ayuda</b>',
+        text: '<i style="font-size:12px"> Si no se visualiza algún dato correctamente recargue la página.</i>',
+        duration: 7000,
+        });
     },
     beforeDestroy(){
         limpiar();

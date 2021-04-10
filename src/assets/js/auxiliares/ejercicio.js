@@ -1,19 +1,18 @@
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 
-export function cargarEjercicios(){
-    cargaEjVigas();
-    cargaEjMohr();
-}
-
 /**
  * Clase con la información básica de un ejercicio
  * @type Ejercicio
- * @param id ID numerico del ejercicio.
- * @param dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
- * @param enunciado Enunciado completo del ejercicio en HTML.
- * @param imagen URL de la imagen que se quiere incluir en el enunciado del ejercicio.
  */
 export class Ejercicio {
+    /**
+     * Constructor de ejercicio
+     * @param {String} id ID numerico del ejercicio.
+     * @param {Number} dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
+     * @param {String} enunciado Enunciado del ejercicio en HTML.
+     * @param {String} ayuda Explicación del ejercicio en HTML.
+     * @param {String} video URL del vídeo explicativo
+     */
     constructor( id, dificultad, enunciado = '', ayuda = '', video = '') {
         this.id = id;
         this.dificultad = dificultad;
@@ -23,7 +22,25 @@ export class Ejercicio {
     }
 }
 
+/**
+ * Clase con la información de un ejercicio de vigas
+ * @type Viga
+ */
 export class Viga extends Ejercicio {
+    /**
+     * Constructor de ejercicio de vigas
+     * @param {String} id ID numerico del ejercicio.
+     * @param {Number} dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
+     * @param {String} enunciado Enunciado del ejercicio en HTML.
+     * @param {String} ayuda Explicación del ejercicio en HTML.
+     * @param {String} video URL del vídeo explicativo
+     * @param {*} tramos Vector con los tramos de la viga
+     * @param {*} elementos Vector con los elementos del ejercicio
+     * @param {*} formulas Vector con las formulas para los tramos de la viga
+     * @param {*} auxiliares Vector con las variables auxiliares
+     * @param {Number} E Módulo elástico
+     * @param {Number} I Momento de inercia
+     */
     constructor( id, dificultad, enunciado = '', ayuda = '', video = '', tramos = [], elementos = [], formulas = [], auxiliares = [], E, I) {
         super(id, dificultad, enunciado, ayuda, video);
         this._tramos = tramos;
@@ -67,48 +84,28 @@ export class Viga extends Ejercicio {
     }
 }
 
-export function compruebaTramos(tramos){
-    let error = [];
-    tramos.forEach((tramo, pos) => {
-        if(tramo.min=='' || parseFloat(tramo.min) > parseFloat(tramo.max))
-            error.push(('min'+(pos+1)));
-        if (tramo.max=='' || parseFloat(tramo.max) < parseFloat(tramo.min))
-            error.push(('max'+(pos+1)));
-        if (tramo.valor=='' || parseFloat(tramo.valor) < parseFloat(tramo.min) || parseFloat(tramo.valor) > parseFloat(tramo.max))
-            error.push(('valor'+(pos+1)));
-    });
-    return error;
-}
-
-// FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE VIGAS DE LA BBDD
-export var vigas = [];
-export async function cargaEjVigas(){
-    const respuesta = await fetch(URL+'/ejercicio/viga/', { 
-        headers: {'Content-Type': 'application/json'},
-        method: 'GET'
-    });
-
-    vigas.splice(0, vigas.length, ...await respuesta.json());
-}
-
-// FUNCION PARA BORRAR UN EJERCICIO DE VIGAS DE LA BBDD
-export async function borrarEjViga(id){
-    const respuesta = await fetch(URL+'/ejercicio/viga/'+id, { 
-        headers: {'Content-Type': 'application/json', 
-                  'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
-        },
-        method: 'DELETE'
-    });
-    
-    if(respuesta.ok){
-        cargaEjVigas();
-        return true;
-    }else
-        return false;
-}
-
-// Ejercicio de Mohr
+/**
+ * Clase con la información de un ejercicio de círculos de Mohr
+ * @type Mohr
+ */
 export class Mohr extends Ejercicio {
+    /**
+     * Constructor de ejercicio de vigas
+     * @param {String} id ID numerico del ejercicio.
+     * @param {Number} dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
+     * @param {String} enunciado Enunciado del ejercicio en HTML.
+     * @param {String} ayuda Explicación del ejercicio en HTML.
+     * @param {String} video URL del vídeo explicativo 
+     * @param {Number} sx 
+     * @param {Number} sy 
+     * @param {Number} txy 
+     * @param {Number} s1 
+     * @param {Number} s2 
+     * @param {Number} a 
+     * @param {Number} B 
+     * @param {Number} E 
+     * @param {Number} v 
+     */
     constructor( id, dificultad, enunciado = '', ayuda = '', video = '', sx, sy, txy, s1, s2, a, B, E, v) {
         super(id, dificultad, enunciado, ayuda, video);
         this.sx = sx;
@@ -123,20 +120,78 @@ export class Mohr extends Ejercicio {
     }
 }
 
-// FUNCION PARA LISTAR TODOS LOS EJERCICIOS DE MOHR DE LA BBDD
-export var mohr = [];
-export async function cargaEjMohr(){
-    const respuesta = await fetch(URL+'/ejercicio/mohr/', { 
+///////////////////////////
+//  Funciones auxiliares //
+///////////////////////////
+
+/**
+ * Función que valida los tramos introducidos para un ejercicio de vigas
+ * @param {*} tramos Vector de tramos
+ * @returns Vector de errores
+ */
+export function compruebaTramos(tramos){
+    let error = [];
+    tramos.forEach((tramo, pos) => {
+        if(tramo.min=='' || parseFloat(tramo.min) > parseFloat(tramo.max))
+            error.push(('min'+(pos+1)));
+        if (tramo.max=='' || parseFloat(tramo.max) < parseFloat(tramo.min))
+            error.push(('max'+(pos+1)));
+        if (tramo.valor=='' || parseFloat(tramo.valor) < parseFloat(tramo.min) || parseFloat(tramo.valor) > parseFloat(tramo.max))
+            error.push(('valor'+(pos+1)));
+    });
+    return error;
+}
+
+/**
+ * Función que carga todos los ejercicios
+ * @returns True si todo se cargó correctamente, false en caso de que haya algún error.
+ */
+export async function cargarEjercicios(){
+    if(await cargaEjercicio('viga') === null) return false;
+    if(await cargaEjercicio('matriz') === null) return false;
+    if(await cargaEjercicio('mohr') === null) return false;
+    return true;
+}
+
+// Vectores para cada tipo de ejercicio
+export var vigas = [], mohr = [], matriz = [];
+
+/**
+ * Función para cargar todos los ejercicios de un tipo
+ * @param {String} tipo Tipo del ejercicio a cargar
+ * @returns Null en caso de error
+ */
+export async function cargaEjercicio(tipo){
+    const respuesta = await fetch(URL+'/ejercicio/'+tipo, { 
         headers: {'Content-Type': 'application/json'},
         method: 'GET'
     });
 
-    mohr.splice(0, mohr.length, ...await respuesta.json());
+    if(!respuesta.ok) return null;
+
+    switch(tipo){
+        case 'viga':
+            vigas.splice(0, vigas.length, ...await respuesta.json());
+            break;
+        case 'matriz':
+            matriz.splice(0, matriz.length, ...await respuesta.json());
+            break;
+        case 'mohr':
+            mohr.splice(0, mohr.length, ...await respuesta.json());
+            break;
+        default:
+            return null;
+    }
 }
 
-// FUNCION PARA BORRAR UN EJERCICIO DE MOHR DE LA BBDD
-export async function borrarEjMohr(id){
-    const respuesta = await fetch(URL+'/ejercicio/mohr/'+id, { 
+/**
+ * Función para el borrado de ejercicios
+ * @param {String} id ID del ejercicio a borrar
+ * @param {String} tipo Tipo de ejercicio
+ * @returns True si tiene éxito, false en caso contrario
+ */
+export async function borrarEjercicio(id, tipo){
+    const respuesta = await fetch(URL+'/ejercicio/'+tipo+'/'+id, { 
         headers: {'Content-Type': 'application/json', 
                   'Authorization': "Basic " + btoa(sessionStorage.getItem("user")+':'+sessionStorage.getItem("pass"))
         },
@@ -144,7 +199,7 @@ export async function borrarEjMohr(id){
     });
     
     if(respuesta.ok){
-        cargaEjMohr();
+        if(await cargaEjercicio(tipo) === null) return false;
         return true;
     }else
         return false;

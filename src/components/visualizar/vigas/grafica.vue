@@ -33,7 +33,7 @@ export default {
         precision: {
             type: Number,
             required: true
-        },
+        }
     },
     components:{
         highcharts: Chart,

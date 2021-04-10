@@ -62,16 +62,11 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
         mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon,
          } from 'mdbvue';
 import enunciado from '@/components/editor/enunciado';
-import dibujar from '@/components/auxVigas/dibujaViga';
-import formulas from '@/components/auxVigas/formulas';
-import grafica from '@/components/visualizar/vigas/grafica';
-import { inicializar, calcular } from '@/assets/js/vigas/calculos.js';
-import { vincularTramos, elementos } from '@/assets/js/vigas/variables.js';
 import { compruebaTramos, cargaEjercicio } from '@/assets/js/auxiliares/ejercicio.js';
-import { ejercicio, ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { ejercicio, ejMatriz } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 export default {
-    name: 'formularioViga',
+    name: 'formularioMatriz',
     components: {
        mdbCard, mdbCardBody, mdbCardTitle, mdbCardText, 
        mdbInput, mdbRow, mdbCol, mdbBtn, mdbIcon, 
@@ -85,65 +80,11 @@ export default {
     },
     data(){
         return{
-            dificultad: ejViga.dificultad,
-            numTramos: ejViga.tramos.length || undefined,
-            tramos: ejViga.tramos,
-            compTramos: ejViga.tramos.length > 0,
-            datosGraficas: {
-                axiles: [],
-                cortantes: [],
-                flectores: [],
-                deformada: []
-            },
+            dificultad: ejMatriz.dificultad,
             previa: false
         }
     },
     methods:{
-        crearTramos(){
-            this.compTramos = false;
-            this.tramos.splice(0);
-            for (let i = 0; i < this.numTramos; i++) {
-                this.tramos.push({min: '', max: '', valor: ''});
-            }
-        },
-        comprobarTramos(){
-            if(this.tramos.length == 0){
-                this.compTramos = false;
-                this.$notify({
-                    group: 'app',
-                    title: '<i class="fas fa-lg fa-exclamation-triangle"></i> <b class="h5">Número de tramos invalido</b>',
-                    text: '<i style="font-size:15px; text-align: center;"> Se debe introducir al menos 1 tramo para la viga.</i>',
-                    duration: 7000,
-                    type: 'warn'
-                });
-            }else{
-                let error = compruebaTramos(this.tramos);
-                for (const [campo, value] of Object.entries(this.$refs)) {
-                    if(error.includes(campo)){
-                        value[0].classList.remove('valid');
-                        value[0].classList.add('invalid');
-                    }else if(value[0]){
-                        value[0].classList.remove('invalid');
-                        value[0].classList.add('valid');
-                    }
-                }
-                if(error.length != 0){
-                    this.compTramos = false;
-                    this.$notify({
-                        group: 'app',
-                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error en los tramos</b>',
-                        text: '<i style="font-size:15px"> Revisa el mínimo, el máximo y el valor por defecto de los tramos marcados en rojo.</i>',
-                        duration: 7000,
-                        type: 'error'
-                    });
-                }else{
-                    this.compTramos = true;
-                    setTimeout(() => { this.$refs.dibujo.actualiza(); }, 300);
-                    setTimeout(() => { this.$refs.formulas.cargaTramos(this.tramos); }, 300);
-                    vincularTramos(this.tramos);
-                }
-            }
-        },
         async crear(){
             if(!this.verificar()) return;
             ejViga.dificultad = this.dificultad;
@@ -213,7 +154,7 @@ export default {
 
             if(respuesta.ok){
                 // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
-                await cargaEjercicio('viga');
+                await cargaEjercicio('matriz');
                 this.$router.push('/ejercicios');
             }else{
                 this.$notify({

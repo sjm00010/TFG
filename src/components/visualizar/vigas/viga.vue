@@ -17,8 +17,8 @@
             <hr/>
             <mdb-row>
                 <mdb-col md="3" col="md" v-for="(tramo, i) in datos.tramos" :key="i">
-                    <mdb-input type="number" :label="'Tramo '+(i+1)+'(m)'" :min="tramo.min" :max="tramo.max" :step="0.1" v-model.number="tramo.valor" @input="cambioTramos(0, i)"/>
-                    <input :aria-label="'Tramo '+(i+1)+'(m)'" type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @input="cambioTramos(0, i)">
+                    <mdb-input :class="tramo.min === tramo.max ? 'disabled' : ''" type="number" :label="'Tramo '+(i+1)+'(m)'" :min="tramo.min" :max="tramo.max" :step="0.1" v-model.number="tramo.valor" @change="cambioTramos(i)"/>
+                    <input v-if="tramo.min !== tramo.max" :aria-label="'Tramo '+(i+1)+'(m)'" type="range" :min="tramo.min" :max="tramo.max" :step="0.1" class="custom-range" v-model="tramo.valor" @change="cambioTramos(i)">
                 </mdb-col>
             </mdb-row>
 
@@ -27,22 +27,22 @@
             <hr/>
             <mdb-row>
                 <mdb-col md="3" col="md" v-for="(elemento, i) in elementos" :key="i">
-                    <mdb-input type="number" :label="elemento.tipo+' '+(i+1)" :min="elemento.min" :max="elemento.max" 
-                                :step="0.1" v-model.number="elemento.magnitud" @input="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)"/>
-                    <input  type="range" :min="elemento.min" :max="elemento.max" :step="0.1" class="custom-range" :aria-label="elemento.tipo+' '+(i+1)"
-                            v-model="elemento.magnitud" @input="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)">
+                    <mdb-input :class="elemento.min === elemento.max ? 'disabled' : ''" type="number" :label="elemento.tipo+' '+(i+1)" :min="elemento.min" :max="elemento.max" 
+                                :step="0.1" v-model.number="elemento.magnitud" @change="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)"/>
+                    <input v-if="elemento.min !== elemento.max" type="range" :min="elemento.min" :max="elemento.max" :step="0.1" class="custom-range" :aria-label="elemento.tipo+' '+(i+1)"
+                            v-model="elemento.magnitud" @change="cambio(elemento.pos, elemento.magnitud, elemento.min, elemento.max)">
                 </mdb-col>
                 <mdb-col md="3" col="md" v-for="(ditancia, i) in d" :key="'d'+i">
-                    <mdb-input type="number" :label="'Distancia de la barra '+(ditancia.pos+1)" :min="ditancia.minD" :max="ditancia.maxD" 
-                                :step="0.01" v-model.number="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)"/>
-                    <input  type="range" :min="ditancia.minD" :max="ditancia.maxD" :step="0.01" class="custom-range" :aria-label="'Distancia de la barra '+(ditancia.pos+1)"
-                            v-model="ditancia.d" @input="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)">
+                    <mdb-input :class="ditancia.minD === ditancia.maxD ? 'disabled' : ''" type="number" :label="'Distancia de la barra '+(ditancia.pos+1)" :min="ditancia.minD" :max="ditancia.maxD" 
+                                :step="0.01" v-model.number="ditancia.d" @change="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)"/>
+                    <input v-if="ditancia.minD !== ditancia.maxD" type="range" :min="ditancia.minD" :max="ditancia.maxD" :step="0.01" class="custom-range" :aria-label="'Distancia de la barra '+(ditancia.pos+1)"
+                            v-model="ditancia.d" @change="cambio(ditancia.pos, ditancia.d, ditancia.minD, ditancia.maxD)">
                 </mdb-col>
             </mdb-row>
         </mdb-card-body>
     </mdb-card>
 
-    <div class="d-flex">
+    <div class="d-flex" v-if="!editado">
         <mdb-popover class="ml-auto" trigger="hover">
             <span slot="header">Sabías que...</span>
             <span slot="body">Si quieres ocultar una ley solo tienes que pinchar en su nombre.</span>
@@ -52,23 +52,27 @@
         </mdb-popover>
     </div>
 
-    <grafica :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3"></grafica>
-    <grafica :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3"></grafica>
-    <grafica :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3"></grafica>
+    <div v-if="editado" class="d-flex justify-content-center my-5">
+        <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;" />
+    </div>
 
-    <mdb-card class="my-3" v-if="datos.E">
+    <grafica v-if="!editado" :datos="this.datosGraficas.axiles" titulo="Esfuerzos axiles" color="rgb(41, 128, 185)" :invertida="false" unidad="kN" :precision="3" ></grafica>
+    <grafica v-if="!editado" :datos="this.datosGraficas.cortantes" titulo="Esfuerzos cortantes" color="rgb(231, 76, 60)" :invertida="false" unidad="kN" :precision="3" ></grafica>
+    <grafica v-if="!editado" :datos="this.datosGraficas.flectores" titulo="Momentos flectores" color="rgb(82, 190, 128)" :invertida="true" unidad="kN·m" :precision="3" ></grafica>
+
+    <mdb-card class="my-3" v-if="def">
         <mdb-card-body>
             <mdb-row>
                 <mdb-col xl="6" class="mb-3">
                     <p class="lead">Módulo elástico <i>E</i> (· 10<sup>7</sup> kN/m<sup>2</sup>)</p>
-                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.E" placeholder="Módulo elástico" @input="cambiaEoI('E', datos.E)">
+                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.E" placeholder="Módulo elástico" @change="cambiaEoI('E', datos.E)">
                         <span class="input-group-text md-addon" slot="prepend"><i>E = </i></span>
                         <span class="input-group-text md-addon" slot="append">· 10<sup>7</sup> kN/m<sup>2</sup></span>
                     </mdb-input>
                 </mdb-col>
                 <mdb-col xl="6" class="mb-3">
                     <p class="lead">Momento de inercia <i>I</i> (· 10<sup>-8</sup> m<sup>4</sup>)</p>
-                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.I" placeholder="Momento de inercia" @input="cambiaEoI('I', datos.I)">
+                    <mdb-input class="mb-2 mt-0" type="number" v-model="datos.I" placeholder="Momento de inercia" @change="cambiaEoI('I', datos.I)">
                         <span class="input-group-text md-addon" slot="prepend"><i>I = </i></span>
                         <span class="input-group-text md-addon" slot="append">· 10<sup>-8</sup> m<sup>4</sup></span>
                     </mdb-input>
@@ -77,7 +81,11 @@
         </mdb-card-body>
     </mdb-card>
 
-    <grafica :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
+    <div v-if="editadoDef" class="d-flex justify-content-center my-5">
+        <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;" />
+    </div>
+
+    <grafica v-if="def && !editado && !editadoDef" :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
 
 </mdb-container>
 </template>
@@ -88,10 +96,10 @@ import { mdbContainer, mdbCardTitle, mdbInput,
          mdbCardBody, mdbPopover} from 'mdbvue';
 import grafica from '@/components/visualizar/vigas/grafica';
 import { vinculaCanvas, resizeCanvas, redibuja } from '@/assets/js/vigas/funAuxiliares.js';
-import { setElementos, modificaElemento, calculaSegmento, vincularTramos } from '@/assets/js/vigas/variables.js';
+import { setElementos, modificaElemento, vincularTramos, calculaSegmento } from '@/assets/js/vigas/variables.js';
 import { ejViga, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import { inicializar, actualizaTramo, actualizaElemento, 
-         actualizaEeI, calcular, calculaDeformada } from '@/assets/js/vigas/calculos.js';
+         actualizaEeI, calcular, calculaDeformada, limpiarVar } from '@/assets/js/vigas/calculos.js';
 export default {
     name: "EjercicioViga",
     data(){
@@ -101,6 +109,7 @@ export default {
             modal2: false,
             elementos: [],
             d: [],
+            def: ejViga.E ? true : false, 
             datosGraficas: {
                 axiles: [],
                 cortantes: [],
@@ -108,7 +117,8 @@ export default {
                 deformada: []
             },
             editado: true,
-            programada: setInterval( this.actualizaGrafica, 1000)
+            editadoDef: false,
+            programada: setInterval( this.actualizaGrafica, 2000)
         };
     },
     components:{
@@ -118,14 +128,16 @@ export default {
         grafica
     },
     methods:{
-        cambioTramos(pos, i){
-            modificaElemento( pos, calculaSegmento(this.datos.tramos.length));
-            redibuja();
-            actualizaTramo(i+1, this.datos.tramos[i].valor);
-            this.editado = true;
+        cambioTramos(i){
+            if(this.datos.tramos[i].valor >= this.datos.tramos[i].min &&  this.datos.tramos[i].valor <= this.datos.tramos[i].max){
+                modificaElemento( 0, calculaSegmento(this.datos.tramos.length));
+                actualizaTramo(i+1, this.datos.tramos[i].valor);
+                redibuja();
+                this.editado = true;
+            }
         },
         cambio(pos, mag, min, max){
-            if(!(mag < min || mag > max)){
+            if(mag >= min && mag <= max){
                 modificaElemento( pos, mag);
                 redibuja();
                 actualizaElemento(this.datos.elementos[pos].nombre, mag);
@@ -149,13 +161,18 @@ export default {
                         type: 'error'
                     });
                 }
-                
                 this.editado = false;
+            }
+            if(this.editadoDef){
+                this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...calculaDeformada());
+                this.editadoDef = false;
             }
         },
         cambiaEoI(variable, valor){
-            actualizaEeI(variable, valor);
-            this.datosGraficas.deformada.splice(0, this.datosGraficas.deformada.length, ...calculaDeformada());
+            if(!isNaN(valor)){
+                this.editadoDef = true;
+                actualizaEeI(variable, valor);
+            }
         }
     },
     mounted() {
@@ -198,8 +215,9 @@ export default {
     },
     beforeDestroy(){
         window.removeEventListener('resize', () => resizeCanvas(this.$refs.editor));
-        clearInterval(this.polling);
+        clearInterval(this.programada);
         limpiar();
+        limpiarVar();
     }
 }
 </script>

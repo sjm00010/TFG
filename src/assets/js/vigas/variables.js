@@ -27,6 +27,7 @@ export function pushElemento(tipo, props){
         d: props.d, // Magnitud d para la barra (Opcional)
         minD: props.minD, // Mínimo para d de la barra (Opcional)
         maxD: props.maxD, // Máximo para d de la barra (Opcional)
+        orientacion: props.orientacion, // Orientación d de la barra (Opcional)
     });
 }
 
@@ -196,10 +197,13 @@ export function verificaBarra(magnitud, min, max, d, minD, maxD){
     } 
 
     if ( minD > maxD){
-        error.texto = "Datos incorrectos: El valor de la distancia mínimo debe ser inferior al del máximo."
+        error.texto = "Datos incorrectos: La longitud mínima del voladizo debe ser inferior a la máxima."
+        error.existe= true;
+    } else if (d <= 0){
+        error.texto = "Datos incorrectos: La longitud debe ser mayor que 0."
         error.existe= true;
     } else if (d < minD || d > maxD){
-        error.texto = "Datos incorrectos: El valor de la distancia de la carga debe estar entre el mínimo y el máximo indicados."
+        error.texto = "Datos incorrectos: La longitud del voladizo debe estar entre el mínimo y el máximo indicados."
         error.existe= true;
     }
 

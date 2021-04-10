@@ -125,7 +125,7 @@ import {mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
 import enunciado from '@/components/editor/enunciado';
 import dibujos from '@/components/visualizar/circulosMohr/dibujos';
 import { ejercicio, ejMohr } from '@/assets/js/auxiliares/ejercicioJSON.js';
-import { cargaEjMohr } from '@/assets/js/auxiliares/ejercicio.js';
+import { cargaEjercicio } from '@/assets/js/auxiliares/ejercicio.js';
 import * as cal from '@/assets/js/mohr/calculos.js';
 import * as dib from '@/assets/js/mohr/dibujarCirculo.js';
 import * as cua from '@/assets/js/mohr/dibujarCuadrado.js';
@@ -360,7 +360,7 @@ export default {
 
             if(respuesta.ok){
                 // Devuelvo temporalmente a la lista de ejercicio, luego ira al ejercicio creado
-                await cargaEjMohr();
+                await cargaEjercicio('mohr');
                 this.$router.push('/ejercicios');
             }else{
                 this.$notify({

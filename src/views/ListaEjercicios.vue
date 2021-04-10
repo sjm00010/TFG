@@ -7,7 +7,7 @@
         </div>
         <mdb-btn block color="blue-grey" @click="cargarEjercicios"><mdb-icon icon="redo-alt" class="mr-1"/>Recargar ejercicios</mdb-btn>
         <hr/>        
-        <tipo class="mb-3" titulo="Diagramas de esfuerzos en vigas" color="aqua-gradient"></tipo>
+        <tipo class="my-3" titulo="Diagramas de esfuerzos en vigas" color="aqua-gradient"></tipo>
         <mdb-row v-if="this.ejVigas.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejVigas" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
@@ -15,10 +15,21 @@
             </mdb-col>
         </mdb-row>
         <div class="text-center my-5" v-else-if="this.ejVigas.length == 0">
-            <h2>No existen ejercicios de cálculo de apoyo en vigas</h2>
+            <h2>No existen ejercicios de diagramas de esfuerzos en vigas</h2>
         </div>
 
-        <tipo class="mb-3" titulo="Círculos de Mohr" color="purple-gradient"></tipo>
+        <tipo class="my-3" titulo="Matrices" color="peach-gradient"></tipo>
+        <mdb-row v-if="this.ejMatrices.length > 0">
+            <mdb-col col="md" v-for="(ej, i) in ejMatrices" :key="ej.id">
+                <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
+                    :descripcion="ej.enunciado" enlace="matriz" @borrar="borrar"></tarjeta>
+            </mdb-col>
+        </mdb-row>
+        <div class="text-center my-5" v-else-if="this.ejMatrices.length == 0">
+            <h2>No existen ejercicios de matrices</h2>
+        </div>
+
+        <tipo class="my-3" titulo="Círculos de Mohr" color="purple-gradient"></tipo>
         <mdb-row v-if="this.ejMohr.length > 0">
             <mdb-col col="md" v-for="(ej, i) in ejMohr" :key="ej.id">
                 <tarjeta :id="i+1" :id_bd="ej.id" :dificultad="ej.dificultad"
@@ -26,7 +37,7 @@
             </mdb-col>
         </mdb-row>
         <div class="text-center my-5" v-else-if="this.ejMohr.length == 0">
-            <h2>No existen ejercicios de cálculo de círculos de Mohr</h2>
+            <h2>No existen ejercicios de círculos de Mohr</h2>
         </div>
     </mdb-container>
 </template>
@@ -36,8 +47,7 @@ import tarjeta from '@/components/listado/TarjetaEjercicio';
 import tipo from '@/components/listado/TipoEjercicios';
 import {mdbContainer, mdbRow, mdbCol, mdbBtn, mdbIcon} from 'mdbvue';
 
-import {vigas, cargaEjVigas, borrarEjViga,
-        mohr, cargaEjMohr, borrarEjMohr} from '@/assets/js/auxiliares/ejercicio.js';
+import {vigas, matriz, mohr, cargarEjercicios, borrarEjercicio} from '@/assets/js/auxiliares/ejercicio.js';
 import {profesor, getUser} from '@/assets/js/login/identificacion.js';
 
 export default {
@@ -50,35 +60,35 @@ export default {
         return{
             prof: false,
             ejVigas: vigas || [],
-            ejMohr: mohr || []
+            ejMohr: mohr || [],
+            ejMatrices: matriz || []
         }
     },
     methods:{
         borrar(num, id, tipo){
             if(confirm("¿Esta seguro de eliminar el ejercicio "+ num +"?"))
-                switch(tipo){
-                    case 'viga':
-                        if (!borrarEjViga(id)) this.error();
-                        break;
-                    case 'mohr':
-                        if (!borrarEjMohr(id)) this.error();
-                        break;
-                }
-                
-                    
+                if (!borrarEjercicio(id, tipo)) this.error();    
         },
         error(){
             this.$notify({
                 group: 'app',
                 title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al borrar el ejercicio</b>',
-                text: '<i style="font-size:15px"> Ocurrio un error al tratar de borrar el ejercicio, intentelo de nuevo.</i>',
+                text: '<i style="font-size:15px"> Ocurrió un error al tratar de borrar el ejercicio, inténtelo de nuevo.</i>',
                 duration: 7000,
                 type: 'error'
             });
         },
         async cargarEjercicios(){
-            await cargaEjVigas();
-            await cargaEjMohr();
+            if(!await cargarEjercicios()){
+                this.$notify({
+                    group: 'app',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al cargar los ejercicios</b>',
+                    text: '<i style="font-size:15px"> Ocurrió un error al tratar de cargar los ejercicios, recargue la página.</i>',
+                    duration: 7000,
+                    type: 'error'
+                });
+                this.$route.push('/');
+            }
         }
     },
     created(){

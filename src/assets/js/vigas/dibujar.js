@@ -17,7 +17,7 @@ let altura = 150;
 
 /**
   * Función que dibuja una viga
-  * @param {int} tam Tamaño de la viga
+  * @param {Number} tam Tamaño de la viga
   */
  export function addViga(tam){
     tamViga = parseFloat(tam);
@@ -87,12 +87,12 @@ let altura = 150;
         evented: false
     }));
     addMarca(inicio, "0", 'black');
-    addMarca(fin, tamViga.toString(), 'black');
+    addMarca(fin, parseFloat(tamViga.toFixed(1)).toString(), 'black');
 }
 
 /**
  * Función que dibuja un soporte fijo para la viga
- * @param {int} coorX Coordenada con respecto a la viga
+ * @param {Number} coorX Coordenada con respecto a la viga
  */
 export function addSoporteFijo(coorX){
     const x = recalculaX(coorX);
@@ -123,7 +123,7 @@ export function addSoporteFijo(coorX){
 
 /**
  * Función que dibuja un soporte simple para la viga
- * @param {int} coorX Coordenada con respecto a la viga
+ * @param {Number} coorX Coordenada con respecto a la viga
  */
 export function addSoporteSimple(coorX){
     const x = recalculaX(coorX);
@@ -161,7 +161,7 @@ export function addSoporteSimple(coorX){
 
 /**
  * Función que dibuja un soporte movil para la viga
- * @param {int} coorX Coordenada con respecto a la viga
+ * @param {Number} coorX Coordenada con respecto a la viga
  */
 export function addSoporteMovil(coorX){
     const x = recalculaX(coorX);
@@ -190,9 +190,9 @@ export function addSoporteMovil(coorX){
 
 /**
  * Función que dibuja una carga
- * @param {int} coorX Coordenada con respecto a la viga
- * @param {boolean} sentido Sentido de la carga
- * @param {int} P Valor de la carga
+ * @param {Number} coorX Coordenada con respecto a la viga
+ * @param {Boolean} sentido Sentido de la carga
+ * @param {Number} P Valor de la carga
  */
 export function addPuntoCarga(coorX, P){
     const x = recalculaX(coorX);
@@ -239,16 +239,16 @@ export function addPuntoCarga(coorX, P){
 
 /**
  * Función que dibuja una barra
- * @param {int} coorX Coordenada con respecto a la viga
- * @param {boolean} sentido Sentido de la carga
- * @param {int} H Valor de la carga
- * @param {int} d Distancia del voladizo
+ * @param {Number} coorX Coordenada con respecto a la viga
+ * @param {Number} H Valor de la carga
+ * @param {Number} d Distancia del voladizo
+ * @param {Boolean} d Distancia del voladizo
  */
-export function addBarra(coorX, H, d){
+export function addBarra(coorX, H, d, orientacion){
     
     const x = recalculaX(coorX);
-    const y1 = H > 0 ? altura-12 : altura+12;
-    const y2 = H > 0 ? altura-60 : altura+60;
+    const y1 = orientacion ? altura+12 : altura-12;
+    const y2 = orientacion ? altura+60 : altura-60;
 
     const linea = new fabric.Line([ x, y1, x, y2 ], {
         stroke: colores.rojo,
@@ -256,7 +256,7 @@ export function addBarra(coorX, H, d){
         selectable: false,
         evented: false,
     });
-    const linea2 = new fabric.Line([ x-15, y2, x-50, y2 ], {
+    const linea2 = new fabric.Line([ x-5, y2, x-50, y2 ], {
         stroke: colores.rojo,
         strokeWidth: 2,
         selectable: false,
@@ -285,8 +285,8 @@ export function addBarra(coorX, H, d){
     canvas.add(linea2);
     canvas.add(arrow);
 
-    escribir(H.toString()+" kN", H < 0 ? x-30 : x-20,  H < 0 ? altura+80 : altura-75, colores.rojo);
-    escribir(d.toFixed(2)+" m", x+35, H < 0 ? altura+40 : altura-30, colores.rojo);
+    escribir(H.toString()+" kN", x-25 ,  orientacion ? altura+80 : altura-75, colores.rojo);
+    escribir(d.toFixed(2)+" m", x+35, orientacion ? altura+40 : altura-30, colores.rojo);
     addMarca(x, coorX.toString(), colores.rojo);
 }
 
@@ -361,7 +361,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     });
     let arrow1 = new fabric.Triangle({
         left: x1,
-        top: altura-20,
+        top: q >= 0 ? altura-20 : altura+20,
         originX: 'center',
         originY: 'center',
         hasBorders: false,
@@ -387,7 +387,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     });
     let arrow2 = new fabric.Triangle({
         left: x2,
-        top: altura-20,
+        top: q >= 0 ? altura-20 : altura+20,
         originX: 'center',
         originY: 'center',
         hasBorders: false,
@@ -434,7 +434,7 @@ export function addCargaDistribuida(desdeX, hastaX, q){
     canvas.add(lineaUnion);
     canvas.add(linea1);
 
-    escribir(q.toString()+" kN/m", (x2-x1)/2+x1, altura-90, colores.verde);
+    escribir(q.toString()+" kN/m", (x2-x1)/2+x1,  q >= 0 ? altura-90 : altura+70, colores.verde);
     addMarca(x1, desdeX.toString(), colores.verde);
     addMarca(x2, hastaX.toString(), colores.verde);
 }

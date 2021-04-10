@@ -39,6 +39,10 @@
             <th>#</th>
             <th>Tipo</th>
             <th>Magnitud</th>
+            <th>Mínimo</th>
+            <th>Máximo</th>
+            <th>Tramo inicial</th>
+            <th>Tramo final</th>
             <th>Borrar</th>
             </tr>
         </mdb-tbl-head>
@@ -46,7 +50,11 @@
             <tr v-for="(elemento, i) in elementos" :key="i">
                 <th v-html="elemento.nombre.replace(/(\w+)(\d+)/, '$1<sub>$2</sub>')"></th>
                 <td>{{elemento.tipo}}</td>
-                <td>{{elemento.magnitud}}</td>
+                <td>{{isNaN(elemento.magnitud) ? '-' : elemento.magnitud}}</td>
+                <td>{{isNaN(elemento.min) ? '-' : elemento.min}}</td>
+                <td>{{isNaN(elemento.max) ? '-' : elemento.max}}</td>
+                <td>{{isNaN(elemento.segmento) ? '-' : elemento.segmento}}</td>
+                <td>{{isNaN(elemento.segmentoFinal) ? '-' : elemento.segmentoFinal}}</td>
                 <td>
                     <mdb-btn class="my-0" size="sm" color="danger" @click="borrar(i)" v-show="elemento.tipo!='Viga'"><mdb-icon far icon="trash-alt" /></mdb-btn>
                     <small class="text-muted" v-show="elemento.tipo=='Viga'">La viga no se puede borrar</small>

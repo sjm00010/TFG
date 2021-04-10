@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import {    mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
+import { mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/formularios/formularioViga';
 import formularioMohr from '@/components/formularios/formularioMohr';
-import { ejViga, ejMohr, cargaEjercicio, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
+import { ejViga, ejMatriz, ejMohr, cargaEjercicio, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 
 export default {
     components: {
@@ -41,15 +41,20 @@ export default {
                 this.tipo = 'Vigas';
                 break;
             case 'mohr':
-                if(ejMohr.id === undefined)
+                if(ejMatriz.id === undefined)
                     this.$router.push('/ejercicios');
                 this.tipo = 'Mohr';
+                break;
+            case 'matriz':
+                if(ejMohr.id === undefined)
+                    this.$router.push('/ejercicios');
+                this.tipo = 'Matriz';
                 break;
             default:
                 this.$notify({
                     group: 'app',
-                    title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al cargar el ejercicio</b>',
-                    text: '<i style="font-size:15px"> Ocurrio un problema al cargar el ejercicio. Recargue los ejercicios y vuelva a intentarlo.</i>',
+                    title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error durante la carga del ejercicio</b>',
+                    text: '<i style="font-size:15px"> Ocurrió un error, pruebe a recargar los ejercicios y vuelva a intentarlo.</i>',
                     duration: 7000,
                     type: 'error'
                 });

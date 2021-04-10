@@ -127,6 +127,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="css">
+b{
+    font-weight: bold;
+}
+ul, ol{
+    text-align: left;
+}
 .katex { font-size: 1.5em; }
 </style>
