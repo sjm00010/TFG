@@ -8,12 +8,13 @@
                 <option value="" selected>Selecciona un tipo</option>
                 <option value="Vigas">Diagramas de esfuerzos en vigas</option>
                 <option value="Mohr">Círculos de Mohr</option>
-                <option value="Matrices">Matricial</option>
+                <option value="Matriz">Matricial</option>
             </select>
 		</mdb-card-body>
 	</mdb-card>
     <formularioViga v-if="tipo == 'Vigas'"/>
     <formularioMohr v-if="tipo == 'Mohr'"/>
+    <formularioMatriz v-if="tipo == 'Matriz'"/>
 </mdb-container>
 </template>
 
@@ -21,12 +22,13 @@
 import { mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText } from 'mdbvue';
 import formularioViga from '@/components/formularios/formularioViga';
 import formularioMohr from '@/components/formularios/formularioMohr';
+import formularioMatriz from '@/components/formularios/formularioMatriz';
 import { limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 
 export default {
     components: {
        mdbContainer, mdbCard, mdbCardBody, mdbCardTitle, mdbCardText,
-       formularioViga, formularioMohr
+       formularioViga, formularioMohr, formularioMatriz
     },
     data(){
         return{

@@ -67,23 +67,6 @@ export default {
         },
         borrar(){
             this.$emit('borrar', this.id, this.id_bd, this.enlace);
-        },
-        tipo(){
-            switch(this.enlace){
-                case 'viga':
-                    return 'Vigas';
-                case 'mohr':
-                    return 'Mohr';
-                default:
-                    this.$notify({
-                        group: 'app',
-                        title: '<i class="fas fa-2x fa-times"></i> <b class="h5">Error al cargar el ejercicio</b>',
-                        text: '<i style="font-size:15px"> Ocurrio un problema al cargar el ejercicio. Recargue los ejercicios y vuelve a intentarlo.</i>',
-                        duration: 7000,
-                        type: 'error'
-                    });
-                    break;
-            }
         }
     },
     created(){

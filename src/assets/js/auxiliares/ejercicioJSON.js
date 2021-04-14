@@ -1,13 +1,15 @@
-import {Ejercicio, Viga, Mohr} from '@/assets/js/auxiliares/ejercicio.js';
+import {Ejercicio, Viga, Mohr, Matriz} from '@/assets/js/auxiliares/ejercicio.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 
 export let ejercicio = new Ejercicio();
 export let ejViga = new Viga();
 export let ejMohr = new Mohr();
+export let ejMatriz = new Matriz();
 export function limpiar(){
     ejercicio = new Ejercicio();
     ejViga = new Viga();
     ejMohr = new Mohr();
+    ejMatriz = new Matriz();
 }
 
 export async function cargaEjercicio(id, tipo){
@@ -22,6 +24,10 @@ export async function cargaEjercicio(id, tipo){
         case 'Mohr':
         case 'mohr':
             url = URL+'/ejercicio/mohr/'+id;
+            break;
+        case 'Matriz':
+        case 'matriz':
+            url = URL+'/ejercicio/matriz/'+id;
             break;
     }
 
@@ -42,6 +48,11 @@ export async function cargaEjercicio(id, tipo){
                 case 'mohr':
                     ejMohr = await ej.json();
                     cargaDatos(ejMohr);
+                    break;
+                case 'Matriz':
+                case 'matriz':
+                    ejMatriz = await ej.json();
+                    cargaDatos(ejMatriz);
                     break;
             }
             return true;

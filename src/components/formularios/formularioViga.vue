@@ -16,7 +16,7 @@
             <h4 class="text-center mt-3"><small class="text-muted">DATOS DE LOS TRAMOS</small></h4>
             <mdb-row>
                 <mdb-col md="12">
-                    <mdb-input type="number" label="Número de tramos" :min="0" :step="1" v-model="numTramos" @change="crearTramos"/>
+                    <mdb-input type="number" label="Número de tramos" :min="0" :step="1" v-model="numTramos" @blur="crearTramos"/>
                 </mdb-col>
                 <mdb-col md="12">
                     <mdb-card-text v-show="tramos.length > 0" class="text-center">Introduce el mínimo, el máximo y un valor por defecto para cada tramo.</mdb-card-text>

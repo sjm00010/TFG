@@ -47,6 +47,7 @@
 
     <viga v-if="this.tipo === 'viga'"/>
     <mohr v-if="this.tipo === 'mohr'"/>
+    <matriz v-if="this.tipo === 'matriz'"/>
 </div>
 </template>
 
@@ -57,6 +58,7 @@ import { mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, mdbCol,
         } from 'mdbvue';
 import viga from '@/components/visualizar/vigas/viga';
 import mohr from '@/components/visualizar/circulosMohr/mohr';
+import matriz from '@/components/visualizar/matrices/matriz';
 import { cargaEjercicio, ejViga, ejMatriz, ejMohr, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 export default {
     name: "EjercicioViga",
@@ -64,7 +66,7 @@ export default {
         mdbJumbotron, mdbCardTitle, mdbBtn, mdbRow, 
         mdbCol, mdbModal, mdbModalHeader, mdbIcon,
         mdbModalTitle, mdbModalBody, mdbModalFooter, 
-        viga, mohr
+        viga, mohr, matriz
     },
     data(){
         return {

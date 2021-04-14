@@ -120,6 +120,84 @@ export class Mohr extends Ejercicio {
     }
 }
 
+/**
+ * Clase con la información de un ejercicio de matrices
+ * @type Matriz
+ */
+ export class Matriz extends Ejercicio {
+    /**
+     * Constructor de ejercicio de matrices
+     * @param {String} id ID numerico del ejercicio.
+     * @param {Number} dificultad Número de lapices, del 1 al 3. Si se sale el ejercicio tendra el color blanco pero el número de lápices especificado.
+     * @param {String} enunciado Enunciado del ejercicio en HTML.
+     * @param {String} ayuda Explicación del ejercicio en HTML.
+     * @param {String} video URL del vídeo explicativo
+     * @param {*} materiales Matriz con los materiales
+     * @param {*} secciones Matriz con las secciones
+     * @param {*} nodos Matriz con los nodos
+     * @param {*} barras Matriz con las barras
+     * @param {*} bc Matriz con las condiciones de contorno
+     * @param {*} cargas Matriz con las cargas
+     */
+    constructor( id, dificultad, enunciado = '', ayuda = '', video = '', materiales = [], secciones = [], nodos = [], barras = [], bc = [], cargas = []) {
+        super(id, dificultad, enunciado, ayuda, video);
+        this._materiales = materiales;
+        this._secciones = secciones;
+        this._nodos = nodos;
+        this._barras = barras;
+        this._bc = bc;
+        this._cargas = cargas;
+    }
+
+    set materiales(nMateriales){
+        this._materiales.splice(0, this._materiales.length, ...nMateriales);
+    }
+
+    set secciones(nSecciones){
+        this._secciones.splice(0, this._secciones.length, ...nSecciones);
+    }
+
+    set nodos(nNodos){
+        this._nodos.splice(0, this._nodos.length, ...nNodos);
+    }
+
+    set barras(nBarras){
+        this._barras.splice(0, this._barras.length, ...nBarras);
+    }
+
+    set bc(nBc){
+        this._bc.splice(0, this._bc.length, ...nBc);
+    }
+
+    set cargas(nCargas){
+        this._cargas.splice(0, this._cargas.length, ...nCargas);
+    }
+
+    get materiales(){
+        return this._materiales;
+    }
+
+    get secciones(){
+        return this._secciones;
+    }
+
+    get nodos(){
+        return this._nodos;
+    }
+
+    get barras(){
+        return this._barras;
+    }
+
+    get bc(){
+        return this._bc;
+    }
+
+    get cargas(){
+        return this._cargas;
+    }
+}
+
 ///////////////////////////
 //  Funciones auxiliares //
 ///////////////////////////
