@@ -1,55 +1,113 @@
-import * as faux from '@/assets/js/ejMatrices/funcionesAux.js';
-import {lusolve, multiply, subtract, transpose} from 'mathjs'
+import * as faux from '@/assets/js/matriz/funcionesAux.js';
+import {lusolve, multiply, subtract, transpose} from 'mathjs';
 
- /**            Inputs predeterminados                **/
+/******************            INPUTS               ******************/
 // materiales: num material | E | nu [en kN y m]
-let materiales = [[1, 210000000, 0.3]];
+let materiales = [];
 // secciones: num_seccion | anchura | altura [en metros]
-let secciones = [[1, 0.10, 0.25]];
+let secciones = [];
 // barras: num nodo | x | y
-let nodos = [[1, 0.00, 0.00],
-    [2, 6.00, 0.00],
-    [3, 10.33012702, 2.50]];
+let nodos = [];
 // barras: num barra | nodo inicial | nodo final | material | seccion
-let barras = [[1, 1, 2, 1, 1],
-    [2, 2, 3, 1, 1]];
+let barras = [];
 // bc (condiciones de contorno): num_nodo | grado de libertad (siendo 1 u_x, 2, u_y y 3 theta_z)
-let bc = [[1, 1],
-    [1, 2],
-    [3, 2]];
+let bc = [];
 // cargas : num_nodo | gdl cargado (siendo 1 u_x, 2, u_y y 3 theta_z) | valor de la carga ]
-let cargas = [[1, 2, -7.50],
-    [1, 3, -11.25],
-    [2, 2, -7.50],
-    [2, 3, 6.25]];
+let cargas = [];
 
-/** Variables auxiliares **/
-export let _MATERIALES = faux.leerMateriales(materiales);
-export let _SECCIONES = faux.leerSecciones(secciones);
-export let _NODOS = faux.leerNodos(nodos);
-export let _ELEMENTOS = faux.leerElementos(barras);
+export function cargaDatos(datos){
+    cargaMateriales(datos.materiales, true);
+    cargaSecciones(datos.secciones, true);
+    cargaNodos(datos.nodos, true);
+    cargaBarras(datos.barras, true);
+    cargaBc(datos.bc, true);
+    cargaCargas(datos.cargas, true);
+    calcular();
+}
 
-/** Variables **/
-let Ktot = faux.creaMatrizK(_NODOS, _ELEMENTOS);
-let Ftot = faux.creaVectorF(_NODOS, cargas);
-let Kred = faux.reducirMatrizK(Ktot, bc, _NODOS);
-let Fred = faux.reducirFvector(Ftot, bc, _NODOS);
-let Dvred = lusolve(Kred, Fred);
-let Dvtot = faux.creaDvector(Dvred, bc, _NODOS);
-let Fvector = multiply(Ktot, Dvtot);
-export let Reacciones = [subtract(Fvector, transpose(Ftot)[0])];
+export function cargaMateriales(datos, cal){
+    materiales.splice(0, materiales.length);
+    datos.forEach((material) => {
+        materiales.push([parseFloat(material[0]), parseFloat(material[1].valor), parseFloat(material[2])]);
+    });
+    if(!cal)
+        calcular();
+}
 
-/**
- * Función para actualizar los datos a los valores de los inputs
- */
-export function actualizaDatos(){ // Pasar los nuevos datos por cabecera
-    /** Variables auxiliares **/
+export function cargaSecciones(datos, cal){
+    secciones.splice(0, secciones.length);
+    datos.forEach((seccion) => {
+        secciones.push([parseFloat(seccion[0]), parseFloat(seccion[1].valor), parseFloat(seccion[2].valor)]);
+    });
+    if(!cal)
+        calcular();
+}
+
+export function cargaNodos(datos, cal){
+    nodos.splice(0, nodos.length);
+    datos.forEach((nodo) => {
+        nodos.push([parseFloat(nodo[0]), parseFloat(nodo[1].valor), parseFloat(nodo[2].valor)]);
+    });
+    if(!cal)
+        calcular();
+}
+
+export function cargaBc(datos, cal){
+    bc.splice(0, bc.length);
+    datos.forEach((nodo) => {
+        if(nodo[1])
+            bc.push([parseFloat(nodo[0]), 1]);
+        if(nodo[2])
+            bc.push([parseFloat(nodo[0]), 2]);
+        if(nodo[3])
+            bc.push([parseFloat(nodo[0]), 3]);
+    });
+    if(!cal)
+        calcular();
+}
+
+export function cargaBarras(datos, cal){
+    barras.splice(0, barras.length);
+    datos.forEach((barra) => {
+        barras.push([parseFloat(barra[0]), parseFloat(barra[1]), parseFloat(barra[2]), parseFloat(barra[3]), parseFloat(barra[4])]);
+    });
+    if(!cal)
+        calcular();
+}
+
+export function cargaCargas(datos, cal){
+    cargas.splice(0, cargas.length);
+    datos.forEach((carga) => {
+        cargas.push([parseFloat(carga[0]), parseFloat(carga[1]), parseFloat(carga[2].valor)]);
+    });
+    if(!cal)
+        calcular();
+}
+
+// Variables auxiliares
+export let _MATERIALES;
+export let _SECCIONES;
+export let _NODOS;
+export let _ELEMENTOS;
+
+// Variables
+let Ktot;
+let Ftot;
+let Kred;
+let Fred;
+let Dvred;
+let Dvtot;
+let Fvector;
+let Reacciones;
+
+function calcular(){
+    // Variables auxiliares
     _MATERIALES = faux.leerMateriales(materiales);
     _SECCIONES = faux.leerSecciones(secciones);
     _NODOS = faux.leerNodos(nodos);
     _ELEMENTOS = faux.leerElementos(barras);
 
-    /** Variables **/
+    // Variables
     Ktot = faux.creaMatrizK(_NODOS, _ELEMENTOS);
     Ftot = faux.creaVectorF(_NODOS, cargas);
     Kred = faux.reducirMatrizK(Ktot, bc, _NODOS);
@@ -61,36 +119,85 @@ export function actualizaDatos(){ // Pasar los nuevos datos por cabecera
 }
 
 /**
- * Función que devuelve el texto latex para la pestaña 3 en el tramo AB
- * @param {String} sentido 
+ * Función que devuelve el texto latex para las matrices locales
  */
-export function matricesRigidezAB(sentido){
-    let texto = [];
-    texto.push(faux.pasaLatex( "K", sentido,"l",_ELEMENTOS[0][1].localK));
-    if(sentido === 'AB')
-        texto.push(faux.pasaLatex( "\\alpha = 0^o \\Rightarrow C", sentido,"",_ELEMENTOS[0][1].C));
-    else
-        texto.push(faux.pasaLatex( "\\alpha = 270^o \\Rightarrow C", sentido,"",_ELEMENTOS[0][1].C));
-    texto.push(faux.pasaLatex( "K", sentido,"g",_ELEMENTOS[0][1].globalK));
+export function matricesLocales(bar){
+    let matrices = [];
+    bar.forEach((barra, i) => {
+        matrices.push(faux.pasaLatex( "K", barra[1].toString()+barra[2].toString(),"l",_ELEMENTOS[i][1].localK));
+    });
+    return matrices;
+}
+
+/**
+ * Función que devuelve el texto latex para las matrices globales
+ */
+export function matricesGlobales(bar){
+    let matrices = [];
+    bar.forEach((barra, i) => {
+        matrices.push(faux.pasaLatex( "K", barra[1].toString()+barra[2].toString(),"g",_ELEMENTOS[i][1].globalK));
+    });
+    return matrices;
+}
+
+/**
+ * Función que devuelve el texto latex para Ktot
+ */
+export function getKtot(){
+    return faux.pasaLatex( "K", '',"tot", Ktot);
+}
+
+function calculaMatrizAux(){
+    let vector = [];
+    for(let i = 0; i < nodos.length; i++){
+        vector.push('\\delta_{H'+(i+1)+'}');
+        vector.push('\\delta_{v'+(i+1)+'}');
+        vector.push('\\theta_{'+(i+1)+'}');
+    }
+
+    for(let i = bc.length-1; i >=0; i--)
+        vector.splice(3*(parseInt(bc[i][0])-1)+(parseInt(bc[i][1])-1), 1)
+
+    let texto = " \\begin{pmatrix}";
+    for(let i = 0; i < vector.length; i++)
+        texto += vector[i] + " \\\\ ";
+    texto += "\\end{pmatrix} ";
+
     return texto;
 }
 
 /**
- * Función que devuelve el texto latex para la pestaña 3 en el tramo BC
- * @param {String} sentido 
+ * Función que devuelve el texto latex para Fred
  */
-export function matricesRigidezBC(sentido){
-    let texto = [];
-    texto.push(faux.pasaLatex( "K", sentido,"l",_ELEMENTOS[1][1].localK));
-    if(sentido === 'BC')
-        texto.push(faux.pasaLatex( "\\alpha = 30^o \\Rightarrow C", sentido,"",_ELEMENTOS[1][1].C));
-    else
-        texto.push(faux.pasaLatex( "\\alpha = 210^o \\Rightarrow C", sentido,"",_ELEMENTOS[1][1].C));
-    texto.push(faux.pasaLatex( "K", sentido,"g",_ELEMENTOS[1][1].globalK));
+ export function getKred(){
+    let texto = faux.pasaLatex( '', '','', Fred);
+    texto += ' = ';
+    texto += faux.pasaLatex( '', '','', Kred);
+    texto += calculaMatrizAux();
     return texto;
 }
 
+/**
+ * Función que devuelve Dvtot
+ */
+export function getDvtot(){
+    return Dvtot;
+}
 
-export function obtenKg(){
-    return faux.pasaLatex( "K", "", "g", Ktot);
+/**
+ * Función que el texto en latex para las reacciones
+ */
+ export function getReacciones(){
+    let vector = [];
+    for(let i = 0; i < nodos.length; i++){
+        vector.push('R_{H'+(i+1)+'} = ' + Reacciones[0][i*3].toPrecision(4).replace(/e\+?(-?[0-9]+)/g, '\\times10^{$1}').replace(/(\d+)\.0+/g, '$1').replace(/(\d+\.[1-9]+)0+/g, '$1'));
+        vector.push('R_{v'+(i+1)+'} = ' + Reacciones[0][i*3+1].toPrecision(4).replace(/e\+?(-?[0-9]+)/g, '\\times10^{$1}').replace(/(\d+)\.0+/g, '$1').replace(/(\d+\.[1-9]+)0+/g, '$1'));
+        vector.push('R_{\\theta'+(i+1)+'} = ' + Reacciones[0][i*3+2].toPrecision(4).replace(/e\+?(-?[0-9]+)/g, '\\times10^{$1}').replace(/(\d+)\.0+/g, '$1').replace(/(\d+\.[1-9]+)0+/g, '$1'));
+    }
+
+    let sol = [];
+    for(let i = 0 ; i  < bc.length; i++)
+        sol.push(vector[3*(parseInt(bc[i][0])-1)+(parseInt(bc[i][1])-1)]);
+
+    return sol;
 }

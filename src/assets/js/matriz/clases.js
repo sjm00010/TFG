@@ -1,5 +1,5 @@
-import {_MATERIALES, _NODOS, _SECCIONES} from '@/assets/js/ejMatrices/calculoMatrices.js';
-import {zeros, multiply, transpose} from 'mathjs'
+import {_MATERIALES, _NODOS, _SECCIONES} from '@/assets/js/matriz/calculoMatrices.js';
+import {zeros, multiply, transpose} from 'mathjs';
 
 /**
  * Clase que representa un material

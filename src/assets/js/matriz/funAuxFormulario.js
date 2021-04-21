@@ -38,7 +38,7 @@ export function compruebaDatosBasicos(materiales, secciones, nodos){
             if(parseFloat(seccion[2].min) > parseFloat(seccion[2].valor)) errores.add('AlMin'+i);
             if(parseFloat(seccion[2].valor) > parseFloat(seccion[2].max)) errores.add('AlMax'+i);
             errores.add('AlVal'+i);
-        }else if( parseFloat(seccion[1].valor) !== parseFloat(seccion[2].valor)){
+        }else if( parseFloat(seccion[1].valor) === parseFloat(seccion[2].valor)){
             mensajes.add('Las secciones deben ser rectangulares, revise los datos.');
             errores.add('AnVal'+i);
             errores.add('AlVal'+i);
@@ -55,7 +55,7 @@ export function compruebaDatosBasicos(materiales, secciones, nodos){
             if(isNaN(nodo[2].min)) errores.add('Ymin'+i);
             if(isNaN(nodo[2].max))errores.add('Ymax'+i);
             if(isNaN(nodo[2].valor))errores.add('Yval'+i);
-        }else if( parseFloat(nodo[1].min) < parseFloat(nodo[1].valor) ||
+        }else if( parseFloat(nodo[1].min) > parseFloat(nodo[1].valor) ||
                   parseFloat(nodo[1].valor) > parseFloat(nodo[1].max)){
             mensajes.add('El valor por defecto para la coordenada X debe estar entre el mínimo y el máximo establecido.');
             if(parseFloat(nodo[1].min) > parseFloat(nodo[1].valor)) errores.add('Xmin'+i);
@@ -92,7 +92,7 @@ export function compruebaValoresSeleccionados(barras, cargas){
             if(isNaN(carga[2].min)) errores.add('CarMin'+i);
             if(isNaN(carga[2].max))errores.add('CarMax'+i);
             if(isNaN(carga[2].valor))errores.add('CarVal'+i);
-        }else if( parseFloat(carga[2].min) < parseFloat(carga[2].valor) ||
+        }else if( parseFloat(carga[2].min) > parseFloat(carga[2].valor) ||
                   parseFloat(carga[2].valor) > parseFloat(carga[2].max)){
             mensajes.add('El valor por defecto para la carga debe estar entre el mínimo y el máximo establecido.');
             if(parseFloat(carga[2].min) > parseFloat(carga[2].valor)) errores.add('CarMin'+i);

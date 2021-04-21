@@ -285,7 +285,8 @@ export function creaDvector(Dr, bc, _NODOS) {
  * @param {*} matriz Matriz
  */
 export function pasaLatex(nombre, sup, sub, matriz) {
-    let texto = ""+ nombre +"_{"+sub+"}^{"+sup+"} = \\begin{pmatrix}";
+    let texto = ""+ nombre +"_{"+sub+"}^{"+sup+"} = \\begin{pmatrix} ";
+    if(nombre.length === 0) texto = "\\begin{pmatrix}";
     for(let i = 0; i < matriz.length; i++){
         for(let j = 0; j < matriz[i].length; j++){
             texto += matriz[i][j].toPrecision(4).replace(/e\+?(-?[0-9]+)/g, '\\times10^{$1}').replace(/(\d+)\.0+/g, '$1').replace(/(\d+\.[1-9]+)0+/g, '$1');

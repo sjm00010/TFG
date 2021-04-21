@@ -149,9 +149,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text md-addon"><b>Valor de la carga <sub>{{i+1}}</sub></b></span>
                             </div>
-                            <input :ref="'CarMin'+i" type="number" min="0" step="0.1" label="Mínimo" class="form-control" placeholder="Mínimo" v-model="carga[2].min">
-                            <input :ref="'CarMax'+i" type="number" min="0" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="carga[2].max">
-                            <input :ref="'CarVal'+i" type="number" min="0" step="0.1" aria-label="Valor por defecto" class="form-control" placeholder="Valor por defecto" v-model="carga[2].valor">
+                            <input :ref="'CarMin'+i" type="number" step="0.1" label="Mínimo" class="form-control" placeholder="Mínimo" v-model="carga[2].min">
+                            <input :ref="'CarMax'+i" type="number" step="0.1" aria-label="Máximo" class="form-control" placeholder="Máximo" v-model="carga[2].max">
+                            <input :ref="'CarVal'+i" type="number" step="0.1" aria-label="Valor por defecto" class="form-control" placeholder="Valor por defecto" v-model="carga[2].valor">
                         </div>
                     </mdbCol>
                 </mdbRow>
