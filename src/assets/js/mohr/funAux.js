@@ -2,20 +2,24 @@ import { fabric } from 'fabric';
 
 export let maxX, minX; // maxY;
 
-export function actualizaValores(s1, s2){ //, radio){
+/**
+ * Funcion para actualizar los datos del círculo
+ * @param {Number} s1 Sigma 1
+ * @param {Number} s2 Sigma 2
+ */
+export function actualizaValores(s1, s2){
     maxX = (s1 < 0 ? -1 : 1)*Math.ceil((s1 < 0 ? -s1 : s1)/10)*10;
     if(Math.trunc(s2)%10 !== 0)
         s2 = s2-10;
     minX = (s2 < 0 ? -1 : 1)*Math.ceil((s2 < 0 ? -s2 : s2)/10)*10;
-    // maxY = Math.ceil(radio/10)*10; // No hace falta ya que es un circulo perferto
 }
 
 /**
  * Función que dibuja texto en el canvas
- * @param {string} texto Texto a dibujar
- * @param {float} x Posición X
- * @param {float} y Posición Y
- * @param {string} color Color del texto
+ * @param {String} texto Texto a dibujar
+ * @param {Number} x Posición X
+ * @param {Number} y Posición Y
+ * @param {String} color Color del texto
  */
 export function escribir(canvas, x, y, texto, color = 'black') {
     let text = new fabric.Text(texto, {
@@ -33,10 +37,10 @@ export function escribir(canvas, x, y, texto, color = 'black') {
 
 /**
  * Función que añade una marca en el eje X
- * @param {int} coorX Donde añadir la marca X
- * @param {int} coorX Donde añadir la marca Y
- * @param {string} texto Valor de la marca
- * @param {string} color Color de la marca
+ * @param {Object} canvas Canvas donde dibijar
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Corrdenada Y
+ * @param {String} texto Valor de la marca
  */
 export function addMarcaX(canvas, coorX, coorY, texto){
     canvas.add(new fabric.Line([ coorX, coorY-5, coorX, coorY+5 ], {
@@ -66,10 +70,10 @@ export function addMarcaX(canvas, coorX, coorY, texto){
 
 /**
  * Función que añade una marca en el eje Y
- * @param {int} coorX Donde añadir la marca X
- * @param {int} coorX Donde añadir la marca Y
- * @param {string} texto Valor de la marca
- * @param {string} color Color de la marca
+ * @param {Object} canvas Canvas donde dibijar
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Corrdenada Y
+ * @param {String} texto Valor de la marca
  */
 export function addMarcaY(canvas, coorX, coorY, texto){
     canvas.add(new fabric.Line([ coorX-5, coorY, coorX+5, coorY ], {
@@ -97,6 +101,14 @@ export function addMarcaY(canvas, coorX, coorY, texto){
     canvas.sendToBack(canvas.getObjects()[canvas.getObjects().length-1]);
 }
 
+/**
+ * Función para añadir un tooltip
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {Object} objeto Objeto fabric donde poner el tooltip
+ * @param {String} texto Texto del tooltil
+ * @param {Number} inSub Indice del inicio del subindice (si lo hay, en caso contrario 0)
+ * @param {Number} finSub Indice del fin del subindice (si lo hay, en caso contrario 0)
+ */
 export function addTooltip(canvas, objeto, texto, inSub, finSub){
     let rect = new fabric.Rect({
         originX: 'top',
@@ -142,6 +154,14 @@ export function addTooltip(canvas, objeto, texto, inSub, finSub){
     });
 }
 
+/**
+ * Función que añade un punto en el círculo
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {String} color Color del punto
+ * @param {Number} top Coordenada Y
+ * @param {Number} left Coordenada X
+ * @returns {fabric.Circle} Objeto fabric creado
+ */
 export function addPunto(canvas, color, top, left){
     let punto = new fabric.Circle({ 
         radius: 5, 
@@ -156,6 +176,14 @@ export function addPunto(canvas, color, top, left){
     return punto;
 }
 
+/**
+ * Función que añade una caja con las coordenadas de los planos
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {String} texto Texto de la caja
+ * @param {String} color Color de la caja
+ * @param {Number} toX Coordenada X de inicio
+ * @param {Number} toY Coordenada Y de inicio
+ */
 export function addCaja(canvas, texto, color, toX, toY){
     let coorX, coorY;
 
@@ -199,7 +227,15 @@ export function addCaja(canvas, texto, color, toX, toY){
     canvas.renderAll();
 }
 
-
+/**
+ * Funcion que añade una caja flotante para el plano
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {String} texto Texto de la caja
+ * @param {String} color Color de la caja
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ * @returns Grupo fabric creado con la caja y el texto
+ */
 export function addCajaFlotante(canvas, texto, color, coorX, coorY){
 
     let rect = new fabric.Rect({
@@ -233,6 +269,20 @@ export function addCajaFlotante(canvas, texto, color, coorX, coorY){
     return group;
 }
 
+/**
+ * Función que añade los datos al dibujo
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {Object} objeto Objeto donde se va a añadir la info
+ * @param {Number} s Valor de sigma
+ * @param {Number} t Valor de tau
+ * @param {Number} sigma Coordenada de Sigma
+ * @param {Number} tau Coordenada de Tau
+ * @param {String} letra Letra de Sigma y Tau
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada Y
+ * @param {Number} angulo Angulo de rotación
+ * @param {Number} rotacion Angulo de rotación de las flechas
+ */
 export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo, rotacion){
     let rect = new fabric.Rect({
         originX: 'top',
@@ -375,6 +425,14 @@ export function addDesc(canvas, objeto, s, t, sigma, tau, letra, x, y, angulo, r
     });
 }
 
+/**
+ * Función que dibuja el angulo de rotación de la viga
+ * @param {Object} canvas Canvas donde dibujar
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada X
+ * @param {Number} angulo Angulo de rotación
+ * @returns Grupo fabric creado
+ */
 function addAngulo( canvas, x, y, angulo){
     let coor = rotate(canvas, x, y, angulo);
     let linea1 = new fabric.Line([ canvas.width/2, canvas.height/2, coor.x, coor.y ], {
@@ -431,6 +489,14 @@ function addAngulo( canvas, x, y, angulo){
     return group;
 }
 
+/**
+ * Función que calcula las coordenadas X e Y tras la rotación
+ * @param {Object} canvas Canvas para las dimensiones
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada X
+ * @param {Number} angulo Angulo de rotación
+ * @returns {Object} Coordenadas X e Y rotadas
+ */
 function rotate(canvas, x, y, angulo) {
     let radians = (Math.PI / 180) * angulo,
         cos = Math.cos(radians),

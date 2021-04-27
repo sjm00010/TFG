@@ -4,6 +4,11 @@ import {addDesc} from '@/assets/js/mohr/funAux.js';
 
 let canvas;
 
+/**
+ * Función que crea el canvas de fabric y actualiza la variable canvas
+ * @param {Object} nCanvas Canvas HTML
+ * @param {Object} datosIniciales Datos iniciales del problema
+ */
 export function vinculaCanvas(nCanvas, angulo1){
     // Creo el canvas de fabric
     canvas = new fabric.Canvas('cuadrado', {
@@ -16,7 +21,7 @@ export function vinculaCanvas(nCanvas, angulo1){
 
 /**
  * Función que escala el canvas a partir del tamaño de la ventana
- * @param {*} nCanvas Contenedor del canvas (div)
+ * @param {Object} nCanvas Canvas HTML
  */
 export function resizeCanvas(nCanvas, angulo1) {
     if(nCanvas == undefined) return;
@@ -31,6 +36,10 @@ export function resizeCanvas(nCanvas, angulo1) {
 
 let cuadradoRotado, flecha1, flecha2, flecha3, flecha4;
 
+/**
+ * Función que dibuja los ejes y el cuadrado que representa la viga real
+ * @param {Number} angulo Angulo de rotación
+ */
 export function dibujaCuadrado(angulo){
 if(canvas){
     // Eje Y
@@ -81,40 +90,47 @@ if(canvas){
 }
 }
 
-let grupo; // Borro el grupo si ya lo he dibujado
+let grupo; 
 
+/**
+ * Función que dibuja el cuadrado rotado que representa la viga real
+ * @param {Number} angulo Angulo de rotación
+ */
 export function dibujaCuadradoRotado(angulo){
-if(canvas){
-    if(grupo)
-        canvas.remove(...grupo.getObjects());
+    if(canvas){
+        if(grupo) // Borro el grupo si ya lo he dibujado
+            canvas.remove(...grupo.getObjects());
 
-    cuadradoRotado = new fabric.Rect({
-        top: canvas.height/2, 
-        left: canvas.width/2, 
-        width: canvas.width/3, 
-        height: canvas.height/3, 
-        fill: 'rgba(0,0,0,0)',
-        stroke: 'blue',
-        selectable : false,
-        evented: false
-    });
+        cuadradoRotado = new fabric.Rect({
+            top: canvas.height/2, 
+            left: canvas.width/2, 
+            width: canvas.width/3, 
+            height: canvas.height/3, 
+            fill: 'rgba(0,0,0,0)',
+            stroke: 'blue',
+            selectable : false,
+            evented: false
+        });
 
-    dibujaLineas();
-    grupo = new fabric.Group([cuadradoRotado, addTexto(), flecha1, flecha2, flecha3, flecha4]);
-    grupo.rotate(-angulo);
-    canvas.add(...grupo.getObjects());
+        dibujaLineas();
+        grupo = new fabric.Group([cuadradoRotado, addTexto(), flecha1, flecha2, flecha3, flecha4]);
+        grupo.rotate(-angulo);
+        canvas.add(...grupo.getObjects());
 
-    addDesc(canvas, flecha1, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
-            2*canvas.width/3, canvas.height/2, angulo, -angulo+90);
-    addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA > 0, (-datos.tA) > 0, 'A',
-            canvas.width/3, canvas.height/2, angulo, -angulo+90);
-    addDesc(canvas, flecha3, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
-            canvas.width/2, canvas.height/3, angulo, -angulo);
-    addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima > 0, datos.tA > 0, "A'",
-            canvas.width/2, 2*canvas.height/3, angulo, -angulo);
+        addDesc(canvas, flecha1, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA < 0, (-datos.tA) < 0, 'A',
+                2*canvas.width/3, canvas.height/2, angulo, -angulo+90);
+        addDesc(canvas, flecha2, datos.sA.toFixed(1), (-datos.tA).toFixed(1), datos.sA > 0, (-datos.tA) > 0, 'A',
+                canvas.width/3, canvas.height/2, angulo, -angulo+90);
+        addDesc(canvas, flecha3, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima < 0, datos.tA < 0, "A'",
+                canvas.width/2, canvas.height/3, angulo, -angulo);
+        addDesc(canvas, flecha4, datos.sAprima.toFixed(1), datos.tA.toFixed(1), datos.sAprima > 0, datos.tA > 0, "A'",
+                canvas.width/2, 2*canvas.height/3, angulo, -angulo);
+    }
 }
-}
 
+/**
+ * Función que dibuja las flechas del cuadrado
+ */
 function dibujaLineas(){
     let ratio1X = Math.abs(datos.sA)/(datos.radio + Math.abs(datos.centro));
     let ratioY = Math.abs(datos.tA)/(datos.radio + Math.abs(datos.centro));
@@ -266,6 +282,10 @@ function dibujaLineas(){
     flecha4 = new fabric.Group([linea4, triangulo4],{selectable: false, hoverCursor: canvas.defaultCursor});
 }
 
+/**
+ * Función que crea un grupo de fabric con el texto de los planos
+ * @returns Grupo del texto
+ */
 function addTexto(){
     let text1 = new fabric.Text( "A'", {
         fontSize: 12,

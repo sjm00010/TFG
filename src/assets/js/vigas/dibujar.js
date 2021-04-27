@@ -191,7 +191,6 @@ export function addSoporteMovil(coorX){
 /**
  * Función que dibuja una carga
  * @param {Number} coorX Coordenada con respecto a la viga
- * @param {Boolean} sentido Sentido de la carga
  * @param {Number} P Valor de la carga
  */
 export function addPuntoCarga(coorX, P){
@@ -242,7 +241,7 @@ export function addPuntoCarga(coorX, P){
  * @param {Number} coorX Coordenada con respecto a la viga
  * @param {Number} H Valor de la carga
  * @param {Number} d Distancia del voladizo
- * @param {Boolean} d Distancia del voladizo
+ * @param {Boolean} orientacion Indica la orientación del voladizo
  */
 export function addBarra(coorX, H, d, orientacion){
     
@@ -292,9 +291,8 @@ export function addBarra(coorX, H, d, orientacion){
 
 /**
  * Función que dibuja un momento
- * @param {int} coorX Coordenada con respecto a la viga
- * @param {String} horario Sentido del momento
- * @param {int} M Valor del momento
+ * @param {Number} coorX Coordenada con respecto a la viga
+ * @param {Number} M Valor del momento
  */
 export function addMomento(coorX, M){
     let x = recalculaX(coorX);
@@ -344,9 +342,9 @@ export function addMomento(coorX, M){
 
 /**
  * Función que dibuja una carga distribuida
- * @param {int} desdeX Coordenada de inicio
- * @param {int} hastaX Coordenada de fin
- * @param {int} q Valor de la carga
+ * @param {Number} desdeX Coordenada de inicio
+ * @param {Number} hastaX Coordenada de fin
+ * @param {Number} q Valor de la carga
  */
 export function addCargaDistribuida(desdeX, hastaX, q){
     let x1 = recalculaX(desdeX);
@@ -441,8 +439,8 @@ export function addCargaDistribuida(desdeX, hastaX, q){
 
 /**
  * Función que dibuja la normal
- * @param {int} coorX Coordenada con respecto a la viga
- * @param {int} N Valor de la carga
+ * @param {Number} coorX Coordenada con respecto a la viga
+ * @param {Number} N Valor de la carga
  */
 export function addNormal(coorX, N){
     let x = recalculaX(coorX);
@@ -509,9 +507,9 @@ export function addNormal(coorX, N){
 
 /**
  * Función que añade una marca en el eje X
- * @param {int} coorX Donde añadir la carga
- * @param {string} texto Valor de la marca
- * @param {string} color Color de la marca
+ * @param {Number} coorX Donde añadir la carga
+ * @param {String} texto Valor de la marca
+ * @param {String} color Color de la marca
  */
 function addMarca(coorX, texto, color){
     canvas.add(new fabric.Line([ coorX, 240, coorX, 260 ], {
@@ -533,10 +531,10 @@ function addMarca(coorX, texto, color){
 
 /**
  * Función que dibuja texto en el canvas
- * @param {string} texto Texto a dibujar
- * @param {float} x Posición X
- * @param {float} y Posición Y
- * @param {string} color Color del texto
+ * @param {String} texto Texto a dibujar
+ * @param {Number} x Posición X
+ * @param {Number} y Posición Y
+ * @param {String} color Color del texto
  */
 function escribir( texto, x, y, color) {
     let text = new fabric.Text(texto, {
@@ -555,7 +553,7 @@ function escribir( texto, x, y, color) {
 
 /**
  * Función que recalcula una cordenada en relación a la viga al eje coordedado
- * @param {int} coorX Coordenada de la viga
+ * @param {Number} coorX Coordenada de la viga
  */
 function recalculaX(coorX){
     return (fin-inicio)*coorX/tamViga + inicio;
@@ -563,7 +561,7 @@ function recalculaX(coorX){
 
 /**
  * Función que reinicia el inicio y fin de la viga
- * @param {*} outerCanvasContainer Contenedor del canvas
+ * @param {Object} outerCanvasContainer Contenedor del canvas
  */
 export function reinicia(outerCanvasContainer){
     inicio = outerCanvasContainer.clientWidth*0.10;
@@ -572,7 +570,7 @@ export function reinicia(outerCanvasContainer){
 
 /**
  * Función para vincular el canvas
- * @param {*} outerCanvasContainer 
+ * @param {Object} outerCanvasContainer Contenedor del canvas
  */
 export function vincularCanvas(outerCanvasContainer){    
     // Creo el canvas de fabric
@@ -604,6 +602,9 @@ export function vincularCanvas(outerCanvasContainer){
     limitaMovimiento();
 }
 
+/**
+ * Función que limita el movimiento de los elementos del canvas
+ */
 function limitaMovimiento(){
     // Limites para que no se salgan los objetos del canvas
     canvas.on ("object:moving", function (event) {
@@ -624,6 +625,9 @@ function limitaMovimiento(){
     });
 }
 
+/**
+ * Funcion que elimina todos los objetos del canvas y los elementos
+ */
 export function resetCanvas(){
     canvas.remove(...canvas.getObjects());
     limpiaElementos();

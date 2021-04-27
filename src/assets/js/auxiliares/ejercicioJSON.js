@@ -1,10 +1,15 @@
 import {Ejercicio, Viga, Mohr, Matriz} from '@/assets/js/auxiliares/ejercicio.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
 
+// Variables para almacenar cada tipo de ejercicio
 export let ejercicio = new Ejercicio();
 export let ejViga = new Viga();
 export let ejMohr = new Mohr();
 export let ejMatriz = new Matriz();
+
+/**
+ * Función que inicializa de nuevo las variables de los ejercicios
+ */
 export function limpiar(){
     ejercicio = new Ejercicio();
     ejViga = new Viga();
@@ -12,6 +17,12 @@ export function limpiar(){
     ejMatriz = new Matriz();
 }
 
+/**
+ * Función para carcar la información de cada tipo de ejercicio
+ * @param {String} id Identificador del ejercicio
+ * @param {String} tipo Tipo de ejercicio que se desea cargar
+ * @returns True si se cargo con exito, False si hubo un error
+ */
 export async function cargaEjercicio(id, tipo){
 
     let url = '';
@@ -64,6 +75,10 @@ export async function cargaEjercicio(id, tipo){
     }  
 }
 
+/**
+ * Funcion auxiliar que carga los datos del enunciado
+ * @param {Object} datos Objeto con los datos del enunciado
+ */
 function cargaDatos(datos){
     ejercicio.enunciado = datos.enunciado;
     ejercicio.video = datos.video;

@@ -12,6 +12,9 @@ export function getUser(){
         profesor = true;
 }
 
+/**
+ * Función que borra los datos de autenticación guardados
+ */
 export function logout(){
     sessionStorage.setItem("user", '');
     sessionStorage.setItem("pass", '');

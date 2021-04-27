@@ -17,7 +17,7 @@ let dimY = {inicio: 0, fin: 0};
 
 /**
  * Función para vincular el canvas
- * @param {*} outerCanvasContainer 
+ * @param {Object} outerCanvasContainer Elemento HTML contenedor del canvas
  */
  export function vincularCanvas(outerCanvasContainer){    
     // Creo el canvas de fabric
@@ -49,7 +49,7 @@ let dimY = {inicio: 0, fin: 0};
 
 /**
  * Función que reinicia el inicio y fin del dibujo
- * @param {*} outerCanvasContainer Contenedor del canvas
+ * @param {Object} outerCanvasContainer Elemento HTML contenedor del canvas
  */
  export function reinicia(outerCanvasContainer){
     dimX.inicio = outerCanvasContainer.clientWidth*0.15;
@@ -60,7 +60,7 @@ let dimY = {inicio: 0, fin: 0};
 
 /**
  * Función que escala el canvas a partir del tamaño de la ventana
- * @param {*} outerCanvasContainer Contenedor del canvas (div)
+ * @param {Object} outerCanvasContainer Elemento HTML contenedor del canvas
  */
  export function resizeCanvas(outerCanvasContainer) {
     if(outerCanvasContainer == undefined) return;
@@ -81,6 +81,12 @@ export function limpiarTodo() {
 //  Funciones de dibujado  //
 /////////////////////////////
 
+/**
+ * Función para dibujar un carrito vertical 
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ * @param {Boolean} espejo Indica si se dibujará normal o invertido
+ */
 function movilVertical(coorX, coorY, espejo){
     canvas.add(new fabric.Circle({
         left: coorX,
@@ -101,6 +107,11 @@ function movilVertical(coorX, coorY, espejo){
     }));
 }
 
+/**
+ * Función para dibujar un carrito horizontal 
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ */
 function movilHorizontal(coorX, coorY){
     canvas.add(new fabric.Circle({
         left: coorX,
@@ -121,6 +132,11 @@ function movilHorizontal(coorX, coorY){
     }));
 }
 
+/**
+ * Función para dibujar un bloqueo de giros
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ */
 function codo(coorX, coorY){
     canvas.add(new fabric.Line([ coorX-15, coorY-10, coorX+15, coorY-10 ], {
         stroke: 'rgba(140, 140, 140, 0.7)',
@@ -151,6 +167,11 @@ function codo(coorX, coorY){
     }));
 }
 
+/**
+ * Función para dibujar un apoyo fijo articulado
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ */
 function fijo(coorX, coorY){
     canvas.add(new fabric.Triangle({
         left: coorX,
@@ -176,6 +197,12 @@ function fijo(coorX, coorY){
     }));
 }
 
+/**
+ * Función para dibujar un empotramiento deslizante vertical
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ * @param {Boolean} espejo Indica si se dibujará normal o invertido
+ */
 function rollVertical(coorX, coorY, espejo){
     canvas.add(new fabric.Circle({
         left: coorX+3,
@@ -223,6 +250,11 @@ function rollVertical(coorX, coorY, espejo){
     }));
 }
 
+/**
+ * Función para dibujar un empotramiento deslizante horizontal 
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ */
 function rollHorizontal(coorX, coorY){
     canvas.add(new fabric.Circle({
         left: coorX-10,
@@ -270,6 +302,11 @@ function rollHorizontal(coorX, coorY){
     }));
 }
 
+/**
+ * Función para dibujar un empotramiento 
+ * @param {Number} coorX Coordenada X
+ * @param {Number} coorY Coordenada Y
+ */
 function cuadrado(coorX, coorY){
     canvas.add(new fabric.Rect({
         left: coorX,
@@ -290,6 +327,11 @@ function cuadrado(coorX, coorY){
 //  Funciones de los ejes  //
 /////////////////////////////
 
+/**
+ * Función que calcula las posiciones iniciales y finales para el dibujo.
+ * Esta función permite escalar el dibujo
+ * @param {Object} datos Datos del dibujo
+ */
 export function calculaDimensiones(datos){
     let minY = datos[0][2].valor, minX = datos[0][1].valor, maxY = 0, maxX = 0;
     datos.forEach((nodo) => {
@@ -306,7 +348,8 @@ export function calculaDimensiones(datos){
 
 /**
  * Función que calcula una cordenada X para el eje ficticio
- * @param {Number} coorX Coordenada de la viga
+ * @param {Number} coorX Coordenada del eje X
+ * @returns {Number} Coordenada X del canvas
  */
 function calculaX(coorX){
     if(X.max === X.min) return dimX.inicio;
@@ -315,13 +358,21 @@ function calculaX(coorX){
 
 /**
  * Función que calcula una cordenada Y para el eje ficticio
- * @param {Number} coorY Coordenada de la viga
+ * @param {Number} coorX Coordenada del eje Y
+ * @returns {Number} Coordenada Y del canvas
  */
 function calculaY(coorY){
     if(Y.max === Y.min) return dimY.fin;
     return dimY.fin - (coorY-Y.min)*(dimY.fin-dimY.inicio)/(Y.max-Y.min) ;
 }
 
+/**
+ * Funcion que realiza el dibujo, comienza dibujando los nodos
+ * @param {Object} barras Datos de las barras
+ * @param {Object} nodos Datos de los nodos
+ * @param {Object} bc Datos de las condiciones de contorno
+ * @param {Object} cargas Datos de las cargas
+ */
 export function dibujaNodos(barras, nodos, bc, cargas){
     conectaNodos(barras, nodos, bc);
     nodos.forEach((nodo, i) => {
@@ -350,6 +401,11 @@ export function dibujaNodos(barras, nodos, bc, cargas){
     });
 }
 
+/**
+ * Funcion que conecta los nodos dibujados mediante lineas
+ * @param {Object} barras Datos de las barras
+ * @param {Object} nodos Datos de los nodos
+ */
 function conectaNodos(barras, nodos){
     barras.forEach((barra) => {
         let x1 = calculaX(nodos[barra[1]-1][1].valor),
@@ -367,6 +423,13 @@ function conectaNodos(barras, nodos){
     });
 }
 
+/**
+ * Función para dibujar las flechas que indican el sentido de las conexiones entre nodos
+ * @param {Number} x1 Coordenada X de inicio
+ * @param {Number} x2 Coordenada X de fin
+ * @param {Number} y1 Coordenada Y de inicio
+ * @param {Number} y2 Coordenada Y de fin
+ */
 function dibujaFlecha(x1, x2, y1, y2){
     let x = Math.abs(x2-x1)/2 + Math.min(x1, x2);
     let alfa = Math.atan(Math.abs(y2-y1)/Math.abs(x2-x1)) * (180/Math.PI);
@@ -436,6 +499,15 @@ function dibujaFlecha(x1, x2, y1, y2){
     escribir(x-15, (y1prima+y2prima)/2 -15, parseFloat(stringAlfa.toFixed(2))+' º', 'rgba(80, 165, 185, 1)');
 }
 
+/**
+ * Función para dibujar las condiciones de contorno de los nodos
+ * Utiliza las funciones de dibujado
+ * @param {Object} bc Datos de las condiciones de contorno
+ * @param {Number} i Nodo actual
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada Y
+ * @param {Number} nextNodo Siguiente nodo, si no hubiera se deja no se pasa
+ */
 function dibujaCondiciones(bc, i, x, y, nextNodo){
     let espejo = false;
     let estado = ''+bc[i][1]+'-'+bc[i][2]+'-'+bc[i][3];
@@ -488,7 +560,13 @@ function escribir(x, y, texto, color = 'black') {
     canvas.add(text);
 }
 
-
+/**
+ * Funcion para dibujar las fuerzas de las cargas
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada Y
+ * @param {Number} tipo Tipo de fuerza: Horizontal (1) o Vertical (2)
+ * @param {Number} mag Magnitud de la fuerza, si es negativa se le cambia el sentido
+ */
 export function dibujaFuerzas(x, y, tipo, mag){
     let x1, x2, y1, y2, rot, tx, ty;
     switch(tipo){
@@ -518,6 +596,17 @@ export function dibujaFuerzas(x, y, tipo, mag){
     }
 }
 
+/**
+ * Función auxiliar para dibujar una fuerza en el canvas
+ * @param {Number} x1 Coordenada X inicial
+ * @param {Number} x2 Coordenada X final
+ * @param {Number} y1 Coordenada Y inicial
+ * @param {Number} y2 Coordenada Y final
+ * @param {Number} tx Coordenada X para la flecha
+ * @param {Number} ty Coordenada Y para la flecha
+ * @param {Number} rot Angulo de rotación en grados, inclinación de la flecha
+ * @param {Number} mag Magnitud de la fuerza
+ */
 function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag){
     let color = x1 === x2 ? 'rgba(40, 80, 170, 0.7)' : 'rgba(125, 33, 129,0.7)';
     canvas.add(new fabric.Line([ x1, y1, x2, y2 ], {
@@ -544,6 +633,12 @@ function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag){
         escribir(x1, y1-15, parseFloat(Math.abs(mag).toFixed(2))+' kN', color);
 }
 
+/**
+ * Función que dibuja el momento
+ * @param {Number} x Coordenada X
+ * @param {Number} y Coordenada Y
+ * @param {Number} mag Magnitud del momento
+ */
 function dibujaMomento(x, y, mag){
     canvas.add(new fabric.Circle({
         radius: 20,
@@ -585,8 +680,13 @@ function dibujaMomento(x, y, mag){
     escribir( x+50, y+15, parseFloat(Math.abs(mag).toFixed(2))+' kN', 'rgba(255,157,65,0.7)');
 }
 
+// Factor multiplicativo, para apreciar el desplazamiento
 const FACTOR = 60;
 
+/**
+ * Función que dibuja el desplazamiento de los nodos
+ * @param {Object} nodos Datos de los nodos
+ */
 export function dibujaDesplazamientos(nodos){
     let deformada = getDvtot();
     

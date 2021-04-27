@@ -15,6 +15,10 @@ let bc = [];
 // cargas : num_nodo | gdl cargado (siendo 1 u_x, 2, u_y y 3 theta_z) | valor de la carga ]
 let cargas = [];
 
+/**
+ * Función que carga todos los datos de los inputs
+ * @param {Object} datos Objeto con los datos
+ */
 export function cargaDatos(datos){
     cargaMateriales(datos.materiales, true);
     cargaSecciones(datos.secciones, true);
@@ -25,6 +29,11 @@ export function cargaDatos(datos){
     calcular();
 }
 
+/**
+ * Función que carga los materiales
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaMateriales(datos, cal){
     materiales.splice(0, materiales.length);
     datos.forEach((material) => {
@@ -34,6 +43,11 @@ export function cargaMateriales(datos, cal){
         calcular();
 }
 
+/**
+ * Función que carga las secciones
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaSecciones(datos, cal){
     secciones.splice(0, secciones.length);
     datos.forEach((seccion) => {
@@ -43,6 +57,11 @@ export function cargaSecciones(datos, cal){
         calcular();
 }
 
+/**
+ * Función que carga los nodos
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaNodos(datos, cal){
     nodos.splice(0, nodos.length);
     datos.forEach((nodo) => {
@@ -52,6 +71,11 @@ export function cargaNodos(datos, cal){
         calcular();
 }
 
+/**
+ * Función que carga las caondiciones de contorno
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaBc(datos, cal){
     bc.splice(0, bc.length);
     datos.forEach((nodo) => {
@@ -66,6 +90,11 @@ export function cargaBc(datos, cal){
         calcular();
 }
 
+/**
+ * Función que carga las barras
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaBarras(datos, cal){
     barras.splice(0, barras.length);
     datos.forEach((barra) => {
@@ -75,6 +104,11 @@ export function cargaBarras(datos, cal){
         calcular();
 }
 
+/**
+ * Función que carga las cargas
+ * @param {Object} datos Objeto con los datos
+ * @param {Boolean} cal Indica si se deben recalcular los datos
+ */
 export function cargaCargas(datos, cal){
     cargas.splice(0, cargas.length);
     datos.forEach((carga) => {
@@ -100,6 +134,9 @@ let Dvtot;
 let Fvector;
 let Reacciones;
 
+/**
+ * Función que realiza los cálculos matriciales con los datos cargados en las variables
+ */
 function calcular(){
     // Variables auxiliares
     _MATERIALES = faux.leerMateriales(materiales);
@@ -119,7 +156,9 @@ function calcular(){
 }
 
 /**
- * Función que devuelve el texto latex para las matrices locales
+ * Función calcula en latex las matrices locales
+ * @param {Object} bar Datos de las barras
+ * @returns Vector con las matrices locales en latex
  */
 export function matricesLocales(bar){
     let matrices = [];
@@ -130,7 +169,9 @@ export function matricesLocales(bar){
 }
 
 /**
- * Función que devuelve el texto latex para las matrices globales
+ * Función calcula en latex las matrices globales
+ * @param {Object} bar Datos de las barras
+ * @returns Vector con las matrices globales en latex
  */
 export function matricesGlobales(bar){
     let matrices = [];
@@ -141,12 +182,17 @@ export function matricesGlobales(bar){
 }
 
 /**
- * Función que devuelve el texto latex para Ktot
+ * Función calcula en latex la matriz Ktot
+ * @returns Matriz Ktot en latex
  */
 export function getKtot(){
     return faux.pasaLatex( "K", '',"tot", Ktot);
 }
 
+/**
+ * Función que calcula el vector auxiliar, que aparece a la derecha en Kred
+ * @returns Vector en latex
+ */
 function calculaMatrizAux(){
     let vector = [];
     for(let i = 0; i < nodos.length; i++){
@@ -167,7 +213,8 @@ function calculaMatrizAux(){
 }
 
 /**
- * Función que devuelve el texto latex para Fred
+ * Función calcula en latex la matriz Kred
+ * @returns Matriz Kred en latex
  */
  export function getKred(){
     let texto = faux.pasaLatex( '', '','', Fred);
@@ -179,6 +226,7 @@ function calculaMatrizAux(){
 
 /**
  * Función que devuelve Dvtot
+ * @returns Matriz Dvtot
  */
 export function getDvtot(){
     return Dvtot;
@@ -186,6 +234,7 @@ export function getDvtot(){
 
 /**
  * Función que el texto en latex para las reacciones
+ * @returns Vector con las reacciones en latex
  */
  export function getReacciones(){
     let vector = [];

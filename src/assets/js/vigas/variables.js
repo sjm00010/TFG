@@ -2,7 +2,6 @@ import { ejViga } from '@/assets/js/auxiliares/ejercicioJSON.js';
 /*******************
  *     Variables   *
  *******************/
-// Las variables necesitan setters para poder modificar sus valores
 
 // Elementos dibujados
 export const elementos = [];
@@ -12,8 +11,8 @@ export function setElementos(el){
 
 /**
  * Función que guarga un elemento dibujado
- * @param {string} tipo Tipo de elemento dibujado
- * @param {*} props Propiedades del elemento
+ * @param {String} tipo Tipo de elemento dibujado
+ * @param {Object} props Propiedades del elemento
  */
 export function pushElemento(tipo, props){
     elementos.push({
@@ -31,6 +30,11 @@ export function pushElemento(tipo, props){
     });
 }
 
+/**
+ * Funcion que actualiza la magnitud de un elemento
+ * @param {Number} pos Número del elemento
+ * @param {Number} nMagnitud Nueva magnitud
+ */
 export function modificaElemento( pos, nMagnitud){
     elementos[pos].magnitud = nMagnitud;
 }
@@ -44,14 +48,28 @@ export function borraElemento(pos){
 }
 
 let tramos = [];
+
+/**
+ * Función que inicializa los tramos
+ * @param {Array} nTramos Tramos nuevos
+ */
 export function vincularTramos(nTramos){
     tramos.splice(0, tramos.length, ...nTramos);
 }
 
+/**
+ * Función que devuelve el número de tramos
+ * @returns {Number} Número de tramos
+ */
 export function numTramos(){
     return tramos.length;
 }
 
+/**
+ * Función que devuelve el numero de elementos de un tipo
+ * @param {String} tipo Tipo del elemento
+ * @returns Numero de elementos del tipo especificado
+ */
 export function num(tipo){
     let total = 1;
     elementos.forEach(elemento => {
@@ -62,13 +80,28 @@ export function num(tipo){
 
 // Flecha y giro
 export let E = 0, I = 0;
+
+/**
+ * Función que cambia el valor de E
+ * @param {*} newE Nuevo valor
+ */
 export function setE(newE) {
     E = newE;
 }
+
+/**
+ * Función que cambia el valor de I
+ * @param {*} newI Nuevo valor
+ */
 export function setI(newI) {
     I = newI;
 }
 
+/**
+ * Calcula la longitud hasta un tramo especificado
+ * @param {Object} tramo Número del tramo hasta el que calcular
+ * @returns Longitud calculada
+ */
 export function calculaSegmento(tramo){
     if(tramos.length === 0)
         tramos.splice(0, tramos.length, ...ejViga.tramos);
@@ -80,6 +113,9 @@ export function calculaSegmento(tramo){
     return total;
 }
 
+/**
+ * Función que borra todos los elementos
+ */
 export function limpiaElementos(){ elementos.splice(0); }
 
 /***********************************
@@ -92,7 +128,7 @@ let tamViga;
 
 /**
  * Vinculación del tamaño de la viga
- * @param {float} tam Tamaño que se desea asignar
+ * @param {Number} tam Tamaño que se desea asignar
  */
 export function vinculaViga(tam){
     // Me quedo con el tamaño de la viga paras futuras validaciones
@@ -101,8 +137,8 @@ export function vinculaViga(tam){
 
 /**
  * Validación de un soporte
- * @param {string} tipo Tipo de soporte
- * @param {float} pos Posición en la viga
+ * @param {String} tipo Tipo de soporte
+ * @param {Number} pos Posición en la viga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaSoporte(tipo, pos){
@@ -126,9 +162,9 @@ export function verificaSoporte(tipo, pos){
 
 /**
  * Validación de un punto de carga
- * @param {float} magnitud Valor de la carga
- * @param {float} min Valor mínimo de la carga
- * @param {float} max Valor máximo de la carga
+ * @param {Number} magnitud Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaPuntoC(magnitud, min, max){
@@ -150,9 +186,9 @@ export function verificaPuntoC(magnitud, min, max){
 
 /**
  * Validación de la normal
- * @param {float} magnitud Valor de la carga
- * @param {float} min Valor mínimo de la carga
- * @param {float} max Valor máximo de la carga
+ * @param {Number} magnitud Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaNormal(magnitud, min, max){
@@ -174,12 +210,12 @@ export function verificaNormal(magnitud, min, max){
 
 /**
  * Validación de la barra
- * @param {float} magnitud Valor de la carga
- * @param {float} min Valor mínimo de la carga
- * @param {float} max Valor máximo de la carga
- * @param {float} d Valor de distancia de la carga
- * @param {float} minD Valor de distancia mínimo de la carga
- * @param {float} maxD Valor de distancia máximo de la carga
+ * @param {Number} magnitud Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
+ * @param {Number} d Valor de distancia de la carga
+ * @param {Number} minD Valor de distancia mínimo de la carga
+ * @param {Number} maxD Valor de distancia máximo de la carga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaBarra(magnitud, min, max, d, minD, maxD){
@@ -212,9 +248,9 @@ export function verificaBarra(magnitud, min, max, d, minD, maxD){
 
 /**
  * Validación de un momento
- * @param {float} magnitud Valor de la carga
- * @param {float} min Valor mínimo de la carga
- * @param {float} max Valor máximo de la carga
+ * @param {Number} magnitud Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaMomento(magnitud, min, max){
@@ -236,11 +272,11 @@ export function verificaMomento(magnitud, min, max){
 
 /**
  * Validación de una carga distribuida
- * @param {float} pos Posición de inicio en la viga
- * @param {float} posf Posición final en la viga
- * @param {float} magnitud Valor de la carga
- * @param {float} min Valor mínimo de la carga
- * @param {float} max Valor máximo de la carga
+ * @param {Number} pos Posición de inicio en la viga
+ * @param {Number} posf Posición final en la viga
+ * @param {Number} magnitud Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  * @returns {Object} error{texto, existe}, existe sera false si todo ha ido bien
  */
 export function verificaCargaD(pos, posf, magnitud, min, max){

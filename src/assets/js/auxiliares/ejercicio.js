@@ -34,10 +34,10 @@ export class Viga extends Ejercicio {
      * @param {String} enunciado Enunciado del ejercicio en HTML.
      * @param {String} ayuda Explicación del ejercicio en HTML.
      * @param {String} video URL del vídeo explicativo
-     * @param {*} tramos Vector con los tramos de la viga
-     * @param {*} elementos Vector con los elementos del ejercicio
-     * @param {*} formulas Vector con las formulas para los tramos de la viga
-     * @param {*} auxiliares Vector con las variables auxiliares
+     * @param {Array} tramos Vector con los tramos de la viga
+     * @param {Array} elementos Vector con los elementos del ejercicio
+     * @param {Array} formulas Vector con las formulas para los tramos de la viga
+     * @param {Array} auxiliares Vector con las variables auxiliares
      * @param {Number} E Módulo elástico
      * @param {Number} I Momento de inercia
      */
@@ -132,12 +132,12 @@ export class Mohr extends Ejercicio {
      * @param {String} enunciado Enunciado del ejercicio en HTML.
      * @param {String} ayuda Explicación del ejercicio en HTML.
      * @param {String} video URL del vídeo explicativo
-     * @param {*} materiales Matriz con los materiales
-     * @param {*} secciones Matriz con las secciones
-     * @param {*} nodos Matriz con los nodos
-     * @param {*} barras Matriz con las barras
-     * @param {*} bc Matriz con las condiciones de contorno
-     * @param {*} cargas Matriz con las cargas
+     * @param {Array} materiales Matriz con los materiales
+     * @param {Array} secciones Matriz con las secciones
+     * @param {Array} nodos Matriz con los nodos
+     * @param {Array} barras Matriz con las barras
+     * @param {Array} bc Matriz con las condiciones de contorno
+     * @param {Array} cargas Matriz con las cargas
      */
     constructor( id, dificultad, enunciado = '', ayuda = '', video = '', materiales = [], secciones = [], nodos = [], barras = [], bc = [], cargas = []) {
         super(id, dificultad, enunciado, ayuda, video);
@@ -204,7 +204,7 @@ export class Mohr extends Ejercicio {
 
 /**
  * Función que valida los tramos introducidos para un ejercicio de vigas
- * @param {*} tramos Vector de tramos
+ * @param {Array} tramos Vector de tramos
  * @returns Vector de errores
  */
 export function compruebaTramos(tramos){
@@ -231,7 +231,7 @@ export async function cargarEjercicios(){
     return true;
 }
 
-// Vectores para cada tipo de ejercicio
+// Vectores para la información básica cada tipo de ejercicio
 export var vigas = [], mohr = [], matriz = [];
 
 /**

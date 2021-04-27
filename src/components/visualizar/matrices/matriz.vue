@@ -10,15 +10,15 @@
         <mdb-card-body>
             <mdb-card-title class="text-center">Edición de variables</mdb-card-title>
             <hr/>
-            <mdb-card-title>Módulo elástico de los materiales</mdb-card-title>
+            <mdb-card-title>Módulo elástico de los materiales (en kN/m<sup>2</sup>)</mdb-card-title>
             <hr/>
             <mdb-row>
                 <mdb-col md="4" col="md" v-for="(material, i) in datos.materiales" :key="'m'+i">
                     <p class="text-center"><b>Material {{i+1}}</b></p>
                     <mdb-input :class="material[1].min === material[1].max ? 'disabled' : ''" type="number" 
-                               :label="'E '+material[0]+' (kN)'" :min="material[1].min" :max="material[1].max" 
+                               :label="'E '+material[0]+' (kN/m2)'" :min="material[1].min" :max="material[1].max" 
                                :step="0.1" v-model.number="material[1].valor" @blur="cambiaMaterial"/>
-                    <input v-if="material[1].min !== material[1].max" :aria-label="'E '+material[0]+'(kN)'" type="range" 
+                    <input v-if="material[1].min !== material[1].max" :aria-label="'E '+material[0]+' (kN/m2)'" type="range" 
                            :min="material[1].min" :max="material[1].max" :step="0.1" class="custom-range" 
                            v-model="material[1].valor" @blur="cambiaMaterial">
                 </mdb-col>
@@ -49,7 +49,7 @@
             <hr/>
             <mdb-row v-for="(nodo, i) in datos.nodos" :key="'n'+i" class="my-3">
                 <mdb-col md="6" col="md">
-                    <p class="text-center"><b>Coordenada X nodo {{i+1}}</b></p>
+                    <p class="text-center"><b>Coordenada X nodo {{i+1}} (m)</b></p>
                     <mdb-input :class="nodo[1].min === nodo[1].max ? 'disabled' : ''" type="number" :label="'Coordenada X '+nodo[0]"
                                :min="nodo[1].min" :max="nodo[1].max" :step="0.1" v-model.number="nodo[1].valor" @blur="cambiaNodos"/>
                     <input v-if="nodo[1].min !== nodo[1].max" :aria-label="'Coordenada X '+nodo[0]" type="range" :min="nodo[1].min" 
@@ -71,8 +71,8 @@
             <div v-for="(nodo, i) in datos.bc" :key="'bc'+i">
                 <span class="mt-3 mx-4"><b>Nodo <sub>{{i+1}}</sub></b></span>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" :id="'H'+i" v-model="nodo[1]" @blur="cambiaBc">
-                    <label class="custom-control-label" :for="'H'+i"><i>H</i></label>
+                    <input type="checkbox" class="custom-control-input" :id="'u'+i" v-model="nodo[1]" @blur="cambiaBc">
+                    <label class="custom-control-label" :for="'u'+i"><i>u</i></label>
                 </div>
                 <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" :id="'v'+i" v-model="nodo[2]" @blur="cambiaBc">
@@ -150,9 +150,9 @@
                     </select>
                 </mdb-col>
                 <mdb-col md="4" col="md">
-                    <mdb-input :class="carga[2].min === carga[2].max ? 'disabled' : ''" type="number" :label="'Valor de la carga '+(i+1)+' (kN)'"
+                    <mdb-input :class="carga[2].min === carga[2].max ? 'disabled' : ''" type="number" :label="'Valor de la carga '+(i+1)+' (kN'+(carga[1] === 3 ? '·m' : '')+')'"
                                :min="carga[2].min" :max="carga[2].max" :step="0.1" v-model.number="carga[2].valor" @blur="cambiaCargas"/>
-                    <input v-if="carga[2].min !== carga[2].max" :aria-label="'Valor de la carga '+(i+1)+' (kN)'" type="range" :min="carga[2].min"
+                    <input v-if="carga[2].min !== carga[2].max" :aria-label="'Valor de la carga '+(i+1)+' (kN'+(carga[1] === 3 ? '·m' : '')+')'" type="range" :min="carga[2].min"
                            :max="carga[2].max" :step="0.1" class="custom-range" v-model="carga[2].valor" @blur="cambiaCargas">
                 </mdb-col>
             </mdb-row>
@@ -179,7 +179,7 @@
         :active="0"
         default
         :links="[
-        { text: 'Matrices locales' },
+        { text: 'Matrices locales', role:'tablist' },
         { text: 'Matrices globales' },
         { text: 'Ktot' },
         { text: 'Kred' },
@@ -299,12 +299,14 @@
     </mdb-modal>
 
     <!-- Modal para matrices -->
-    <mdb-modal side position="top" fullHeight direction="rop" :show="verMatriz" @close="verMatriz = false">
+    <mdb-modal side position="top" fullHeight direction="top" style="width: 100%" :show="verMatriz" @close="verMatriz = false">
         <mdb-modal-header>
             <mdb-modal-title>Matriz amplada</mdb-modal-title>
         </mdb-modal-header>
         <mdb-modal-body>
-            <katex-element :expression="matrizSelecionada" :throwOnError="false" :display-mode="true"/>
+            <div class="overflow-auto">
+                <katex-element :expression="matrizSelecionada" :throwOnError="false" :display-mode="true"/>
+            </div>
         </mdb-modal-body>
         <mdb-modal-footer>
             <mdb-btn size="sm" color="secondary" @click.native="verMatriz = false">Cerrar</mdb-btn>
@@ -343,12 +345,12 @@ export default {
             verDesp: false,
             leyenda: false,
             fotosLeyenda: [
-                {img: 'movilHorizontal.png', tipo: 'Soporte movil horizontal'},
-                {img: 'movilVertical.png', tipo: 'Soporte movil vertical'},
-                {img: 'fijo.png', tipo: 'Soporte fijo'},
-                {img: 'rollHorizontal.png', tipo: '-----'},
-                {img: 'rollVertical.png', tipo: '-----'},
-                {img: 'codo.png', tipo: '-----'},
+                {img: 'movilHorizontal.png', tipo: 'Carrito horizontal'},
+                {img: 'movilVertical.png', tipo: 'Carrito vertical'},
+                {img: 'fijo.png', tipo: 'Apoyo fijo articulado'},
+                {img: 'rollHorizontal.png', tipo: 'Empotramiento deslizante horizontal'},
+                {img: 'rollVertical.png', tipo: 'Empotramiento deslizante vertical'},
+                {img: 'codo.png', tipo: 'Bloqueo de giros'},
                 {img: 'cuadrado.png', tipo: 'Empotramiento'},
             ],
             verMatriz: false,

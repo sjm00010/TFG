@@ -3,7 +3,7 @@ import * as val from './variables';
 
 /**
  * Función que escala el canvas a partir del tamaño de la ventana
- * @param {*} outerCanvasContainer Contenedor del canvas (div)
+ * @param {Object} outerCanvasContainer Contenedor del canvas (div)
  */
 export function resizeCanvas(outerCanvasContainer) {
     if(outerCanvasContainer == undefined) return;
@@ -13,20 +13,24 @@ export function resizeCanvas(outerCanvasContainer) {
 
 /**
  * Función para resetear los datos
- * @param {*} outerCanvasContainer 
+ * @param {Object} outerCanvasContainer Contenedor del canvas (div)
  */
 export function clearDatos(outerCanvasContainer){
     val.limpiaElementos();
     redibuja(outerCanvasContainer);
 }
 
+/**
+ * Función para inicializar el canvas
+ * @param {Object} outerCanvasContainer Contenedor del canvas (div)
+ */
 export function vinculaCanvas(outerCanvasContainer){
     dibujo.vincularCanvas(outerCanvasContainer);
 }
 
 /**
- * Funión que vuelve a dibujar todo
- * @param {canvas} outerCanvasContainer Canvas
+ * Función que vuelve a dibujar todo
+ * @param {canvas} outerCanvasContainer Contenedor del canvas (div)
  */
 export function redibuja(outerCanvasContainer){
     if(outerCanvasContainer != null)
@@ -83,7 +87,7 @@ export function redibuja(outerCanvasContainer){
  * Función que dibuja un soporte para la viga
  * @param {String} nom Nombre del elemento
  * @param {String} tipo Tipo de soporte
- * @param {Int} seg Posición del vector tramos del segmento asociado
+ * @param {Number} seg Posición del vector tramos del segmento asociado
  */
 export function addSoporte(nom, tipo, seg){
     let coorX = val.calculaSegmento(seg);
@@ -107,10 +111,10 @@ export function addSoporte(nom, tipo, seg){
 /**
  * Función que dibuja una carga
  * @param {String} nom Nombre del elemento
- * @param {Int} seg Posición del vector tramos del segmento asociado
- * @param {Int} P Valor de la carga
- * @param {Int} min Valor mínimo de la carga
- * @param {Int} max Valor máximo de la carga
+ * @param {Number} seg Posición del vector tramos del segmento asociado
+ * @param {Number} P Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  */
 export function addPuntoCarga(nom, seg, P, min, max){
     let coorX = val.calculaSegmento(seg);
@@ -123,13 +127,14 @@ export function addPuntoCarga(nom, seg, P, min, max){
 /**
  * Función que dibuja una barra
  * @param {String} nom Nombre del elemento
- * @param {Int} seg Posición del vector tramos del segmento asociado
- * @param {Int} H Valor de la carga
- * @param {Int} min Valor mínimo de la carga
- * @param {Int} max Valor máximo de la carga
- * @param {Int} d Distancia respecto a la viga
- * @param {Int} minD Distancia mínima respecto a la viga
- * @param {Int} maxD Distancia máxima respecto a la viga
+ * @param {Number} seg Posición del vector tramos del segmento asociado
+ * @param {Number} H Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
+ * @param {Number} d Distancia respecto a la viga
+ * @param {Number} minD Distancia mínima respecto a la viga
+ * @param {Number} maxD Distancia máxima respecto a la viga
+ * @param {Boolean} orientacion Indica la orientación del voladizo
  */
 export function addBarra(nom,  seg, H, min, max, d, minD, maxD, orientacion){
     let error = val.verificaBarra(H, min, max, d, minD, maxD);
@@ -152,10 +157,10 @@ export function addBarra(nom,  seg, H, min, max, d, minD, maxD, orientacion){
 /**
  * Función que dibuja la normal
  * @param {String} nom Nombre del elemento
- * @param {Int} seg Posición del vector tramos del segmento asociado
- * @param {Int} N Valor de la carga
- * @param {Int} min Valor mínimo de la carga
- * @param {Int} max Valor máximo de la carga
+ * @param {Number} seg Posición del vector tramos del segmento asociado
+ * @param {Number} N Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  */
 export function addNormal(nom, seg, N, min, max){
     let error = val.verificaNormal(N, min, max);
@@ -166,10 +171,11 @@ export function addNormal(nom, seg, N, min, max){
 
 /**
  * Función que dibuja un momento
- * @param {Int} seg Posición del vector tramos del segmento asociado
- * @param {Int} M Valor del momento
- * @param {Int} min Valor mínimo de la carga
- * @param {Int} max Valor máximo de la carga
+ * @param {String} nom Nombre del elemento
+ * @param {Number} seg Posición del vector tramos del segmento asociado
+ * @param {Number} M Valor del momento
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  */
 export function addMomento(nom, seg, M, min, max){
     let coorX = val.calculaSegmento(seg);
@@ -187,11 +193,12 @@ export function addMomento(nom, seg, M, min, max){
 
 /**
  * Función que dibuja una carga distribuida
- * @param {Int} desdeSeg Posición inicial del vector tramos del segmento asociado
- * @param {Int} hastaSeg Posición final del vector tramos del segmento asociado
- * @param {Int} q Valor de la carga
- * @param {Int} min Valor mínimo de la carga
- * @param {Int} max Valor máximo de la carga
+ * @param {String} nom Nombre del elemento
+ * @param {Number} desdeSeg Posición inicial del vector tramos del segmento asociado
+ * @param {Number} hastaSeg Posición final del vector tramos del segmento asociado
+ * @param {Number} q Valor de la carga
+ * @param {Number} min Valor mínimo de la carga
+ * @param {Number} max Valor máximo de la carga
  */
 export function addCargaDistribuida(nom, desdeSeg, hastaSeg, q, min, max){
     let desdeX = val.calculaSegmento(desdeSeg);

@@ -11,6 +11,11 @@ fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 // Variables locales
 let canvas, planoA, eq1, eq2, cj1, cj2, centro, ratio, punto1, punto2, punto3;
 
+/**
+ * Función que crea el canvas de fabric y actualiza la variable canvas
+ * @param {Object} nCanvas Canvas HTML
+ * @param {Object} datosIniciales Datos iniciales del problema
+ */
 export function vinculaCanvas(nCanvas, datosIniciales){
     // Creo el canvas de fabric
     canvas = new fabric.Canvas('circulo', {
@@ -23,7 +28,7 @@ export function vinculaCanvas(nCanvas, datosIniciales){
 
 /**
  * Función que escala el canvas a partir del tamaño de la ventana
- * @param {*} nCanvas Contenedor del canvas (div)
+ * @param {Object} nCanvas Canvas HTML
  */
  export function resizeCanvas(nCanvas, datosIniciales) {
     if(nCanvas == undefined) return;
@@ -32,8 +37,12 @@ export function vinculaCanvas(nCanvas, datosIniciales){
     dibujarEjes(datosIniciales);
 }
 
+/**
+ * Función para dibujar los ejes cartesianos y el círculo de Mohr
+ * @param {Object} datosIniciales Datos iniciales del problema
+ */
 export function dibujarEjes(datosIniciales){
-    if(canvas == undefined) return;
+    if(canvas == undefined) return; // Cancelo la función
     canvas.remove(...canvas.getObjects());
     actualizaValores(datos.s1, datos.s2, datos.radio);
     let incPuntosX = 0, puntosX, punto, x;
@@ -99,6 +108,13 @@ export function dibujarEjes(datosIniciales){
     dibujaEsfera(incrementoX, incPuntosX, centro, datosIniciales);
 }
 
+/**
+ * Función auxiliar que dibuja el circul de Mohr
+ * @param {Number} incrementoX Relacion entre pixel-coordenada
+ * @param {Number} incPuntoX Incrementos de X en el eje
+ * @param {Number} centro Centro del círculo
+ * @param {Object} datosIniciales Datos iniciales del problema
+ */
 function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     let nRadio = datos.radio*incrementoX/incPuntoX;
     let coorX = incrementoX/incPuntoX*Math.abs(datos.centro);
@@ -179,6 +195,9 @@ function dibujaEsfera(incrementoX, incPuntoX, centro, datosIniciales){
     addCaja(canvas, 'Eje Y: ('+datosIniciales.sy.toFixed(0)+', '+datosIniciales.txy.toFixed(0)+')', '#EDB02A', ejeY.x, ejeY.y);
 }
 
+/**
+ * Función que dibuja el pano en el círculo de Mohr
+ */
 export function calculaPlano(){
     if(canvas){
         if(planoA)
@@ -242,6 +261,9 @@ export function calculaPlano(){
     }
 }
 
+/**
+ * Funcion que añade los Tooltips al dibujo con los datos de los ejes
+ */
 function addTooltips(){
     addTooltip(canvas, punto1, 'σ1 : '+datos.s1.toFixed(2), 1, 2);
     addTooltip(canvas, punto2, 'σ2 : '+datos.s2.toFixed(2), 1, 2);

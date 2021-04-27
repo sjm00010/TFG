@@ -1,8 +1,8 @@
 /**
+ * La función añade o encapsula la opción que selecciona el usuario
  * La etiqueta de inicio y fin deben ser distintas
- * La función añade o encapsula la opción que soluciona el usuario
- * @param {*} sStartTag 
- * @param {*} sEndTag 
+ * @param {String} sStartTag Inicio de la etiqueta
+ * @param {String} sEndTag Fin de la etiqueta
  * @param {*} area 
  */
 export function insertaCaracteres(sStartTag, sEndTag, area) {

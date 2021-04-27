@@ -63,9 +63,9 @@ export class Barra {
 
 /**
  * Función para extraer una submatriz, para calcular las Kxx
- * @param {type} f Fila hasta donde se extrae, inicio en f-3
- * @param {type} c Columna hasta donde se extrae, inicio en c-3
- * @param {type} m Matriz de datos
+ * @param {Number} f Fila hasta donde se extrae, inicio en f-3
+ * @param {Number} c Columna hasta donde se extrae, inicio en c-3
+ * @param {Array} m Matriz de datos
  * @returns {Array} Submatriz
  */
 export function submatriz(f, c, m) {
@@ -82,7 +82,7 @@ export function submatriz(f, c, m) {
 
 /**
  * Función que busca una sección por su identificador
- * @param {Number} id
+ * @param {Number} id Identificador
  * @returns {Seccion} Null si no existe
  */
 function getSeccion(id) {
@@ -95,7 +95,7 @@ function getSeccion(id) {
 
 /**
  * Función que busca un material por su identificador
- * @param {Number} id
+ * @param {Number} id Identificador
  * @returns {Seccion} Null si no existe
  */
 function getMaterial(id) {
@@ -108,8 +108,8 @@ function getMaterial(id) {
 
 /**
  * Función que calcula la longitud
- * @param {type} nodoA Nodo 1
- * @param {type} nodoB Nodo 2
+ * @param {Number} nodoA Nodo 1
+ * @param {Number} nodoB Nodo 2
  * @returns {Number} Logitud
  */
 function getTam(nodoA, nodoB) {
@@ -181,7 +181,7 @@ function getAngulo(nodoA, nodoB) {
  * @param {Number} seccion Id de la sección
  * @param {Number} material Id del material
  * @param {Number} tam Longitud de la barra
- * @returns {Matriz} K
+ * @returns {Array} K
  */
 function giveLocalStiffnessMatrix(seccion, material, tam) {
     let miSection = getSeccion(seccion);
@@ -219,8 +219,8 @@ function giveLocalStiffnessMatrix(seccion, material, tam) {
 /**
  * Calcúla la matriz global de rigidez del elemento
  * @param {Number} angulo Alpha
- * @param {Matriz} kLocal Matriz local de fuerzas
- * @returns {Matriz} Matriz global de fuerzas
+ * @param {Array} kLocal Matriz local de fuerzas
+ * @returns {Array} Matriz global de fuerzas
  */
 function calculaC(angulo) {
     let C = zeros(6, 6)._data; // C es la matriz para el cambio de coordenadas del sistema local al global

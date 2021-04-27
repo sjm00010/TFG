@@ -4,7 +4,7 @@ import {zeros} from 'mathjs'
 /**
  * Función para leer los materiales
  * @param {Array} materiales Matriz con los datos a interpretar
- * @returns {Array|leerMateriales.aux} Matriz de materiales
+ * @returns {Array} Matriz de materiales
  */
 export function leerMateriales(materiales) {
     let aux = [];
@@ -20,7 +20,7 @@ export function leerMateriales(materiales) {
 /**
  * Función para leer los nodos
  * @param {Array} nodos Matriz con los datos a interpretar
- * @returns {Array|leerNodos.aux} Matriz de nodos
+ * @returns {Array} Matriz de nodos
  */
 export function leerNodos(nodos) {
     let aux = [];
@@ -36,7 +36,7 @@ export function leerNodos(nodos) {
 /**
  * Función para leer las secciones
  * @param {Array} secciones Matriz con los datos a interpretar
- * @returns {Array|leerSecciones.aux} Matriz de secciones
+ * @returns {Array} Matriz de secciones
  */
 export function leerSecciones(secciones) {
     let aux = [];
@@ -52,7 +52,7 @@ export function leerSecciones(secciones) {
 /**
  * Función para leer los elementos
  * @param {Array} elementos Matriz con los datos a interpretar
- * @returns {Array|leerElementos.aux} Matriz de elementos
+ * @returns {Array} Matriz de elementos
  */
 export function leerElementos(elementos) {
     let aux = [];
@@ -101,7 +101,7 @@ export function sumaMatrices(a, b) {
  * Ensambla la matriz de rigidez total, que sera de nxn, siendo n=3xnumero de nodos
  * @param {Nodo} _NODOS nodos
  * @param {Elemento} _ELEMENTOS elementos
- * @returns {Array}
+ * @returns {Array} Matriz Kt
  */
 export function creaMatrizK(_NODOS, _ELEMENTOS) {
     let n = 3 * _NODOS.length;

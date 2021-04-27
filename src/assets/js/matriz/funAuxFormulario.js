@@ -1,3 +1,10 @@
+/**
+ * Función que verifica los datos básicos del ejercicio matricial
+ * @param {Object} materiales Datos suministrados de los materiales
+ * @param {Object} secciones Datos suministrados de las secciones
+ * @param {Object} nodos Datos suministrados de los nodos
+ * @returns {Set} Errores si los hay, y ref del elemento HTML donde se produce
+ */
 export function compruebaDatosBasicos(materiales, secciones, nodos){
     let mensajes = new Set();
     let errores = new Set();
@@ -26,7 +33,7 @@ export function compruebaDatosBasicos(materiales, secciones, nodos){
             if(isNaN(seccion[2].min)) errores.add('AlMin'+i);
             if(isNaN(seccion[2].max))errores.add('AlMax'+i);
             if(isNaN(seccion[2].valor))errores.add('AlVal'+i);
-        }else if( parseFloat(seccion[1].min) < parseFloat(seccion[1].valor) ||
+        }else if( parseFloat(seccion[1].min) > parseFloat(seccion[1].valor) ||
                   parseFloat(seccion[1].valor) > parseFloat(seccion[1].max)){
             mensajes.add('El valor por defecto para el ancho debe estar entre el mínimo y el máximo establecido.');
             if(parseFloat(seccion[1].min) > parseFloat(seccion[1].valor)) errores.add('AnMin'+i);
@@ -73,6 +80,12 @@ export function compruebaDatosBasicos(materiales, secciones, nodos){
     return {errores, mensajes};
 }
 
+/**
+ * Función que verifica los datos de las barras y las cargas
+ * @param {Object} barras Datos suministrados de las barras
+ * @param {Object} cargas Datos suministrados de las cargas
+ * @returns {Set} Errores si los hay, y ref del elemento HTML donde se produce
+ */
 export function compruebaValoresSeleccionados(barras, cargas){
     let mensajes = new Set();
     let errores = new Set();
