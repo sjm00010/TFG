@@ -80,3 +80,11 @@ En este caso el dominio ha sido proporcionado por la Universidad de Jaén, por l
 Lo primero de todo el dominio sirve, explicado de manera sencilla, para no tener que acceder mediante la dirección IP del servidor al contenido del mismo (la web). De esta forma en vez de acceder a la web mediante la URL ficticia *http://88.51.18.1* podemos acceder como *http://wipace.ujaen.es*, por ejemplo. Esto facilita el acceso a la web, para ello podemos utilizar herramientas como [Freenom](http://www.freenom.com/en/index.html) para conseguir un dominio gratuito durante un año, renovable tras la caducidad del mismo de manera gratuita, y [FreeDNS](https://freedns.afraid.org/) para el mapeo autimático de la IP del servidor, de esta forma el dominio adquirido se actualizara automáticamente cuando cambien la IP del servidor. Para usar FreeDNS de manera autimática se puede utilizar alguno de los [clientes](https://freedns.afraid.org/scripts/freedns.clients.php) de los que dispone la web.
 
 Es importante destacar también que se deben abrir los puertos para poder acceder a la web, HTTP utiliza por defecto el puerto 80 y HTTPS el 443. Si se cambian esto puertos se deberá acceder especificando el nuevo puerto, por ejemplo *http://ejemplo.ejemplo:8080*. En internet hay gran cantidad de tutoriales sobre como abrir los puertos del router para configurar servidores 😉
+
+## Automatización (Opcional)
+Si se desea automatizar el arranque del servidor se puede configurar el inicio automático del siguiente script:
+```
+cd C:\Apache24\bin
+httpd
+```
+Esto arrancara automáticamente Apache, si el caso de Windows, en Linux la ejecución debería ser automática.
