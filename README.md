@@ -20,7 +20,7 @@ Las librerías necesarias han sido:
 Para la parte visual de la web se ha ultilizado [MDB](https://mdbootstrap.com/docs/vue/) (Material Design for Bootstrap en la versión de Vue), ya que tiene una versión gratuita fácil de utilizar y visualmente resulta bastante llamativa.
 
 ## Instalación y configuración del servidor
-Para hospedar la web se utilizara (Apache)[http://httpd.apache.org/], en su (versión compilada para Windows)[https://www.apachelounge.com/download/] o su versión para (Linux)[https://www.digitalocean.com/community/tutorials/como-instalar-el-servidor-web-apache-en-ubuntu-18-04-es]. Dependiendo de la versión del SO seran distintas las rutas de los archivos, por lo que solo se indicará la carpeta u archivo que se debe modificar. Si no se corresponden las rutas o configuraciones con tu versión de Apache, o no deseas utilizar Apache como servidor te recomiendo que busques información sobre como hacer un Proxy y habilitar HTTPS para tu versión. Una vez instalado se debe modificar la configuración de Apache, el archivo *https.conf*, del que se deben modifcar las siguientes líneas (quitandoles *#* para activarlas): 
+Para hospedar la web se utilizara [Apache](http://httpd.apache.org/), en su [versión compilada para Windows](https://www.apachelounge.com/download/) o su versión para [Linux](https://www.digitalocean.com/community/tutorials/como-instalar-el-servidor-web-apache-en-ubuntu-18-04-es). Dependiendo de la versión del SO seran distintas las rutas de los archivos, por lo que solo se indicará la carpeta u archivo que se debe modificar. Si no se corresponden las rutas o configuraciones con tu versión de Apache, o no deseas utilizar Apache como servidor te recomiendo que busques información sobre como hacer un Proxy y habilitar HTTPS para tu versión. Una vez instalado se debe modificar la configuración de Apache, el archivo *https.conf*, del que se deben modifcar las siguientes líneas (quitandoles *#* para activarlas): 
 ```
 ServerName wipace.ujaen.es:443
 ```
@@ -60,7 +60,7 @@ ProxyPass /api http://localhost:8081/api
 ProxyPassReverse /api http://localhost:8081/api
 ```
 
-Por último en el mismo fichero se deben configurar las rutas para los certificados, en mi caso ha sido:
+Por último, en el mismo fichero se deben configurar las rutas para los certificados, en mi caso ha sido:
 ```
 SSLCertificateFile "${SRVROOT}/certificados/wipace_ujaen_es_cert.cer"
 SSLCertificateKeyFile "${SRVROOT}/certificados/wipace.ujaen.es_privatekey.pem"
