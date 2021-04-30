@@ -20,7 +20,7 @@
             </mdb-card-text>
             <p class="text-center h4">Materiales</p>
             <mdb-input type="number" label="Número de materiales" :min="0" :step="1" v-model="numMateriales" @blur="crearMateriales"/>
-            <p v-show="materiales.length > 0" class="h5">Módulos elásticos de los materiales (en kN)</p>
+            <p v-show="materiales.length > 0" class="h5">Módulos elásticos de los materiales (en kN/m<sup>2</sup>)</p>
             <div class="md-form input-group" v-for="(material, i) in materiales" :key="'M'+i">
                 <div class="input-group-prepend">
                     <span class="input-group-text md-addon"><b>E<sub>{{i+1}}</sub></b></span>
@@ -31,9 +31,11 @@
             </div>
             <hr class="my-3"/>
             <p class="text-center h4">Secciones</p>
+            <small class="text-muted">El ancho de la sección indica la dimensión perpendicular al plano de la estructura,
+                 es decir, la dimensión paralela al eje de flexión.</small>
             <mdb-input type="number" label="Número de secciones" :min="0" :step="1" v-model="numSecciones" @blur="crearSecciones"/>
             <div v-for="(seccion, i) in secciones" :key="'S'+i">
-                <p class="text-center h5"> Sección {{i+1}}</p>
+                <p class="text-center h5"> Sección {{i+1}} (en m)</p>
                 <div class="md-form input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text md-addon"><b>Ancho {{i+1}}</b></span>
@@ -54,7 +56,7 @@
             <hr class="my-3"/>
             <p class="text-center h4">Nodos</p>
             <mdb-input type="number" label="Número de nodos" :min="0" :step="1" v-model="numNodos" @blur="crearNodos"/>
-            <p v-show="nodos.length > 0" class="h5">Coordenadas X e Y de los nodos</p>
+            <p v-show="nodos.length > 0" class="h5">Coordenadas X e Y de los nodos (en m)</p>
             <div v-for="(nodo, i) in nodos" :key="'N'+i">
                 <p class="text-center h5"> Nodo {{i+1}}</p>
                 <div class="md-form input-group">
@@ -158,6 +160,15 @@
             </div>
         </mdb-card-body>
     </mdb-card>
+    <mdb-card class="my-3" v-if="verificado">
+        <mdb-card-body>
+            <mdb-btn block v-show="!dibujar" color="dark-green" @click="dibujaVistaPrevia"><mdb-icon icon="eye" class="mr-1"/> Vista previa</mdb-btn>
+            <mdb-btn block v-show="dibujar" color="blue-grey" @click="dibujar = false"><mdb-icon far icon="eye-slash" class="mr-1"/> Ocultar vista previa</mdb-btn>
+            <div v-if="dibujar" class="mt-4" ref="dibujo">
+                <canvas id="dibujo" style="border: 1px solid rgb(211,211,211)"></canvas>
+            </div>
+        </mdb-card-body>
+    </mdb-card>
     <mdb-btn v-if="!modificando && verificado" class="my-3" block color="default" @click="crear"><mdb-icon size="lg" icon="plus"/> Crear</mdb-btn>
     <mdb-btn v-if="modificando && verificado" class="my-3" block color="unique" @click="modificar"><mdb-icon size="lg" icon="sync-alt"/> Modificar</mdb-btn>
 </div>
@@ -172,6 +183,7 @@ import { cargaEjercicio } from '@/assets/js/auxiliares/ejercicio.js';
 import { ejercicio, ejMatriz } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import { compruebaDatosBasicos, compruebaValoresSeleccionados } from '@/assets/js/matriz/funAuxFormulario.js';
 import {URL} from '@/assets/js/auxiliares/api.config.js';
+import * as dibujo from '@/assets/js/matriz/dibujado.js';
 export default {
     name: 'formularioMatriz',
     components: {
@@ -196,24 +208,28 @@ export default {
             bc: ejMatriz.bc,
             numCargas: ejMatriz.cargas.length || undefined,
             cargas: ejMatriz.cargas,
-            verificado: ejMatriz.materiales.length > 0 ? true : false
+            verificado: ejMatriz.materiales.length > 0 ? true : false,
+            dibujar: false
         }
     },
     methods:{
         crearMateriales(){
             this.verificado = false;
+            this.dibujar = false;
             this.materiales.splice(0);
             for (let i = 0; i < this.numMateriales; i++)
                 this.materiales.push([i+1, {min: undefined, max: undefined, valor: undefined}, 0.3]);       
         },
         crearSecciones(){
             this.verificado = false;
+            this.dibujar = false;
             this.secciones.splice(0);
             for (let i = 0; i < this.numSecciones; i++)
                 this.secciones.push([i+1, {min: undefined, max: undefined, valor: undefined}, {min: undefined, max: undefined, valor: undefined}]);         
         },
         crearNodos(){
             this.verificado = false;
+            this.dibujar = false;
             this.nodos.splice(0);
             this.bc.splice(0);
             for (let i = 0; i < this.numNodos; i++){
@@ -222,14 +238,38 @@ export default {
             }       
         },
         crearBarras(){
+            this.dibujar = false;
             this.barras.splice(0);
             for (let i = 0; i < this.numBarras; i++)
                 this.barras.push([i+1, undefined, undefined, undefined, undefined]);         
         },
         crearCargas(){
+            this.dibujar = false;
             this.cargas.splice(0);
             for (let i = 0; i < this.numCargas; i++)
                 this.cargas.push([undefined, undefined, {min: undefined, max: undefined, valor: undefined}]);         
+        },
+        dibujaVistaPrevia(){
+            this.dibujar = false;
+            if(this.verificar()){
+                this.dibujar = true;
+                this.toNumber();
+                dibujo.vincularCanvas(this.$refs.dibujo);
+                ejMatriz.dificultad = this.dificultad;
+                ejMatriz.enunciado = ejercicio.enunciado;
+                ejMatriz.ayuda = ejercicio.ayuda;
+                ejMatriz.video = ejercicio.video;
+                ejMatriz.materiales = this.materiales;
+                ejMatriz.secciones = this.secciones;
+                ejMatriz.nodos = this.nodos;
+                ejMatriz.barras = this.barras;
+                ejMatriz.bc = this.bc;
+                ejMatriz.cargas = this.cargas;
+                dibujo.calculaDimensiones(this.nodos);
+                dibujo.dibujaNodos(this.barras, this.nodos, this.bc, this.cargas);
+            }else{
+                this.error('Error en los datos', 'Se deben facilitar primero todos los datos para poder visualizar la vista previa');
+            }
         },
         verificaDatos(){
             if(this.numMateriales > 0 && this.numSecciones > 0 && this.numNodos > 0){
@@ -239,6 +279,7 @@ export default {
                     this.verificado = true;
                 else
                     this.verificado = false;
+                    this.dibujar = false;
             }else
             this.error('Error en los datos', 'Se debe introducir al menos 1 material, sección y nodo.');
         },
@@ -399,6 +440,18 @@ export default {
                     });
                 }
             }
+        },
+        mounted() {
+            window.addEventListener('resize', () => {
+                dibujo.resizeCanvas(this.$refs.dibujo);
+                if(this.dibujar) dibujo.dibujaNodos(this.datos.barras, this.datos.nodos, this.datos.bc, this.datos.cargas);
+            });
+        },
+        beforeDestroy(){
+            window.removeEventListener('resize', () => {
+                dibujo.resizeCanvas(this.$refs.dibujo);
+                if(this.dibujar) dibujo.dibujaNodos(this.datos.barras, this.datos.nodos, this.datos.bc, this.datos.cargas);
+            });
         }
     }
 }

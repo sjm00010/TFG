@@ -419,7 +419,8 @@ function conectaNodos(barras, nodos){
             evented: false
         }));
 
-        dibujaFlecha(x1, x2, y1, y2);
+        let angulo = Math.atan(Math.abs(nodos[barra[2]-1][2].valor-nodos[barra[1]-1][2].valor)/Math.abs(nodos[barra[2]-1][1].valor-nodos[barra[1]-1][1].valor)) * (180/Math.PI);
+        dibujaFlecha(x1, x2, y1, y2, parseFloat(angulo.toFixed(2)));
     });
 }
 
@@ -429,11 +430,11 @@ function conectaNodos(barras, nodos){
  * @param {Number} x2 Coordenada X de fin
  * @param {Number} y1 Coordenada Y de inicio
  * @param {Number} y2 Coordenada Y de fin
+ * @param {Number} angulo Ángulo calculado de las coordenadas originales 
  */
-function dibujaFlecha(x1, x2, y1, y2){
+function dibujaFlecha(x1, x2, y1, y2, angulo){
     let x = Math.abs(x2-x1)/2 + Math.min(x1, x2);
     let alfa = Math.atan(Math.abs(y2-y1)/Math.abs(x2-x1)) * (180/Math.PI);
-    let stringAlfa = 0;
     let m = Math.abs(y2-y1)/Math.abs(x2-x1);
     let y1prima = m*Math.abs((x-20)-x1)+Math.min(y1, y2)-20;
     let y2prima = m*Math.abs((x+20)-x1)+Math.min(y1, y2)-20;
@@ -444,14 +445,12 @@ function dibujaFlecha(x1, x2, y1, y2){
             let aux = y1prima;
             y1prima = Math.max(y1prima, y2prima);
             y2prima = Math.min(aux, y2prima);
-            stringAlfa = alfa;
             alfa = 90 - alfa;
             ty = Math.min(y1prima, y2prima);
         }else{
             let aux = y1prima;
             y1prima = Math.min(y1prima, y2prima);
             y2prima = Math.max(aux, y2prima);
-            stringAlfa = 360 - alfa;
             alfa = 90 + alfa;
             ty = Math.max(y1prima, y2prima);
         }
@@ -460,14 +459,12 @@ function dibujaFlecha(x1, x2, y1, y2){
             let aux = y1prima;
             y1prima = Math.max(y1prima, y2prima);
             y2prima = Math.min(aux, y2prima);
-            stringAlfa = 270-alfa;
             alfa = 270 - alfa;
             ty = Math.max(y1prima, y2prima);
         }else{
             let aux = y1prima;
             y1prima = Math.min(y1prima, y2prima);
             y2prima = Math.max(aux, y2prima);
-            stringAlfa = 180-alfa;
             alfa = 270+alfa;
             ty = Math.min(y1prima, y2prima);
         }
@@ -495,8 +492,8 @@ function dibujaFlecha(x1, x2, y1, y2){
         evented: false
     }));
 
-    stringAlfa = stringAlfa === 360 ? 0 : stringAlfa;
-    escribir(x-15, (y1prima+y2prima)/2 -15, parseFloat(stringAlfa.toFixed(2))+' º', 'rgba(80, 165, 185, 1)');
+    angulo = angulo === 360 ? 0 : angulo;
+    escribir(x-15, (y1prima+y2prima)/2 -15, parseFloat(angulo.toFixed(2))+' º', 'rgba(80, 165, 185, 1)');
 }
 
 /**

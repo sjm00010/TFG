@@ -45,10 +45,6 @@ export function compruebaDatosBasicos(materiales, secciones, nodos){
             if(parseFloat(seccion[2].min) > parseFloat(seccion[2].valor)) errores.add('AlMin'+i);
             if(parseFloat(seccion[2].valor) > parseFloat(seccion[2].max)) errores.add('AlMax'+i);
             errores.add('AlVal'+i);
-        }else if( parseFloat(seccion[1].valor) === parseFloat(seccion[2].valor)){
-            mensajes.add('Las secciones deben ser rectangulares, revise los datos.');
-            errores.add('AnVal'+i);
-            errores.add('AlVal'+i);
         }
     });
 

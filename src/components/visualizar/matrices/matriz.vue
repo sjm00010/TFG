@@ -25,18 +25,20 @@
             </mdb-row>
 
             <hr/>
-            <mdb-card-title>Longitud de las secciones</mdb-card-title>
+            <mdb-card-title>Dimensiones de las secciones transversales (en m)</mdb-card-title>
+            <small class="text-muted">El ancho de la sección indica la dimensión perpendicular al plano de la estructura,
+                 es decir, la dimensión paralela al eje de flexión.</small>
             <hr/>
             <mdb-row v-for="(seccion, i) in datos.secciones" :key="'s'+i">
                 <mdb-col md="6" col="md">
-                    <p class="text-center"><b>Altura sección {{i+1}}</b></p>
+                    <p class="text-center"><b>Ancho sección {{i+1}}</b></p>
                     <mdb-input :class="seccion[1].min === seccion[1].max ? 'disabled' : ''" type="number" :label="'Ancho '+seccion[0]+' (m)'"
                                :min="seccion[1].min" :max="seccion[1].max" :step="0.1" v-model.number="seccion[1].valor" @blur="cambiaSeccion"/>
                     <input v-if="seccion[1].min !== seccion[1].max" :aria-label="'Ancho '+seccion[0]+'(m)'" type="range" :min="seccion[1].min"
                            :max="seccion[1].max" :step="0.1" class="custom-range" v-model="seccion[1].valor" @blur="cambiaSeccion">
                 </mdb-col>
                 <mdb-col md="6" col="md">
-                    <p class="text-center"><b>Ancho sección {{i+1}}</b></p>
+                    <p class="text-center"><b>Altura sección {{i+1}}</b></p>
                     <mdb-input :class="seccion[2].min === seccion[2].max ? 'disabled' : ''" type="number" :label="'Alto '+seccion[0]+' (m)'"
                                :min="seccion[2].min" :max="seccion[2].max" :step="0.1" v-model.number="seccion[2].valor" @blur="cambiaSeccion"/>
                     <input v-if="seccion[2].min !== seccion[2].max" :aria-label="'Alto '+seccion[0]+'(m)'" type="range" :min="seccion[2].min" 
@@ -56,7 +58,7 @@
                            :max="nodo[1].max" :step="0.1" class="custom-range" v-model="nodo[1].valor" @blur="cambiaNodos">
                 </mdb-col>
                 <mdb-col md="6" col="md">
-                    <p class="text-center"><b>Coordenada Y nodo {{i+1}}</b></p>
+                    <p class="text-center"><b>Coordenada Y nodo {{i+1}} (m)</b></p>
                     <mdb-input :class="nodo[2].min === nodo[2].max ? 'disabled' : ''" type="number" :label="'Coordenada Y '+nodo[0]"
                                :min="nodo[2].min" :max="nodo[2].max" :step="0.1" v-model.number="nodo[2].valor" @blur="cambiaNodos"/>
                     <input v-if="nodo[2].min !== nodo[2].max" :aria-label="'Coordenada Y '+nodo[0]" type="range" :min="nodo[2].min"
