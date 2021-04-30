@@ -162,8 +162,12 @@
     </mdb-card>
     <mdb-card class="my-3" v-if="verificado">
         <mdb-card-body>
-            <mdb-btn block v-show="!dibujar" color="dark-green" @click="dibujaVistaPrevia"><mdb-icon icon="eye" class="mr-1"/> Vista previa</mdb-btn>
-            <mdb-btn block v-show="dibujar" color="blue-grey" @click="dibujar = false"><mdb-icon far icon="eye-slash" class="mr-1"/> Ocultar vista previa</mdb-btn>
+            <mdb-btn block v-show="!dibujar && !cargando" color="dark-green" @click="dibujaVistaPrevia"><mdb-icon icon="eye" class="mr-1"/> Vista previa</mdb-btn>
+            <mdb-btn block v-show="dibujar && !cargando" color="dark-green" @click="dibujaVistaPrevia" class="my-2"><mdb-icon far icon="redo" class="mr-1"/> Actualizar vista previa</mdb-btn>
+            <mdb-btn block v-show="dibujar && !cargando" color="blue-grey" @click="dibujar = false"><mdb-icon far icon="eye-slash" class="mr-1"/> Ocultar vista previa</mdb-btn>
+            <div v-if="cargando" class="d-flex justify-content-center my-5">
+                <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;" />
+            </div>
             <div v-if="dibujar" class="mt-4" ref="dibujo">
                 <canvas id="dibujo" style="border: 1px solid rgb(211,211,211)"></canvas>
             </div>
@@ -209,7 +213,8 @@ export default {
             numCargas: ejMatriz.cargas.length || undefined,
             cargas: ejMatriz.cargas,
             verificado: ejMatriz.materiales.length > 0 ? true : false,
-            dibujar: false
+            dibujar: false,
+            cargando: false
         }
     },
     methods:{
@@ -249,12 +254,12 @@ export default {
             for (let i = 0; i < this.numCargas; i++)
                 this.cargas.push([undefined, undefined, {min: undefined, max: undefined, valor: undefined}]);         
         },
-        dibujaVistaPrevia(){
+        async dibujaVistaPrevia(){
+            this.cargando = true;
             this.dibujar = false;
             if(this.verificar()){
                 this.dibujar = true;
                 this.toNumber();
-                dibujo.vincularCanvas(this.$refs.dibujo);
                 ejMatriz.dificultad = this.dificultad;
                 ejMatriz.enunciado = ejercicio.enunciado;
                 ejMatriz.ayuda = ejercicio.ayuda;
@@ -265,11 +270,14 @@ export default {
                 ejMatriz.barras = this.barras;
                 ejMatriz.bc = this.bc;
                 ejMatriz.cargas = this.cargas;
+                await new Promise(r => setTimeout(r, 2000));
+                dibujo.vincularCanvas(this.$refs.dibujo);
                 dibujo.calculaDimensiones(this.nodos);
                 dibujo.dibujaNodos(this.barras, this.nodos, this.bc, this.cargas);
             }else{
                 this.error('Error en los datos', 'Se deben facilitar primero todos los datos para poder visualizar la vista previa');
             }
+            this.cargando = false;
         },
         verificaDatos(){
             if(this.numMateriales > 0 && this.numSecciones > 0 && this.numNodos > 0){
@@ -288,7 +296,7 @@ export default {
                 if(errores.has(campo)){
                     value[0].classList.remove('valid');
                     value[0].classList.add('invalid');
-                }else if(value[0]){
+                }else if(campo !== 'dibujo' && value[0]){
                     value[0].classList.remove('invalid');
                     value[0].classList.add('valid');
                 }
