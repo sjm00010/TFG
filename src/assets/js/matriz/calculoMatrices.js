@@ -182,6 +182,19 @@ export function matricesGlobales(bar){
 }
 
 /**
+ * Función calcula en latex las matrices de cambio de base
+ * @param {Object} bar Datos de las barras
+ * @returns Vector con las matrices de cambio de base en latex
+ */
+ export function matricesCambioBase(bar){
+    let matrices = [];
+    bar.forEach((barra, i) => {
+        matrices.push(faux.pasaLatex( "C", barra[1].toString()+barra[2].toString(),'',_ELEMENTOS[i][1].C));
+    });
+    return matrices;
+}
+
+/**
  * Función calcula en latex la matriz Ktot
  * @returns Matriz Ktot en latex
  */
@@ -248,5 +261,19 @@ export function getDvtot(){
     for(let i = 0 ; i  < bc.length; i++)
         sol.push(vector[3*(parseInt(bc[i][0])-1)+(parseInt(bc[i][1])-1)]);
 
+    return sol;
+}
+
+export function obtenerReacciones(){
+    let sol = [];
+    for(let i = 0 ; i < bc.length; i++)
+        sol.push({
+            x: parseFloat(nodos[bc[i][0]-1][1]),
+            y: parseFloat(nodos[bc[i][0]-1][2]),
+            tipo: parseInt(bc[i][1]),
+            mag:  parseFloat(Reacciones[0][3*(parseInt(bc[i][0])-1)+(parseInt(bc[i][1])-1)].toPrecision(4)),
+            
+        });
+    
     return sol;
 }

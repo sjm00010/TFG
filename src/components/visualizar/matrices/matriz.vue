@@ -181,8 +181,9 @@
         :active="0"
         default
         :links="[
-        { text: 'Matrices locales', role:'tablist' },
-        { text: 'Matrices globales' },
+        { text: 'Kloc', role:'tablist' },
+        { text: 'C'},
+        { text: 'Kglob' },
         { text: 'Ktot' },
         { text: 'Kred' },
         { text: 'Desplazamientos y reacciones' }]"
@@ -190,9 +191,9 @@
         transition-style="linear"
         class="my-3"
     >
-        <template :slot="'Matrices locales'">
+        <template :slot="'Kloc'">
             <mdb-container>
-                <mdb-card-title class="text-center">Matrices locales</mdb-card-title>
+                <mdb-card-title class="text-center">Matrices de rigidez de las barras en coordenadas locales</mdb-card-title>
                 <div v-for="(matriz, i) in localK" :key="'kloc'+i">
                     <div class="container overflow-auto">
                         <katex-element :expression="matriz" :throwOnError="false" :display-mode="true"/>
@@ -203,9 +204,22 @@
                 </div>
             </mdb-container>
         </template>
-        <template :slot="'Matrices globales'">
+        <template :slot="'C'">
             <mdb-container>
-                <mdb-card-title class="text-center">Matrices globales</mdb-card-title>
+                <mdb-card-title class="text-center">Matrices de cambio de base</mdb-card-title>
+                <div v-for="(matriz, i) in C" :key="'C'+i">
+                    <div class="container overflow-auto">
+                        <katex-element :expression="matriz" :throwOnError="false" :display-mode="true"/>
+                    </div>
+                    <div class="text-right">
+                        <mdb-btn size="sm" color="secondary" @click="matrizSelecionada = matriz; verMatriz = true"><mdb-icon icon="search" class="mr-1"/> Ampliar</mdb-btn>
+                    </div>
+                </div>
+            </mdb-container>
+        </template>
+        <template :slot="'Kglob'">
+            <mdb-container>
+                <mdb-card-title class="text-center">Matrices de rigidez de las barras en coordenadas globales</mdb-card-title>
                 <div v-for="(matriz, i) in globalK" :key="'kglo'+i">
                     <div class="container overflow-auto">
                         <katex-element :expression="matriz" :throwOnError="false" :display-mode="true"/>
@@ -217,6 +231,7 @@
             </mdb-container>
         </template>
         <template :slot="'Ktot'">
+            <mdb-card-title class="text-center">Matriz de rigidez completa del problema antes de aplicar las condiciones de contorno</mdb-card-title>
             <mdb-container>
                 <div class="container overflow-auto">
                     <katex-element :expression="Ktot" :throwOnError="false" :display-mode="true"/>
@@ -258,12 +273,21 @@
                     </mdb-tbl-body>
                 </mdb-tbl>
             </div>
-            <div class="text-center">
-                <mdb-btn size="sm" v-show="verDesp" color="primary" @click="verDesp = false; actualizaDibujo()"><mdb-icon icon="eye-slash" class="mr-1"/> Ocultar desplazamientos</mdb-btn>
-                <mdb-btn size="sm" v-show="!verDesp" color="default" @click="verDesp = true; actualizaDibujo()"><mdb-icon far icon="eye" class="mr-1"/> Mostrar desplazamientos</mdb-btn>
-            </div>
-            <mdb-container class="container overflow-auto">
+            <mdb-row class="container">
+                <mdb-col size="md" md="4">
+                    <mdb-input placeholder="Factor multiplicativo" class="mb-3 mt-0" v-model="factor" :min="0" :step="1" @change="verDesp = false; actualizaDibujo()">
+                        <span class="input-group-text md-addon" slot="prepend">Factor multiplicativo</span>
+                    </mdb-input>
+                </mdb-col>
+                <mdb-col size="md" md="8" class="text-center">
+                    <mdb-btn size="sm" block v-show="verDesp" color="primary" @click="verDesp = false; actualizaDibujo()"><mdb-icon icon="eye-slash" class="mr-1"/> Ocultar desplazamientos</mdb-btn>
+                    <mdb-btn size="sm" block v-show="!verDesp" color="default" @click="verDesp = true; actualizaDibujo()"><mdb-icon far icon="eye" class="mr-1"/> Mostrar desplazamientos</mdb-btn>
+                </mdb-col>
+            </mdb-row>
+            <mdb-container class="container overflow-auto my-2">
                 <mdb-card-title class="text-center">Reacciones</mdb-card-title>
+                <mdb-btn size="sm" block v-show="verReac" color="primary" @click="verReac = false; actualizaDibujo()"><mdb-icon icon="eye-slash" class="mr-1"/> Ocultar reacciones</mdb-btn>
+                <mdb-btn size="sm" block v-show="!verReac" color="default" @click="verReac = true; actualizaDibujo()"><mdb-icon far icon="eye" class="mr-1"/> Mostrar reaciones</mdb-btn>
                 <katex-element v-for="(reaccion, i) in reacciones" :key="'reac'+i" :expression="reaccion" :throwOnError="false" :display-mode="true"/>
             </mdb-container>
         </template>
@@ -327,8 +351,8 @@ import { mdbContainer, mdbCardTitle, mdbInput,
 import 'katex/dist/katex.min.css';
 import { ejMatriz, limpiar } from '@/assets/js/auxiliares/ejercicioJSON.js';
 import { cargaDatos, cargaMateriales, cargaSecciones, cargaNodos, cargaBc,
-         cargaBarras, cargaCargas, matricesLocales, matricesGlobales, getKtot,
-         getKred, getDvtot, getReacciones } from '@/assets/js/matriz/calculoMatrices.js';
+         cargaBarras, cargaCargas, matricesLocales, matricesGlobales, matricesCambioBase,
+         getKtot, getKred, getDvtot, getReacciones } from '@/assets/js/matriz/calculoMatrices.js';
 import * as dibujo from '@/assets/js/matriz/dibujado.js';
 export default {
     name: "EjercicioViga",
@@ -340,11 +364,13 @@ export default {
             editar: true,
             localK: [],
             globalK: [],
+            C: [],
             Ktot: '',
             Kred: '',
             desplazamiento: [],
             reacciones: [],
             verDesp: false,
+            verReac: false,
             leyenda: false,
             fotosLeyenda: [
                 {img: 'movilHorizontal.png', tipo: 'Carrito horizontal'},
@@ -356,7 +382,8 @@ export default {
                 {img: 'cuadrado.png', tipo: 'Empotramiento'},
             ],
             verMatriz: false,
-            matrizSelecionada: ''
+            matrizSelecionada: '',
+            factor: 1
         };
     },
     components:{
@@ -414,12 +441,14 @@ export default {
             dibujo.calculaDimensiones(this.datos.nodos);
             dibujo.limpiarTodo();
             dibujo.dibujaNodos(this.datos.barras, this.datos.nodos, this.datos.bc, this.datos.cargas);
-            if(this.verDesp) dibujo.dibujaDesplazamientos(this.datos.nodos);
+            if(this.verDesp) dibujo.dibujaDesplazamientos(this.datos.nodos, this.factor);
+            if(this.verReac) dibujo.dibujaReacciones();
             this.cambio = false;
         },
         calculaMatrices(){
             this.localK.splice(0, this.localK.length, ...matricesLocales(this.datos.barras));
             this.globalK.splice(0, this.globalK.length, ...matricesGlobales(this.datos.barras));
+            this.C.splice(0, this.C.length, ...matricesCambioBase(this.datos.barras));
             this.Ktot = getKtot();
             this.Kred = getKred();
             this.desplazamiento = getDvtot();

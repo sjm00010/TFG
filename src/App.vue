@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import cabecera from '@/components/Cabecera';
+import cabecera from '@/components/cabecera';
 export default {
   name: 'App',
   components: {cabecera},

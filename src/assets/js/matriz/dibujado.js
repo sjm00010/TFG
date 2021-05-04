@@ -1,5 +1,5 @@
 import { fabric } from 'fabric';
-import { getDvtot } from '@/assets/js/matriz/calculoMatrices.js';
+import { getDvtot, obtenerReacciones } from '@/assets/js/matriz/calculoMatrices.js';
 
 /////////////////
 //  Variables  //
@@ -52,10 +52,10 @@ let dimY = {inicio: 0, fin: 0};
  * @param {Object} outerCanvasContainer Elemento HTML contenedor del canvas
  */
  export function reinicia(outerCanvasContainer){
-    dimX.inicio = outerCanvasContainer.clientWidth*0.15;
-    dimX.fin = outerCanvasContainer.clientWidth*0.85;
-    dimY.inicio = outerCanvasContainer.clientHeight*0.15;
-    dimY.fin = outerCanvasContainer.clientHeight*0.85;
+    dimX.inicio = outerCanvasContainer.clientWidth*0.2;
+    dimX.fin = outerCanvasContainer.clientWidth*0.8;
+    dimY.inicio = outerCanvasContainer.clientHeight*0.2;
+    dimY.fin = outerCanvasContainer.clientHeight*0.8;
 }
 
 /**
@@ -396,7 +396,8 @@ export function dibujaNodos(barras, nodos, bc, cargas){
         dibujaFuerzas(calculaX(parseFloat(nodos[carga[0]-1][1].valor)), 
                       calculaY(parseFloat(nodos[carga[0]-1][2].valor)),
                       carga[1],
-                      carga[2].valor
+                      carga[2].valor,
+                      false
                       );
     });
 }
@@ -419,7 +420,8 @@ function conectaNodos(barras, nodos){
             evented: false
         }));
 
-        let angulo = Math.atan(Math.abs(nodos[barra[2]-1][2].valor-nodos[barra[1]-1][2].valor)/Math.abs(nodos[barra[2]-1][1].valor-nodos[barra[1]-1][1].valor)) * (180/Math.PI);
+        let angulo = Math.atan((nodos[barra[2]-1][2].valor-nodos[barra[1]-1][2].valor)/(nodos[barra[2]-1][1].valor-nodos[barra[1]-1][1].valor)) * (180/Math.PI);
+        if (x1 > x2) angulo = angulo + 180;
         dibujaFlecha(x1, x2, y1, y2, parseFloat(angulo.toFixed(2)));
     });
 }
@@ -563,9 +565,10 @@ function escribir(x, y, texto, color = 'black') {
  * @param {Number} y Coordenada Y
  * @param {Number} tipo Tipo de fuerza: Horizontal (1) o Vertical (2)
  * @param {Number} mag Magnitud de la fuerza, si es negativa se le cambia el sentido
+ * @param {Boolean} reac Indica si se deben dibujar las reacciones
  */
-export function dibujaFuerzas(x, y, tipo, mag){
-    let x1, x2, y1, y2, rot, tx, ty;
+export function dibujaFuerzas(x, y, tipo, mag, reac){
+    let x1, x2, y1, y2, rot, tx, ty, color;
     switch(tipo){
         case 1: // Horizontal
             x1 = x-50;
@@ -575,7 +578,8 @@ export function dibujaFuerzas(x, y, tipo, mag){
             y2 = y;
             ty = y;
             rot = mag > 0 ? 270 : 90;
-            dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag);
+            color = reac ? 'rgba(243, 67, 54, 0.7)' : 'rgba(125, 33, 129, 0.7)';
+            dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag, color, reac);
             break;
         case 2: // Vertical
             x1 = x;
@@ -585,10 +589,12 @@ export function dibujaFuerzas(x, y, tipo, mag){
             y2 = y-20;
             ty = mag > 0 ? y1 : y2;
             rot = mag > 0 ? 0 : 180;
-            dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag);
+            color = reac ? 'rgba(243, 67, 54, 0.7)' : 'rgba(40, 80, 170, 0.7)';
+            dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag, color, reac);
             break;
         case 3: // Momento
-            dibujaMomento(x, y, mag);
+            color = reac ? 'rgba(243, 67, 54, 0.7)' : 'rgba(255,157,65,0.7)';
+            dibujaMomento(x, y, mag, color);
             break;
     }
 }
@@ -603,9 +609,10 @@ export function dibujaFuerzas(x, y, tipo, mag){
  * @param {Number} ty Coordenada Y para la flecha
  * @param {Number} rot Angulo de rotación en grados, inclinación de la flecha
  * @param {Number} mag Magnitud de la fuerza
+ * @param {String} color Color de dibujado de la fuerza
+ * @param {Boolean} reac Indica si se va a dibujar la fuerza
  */
-function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag){
-    let color = x1 === x2 ? 'rgba(40, 80, 170, 0.7)' : 'rgba(125, 33, 129,0.7)';
+function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag, color, reac){
     canvas.add(new fabric.Line([ x1, y1, x2, y2 ], {
         stroke: color,
         strokeWidth: 2,
@@ -627,6 +634,10 @@ function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag){
         selectable: false,
         evented: false
     }));
+    
+    if (reac)
+        escribir(x1-30, (y1+y2)/2, parseFloat(Math.abs(mag).toFixed(2))+' kN', color);
+    else
         escribir(x1, y1-15, parseFloat(Math.abs(mag).toFixed(2))+' kN', color);
 }
 
@@ -635,8 +646,9 @@ function dibujaFuerzaHV(x1, x2, y1, y2, tx, ty, rot, mag){
  * @param {Number} x Coordenada X
  * @param {Number} y Coordenada Y
  * @param {Number} mag Magnitud del momento
+ * @param {String} color Color de dibujado de la fuerza
  */
-function dibujaMomento(x, y, mag){
+function dibujaMomento(x, y, mag, color){
     canvas.add(new fabric.Circle({
         radius: 20,
         left: x,
@@ -644,7 +656,7 @@ function dibujaMomento(x, y, mag){
         angle: 0,
         startAngle: Math.PI + Math.PI/2,
         endAngle: Math.PI/2,
-        stroke: "rgba(255,157,65,0.7)",
+        stroke: color,
         strokeWidth: 3,
         fill: '',
         selectable: false,
@@ -669,27 +681,25 @@ function dibujaMomento(x, y, mag){
         angle: 270,
         width: 15,
         height: 15,
-        fill: "rgba(255,157,65,0.7)",
+        fill: color,
         selectable: false,
         evented: false
     }));
     
-    escribir( x+50, y+15, parseFloat(Math.abs(mag).toFixed(2))+' kN', 'rgba(255,157,65,0.7)');
+    escribir( x+60, y+15, parseFloat(Math.abs(mag).toFixed(2))+' kN·m', color);
 }
-
-// Factor multiplicativo, para apreciar el desplazamiento
-const FACTOR = 60;
 
 /**
  * Función que dibuja el desplazamiento de los nodos
  * @param {Object} nodos Datos de los nodos
+ * @param {Number} factor Factor multiplicativo para apreciar la deformada
  */
-export function dibujaDesplazamientos(nodos){
+export function dibujaDesplazamientos(nodos, factor){
     let deformada = getDvtot();
     
     nodos.forEach((nodo, i) => {
-        let x = calculaX(parseFloat(nodo[1].valor+deformada[i*3]*FACTOR));
-        let y = calculaY(parseFloat(nodo[2].valor+deformada[i*3+1]*FACTOR));
+        let x = calculaX(parseFloat(nodo[1].valor+deformada[i*3]*factor));
+        let y = calculaY(parseFloat(nodo[2].valor+deformada[i*3+1]*factor));
         canvas.add(new fabric.Circle({
             left: x,
             top: y,
@@ -701,5 +711,18 @@ export function dibujaDesplazamientos(nodos){
             evented: false
         }));
         escribir( x, y-15, 'θ'+(i+1)+' = '+deformada[i*3+2].toFixed(4)+' rad', 'rgba(230, 10, 40, 0.7)');
+    });
+}
+
+export function dibujaReacciones(){
+    let reacciones = obtenerReacciones();
+    
+    reacciones.forEach(reaccion => {
+        dibujaFuerzas(  calculaX(reaccion.x), 
+                        calculaY(reaccion.y),
+                        reaccion.tipo,
+                        reaccion.mag,
+                        true
+        );
     });
 }
