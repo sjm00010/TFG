@@ -664,7 +664,7 @@ function dibujaMomento(x, y, mag, color){
     }));
 
     let yFlecha = y-20;
-    if(mag > 0){
+    if(mag < 0){
         yFlecha = y+20;
     }
     canvas.add(new fabric.Triangle({
