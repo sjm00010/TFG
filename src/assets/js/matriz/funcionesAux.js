@@ -271,7 +271,7 @@ export function creaDvector(Dr, bc, _NODOS) {
         let m = (nodo - 1) * 3 + dof - 1;
         Dt.splice(m, 0, 0.0); // Inserto un 0 en la posicion m
     }
-    
+
     Dt = [].concat.apply([], Dt); // Transformo la matriz a vector
 
     return Dt;

@@ -86,6 +86,7 @@ export function cargaBc(datos, cal){
         if(nodo[3])
             bc.push([parseFloat(nodo[0]), 3]);
     });
+
     if(!cal)
         calcular();
 }
@@ -149,7 +150,10 @@ function calcular(){
     Ftot = faux.creaVectorF(_NODOS, cargas);
     Kred = faux.reducirMatrizK(Ktot, bc, _NODOS);
     Fred = faux.reducirFvector(Ftot, bc, _NODOS);
-    Dvred = lusolve(Kred, Fred);
+    if(Kred.length === 0 && Fred.length === 0)
+        Dvred = [];
+    else
+        Dvred = lusolve(Kred, Fred);
     Dvtot = faux.creaDvector(Dvred, bc, _NODOS);
     Fvector = multiply(Ktot, Dvtot);
     Reacciones = [subtract(Fvector, transpose(Ftot)[0])];
