@@ -18,7 +18,7 @@
       <mdb-jumbotron class="mb-0 text-center hoverable p-4">
         <mdb-row>
           <mdb-col md="4" offsetMd="1" class="m-3">
-            <mdb-view class="animated pulse infinite" src="https://www.flaticon.com/svg/static/icons/svg/1276/1276525.svg" alt="Imagen del profesor">
+            <mdb-view class="animated pulse infinite" :src="require('@/assets/img/engineer.svg')" alt="Imagen del profesor">
               <mdb-mask waves overlay="white-slight"/>
             </mdb-view>
           </mdb-col>
