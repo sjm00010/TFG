@@ -17,29 +17,28 @@
     <mdb-container class="my-3">
       <mdb-jumbotron class="mb-0 text-center hoverable p-4">
         <mdb-row>
-          <mdb-col md="4" offsetMd="1" class="m-3">
+          <mdb-col md="3" offsetMd="1" class="m-3">
             <mdb-view class="animated pulse infinite" :src="require('@/assets/img/engineer.svg')" alt="Imagen del profesor">
               <mdb-mask waves overlay="white-slight"/>
             </mdb-view>
           </mdb-col>
           <mdb-col md="7" class="text-left ml-3 mt-3">
             <p class="h6 pb-1 indigo-text"><mdb-icon far icon="question-circle" class="pr-1"/> +Info</p>
-            <h3 class="h3 mb-4">Fernando Suárez Guerra</h3>
-            <h4 class="h4 mb-4">Si necesitas tutoría...</h4>
+            <h3 class="h3 mb-4">Autores</h3>
             <p class="font-weight-normal">
               <ul>
                 <li>
-                  <b>Correo</b> : fsuarez@ujaen.es
+                  <a href="https://www.ujaen.es/departamentos/ingmec/contactos/suarez-guerra-fernando">Fernando Suárez Guerra</a>
                 </li>
                 <li>
-                  <b>Teléfono</b> : (+34) 953 648 606
+                  <a href="https://www.ujaen.es/departamentos/ingmec/contactos/fernandez-aceituno-javier">Javier Fernández Aceituno</a>
                 </li>
                 <li>
-                  <b>Dirección</b> : Campus Científico Tecnológico de Linares, Dependencia: D-50
+                  <a href="https://github.com/sjm00010">Sergio Jiménez Moreno</a>
                 </li>
               </ul>
             </p>
-            <mdb-btn class="ml-0 black-text" tag="a" block color="light-blue" href="https://www.ujaen.es/departamentos/ingmec/contactos/suarez-guerra-fernando"><b>Mis tutorías</b></mdb-btn>
+            <p class="lead text-muted">Esta web ha sido creada como parte del Proyecto de Innovación y Mejora Docente PIMED06_201921, financiado por la Universidad de Jaén.</p>
           </mdb-col>
         </mdb-row>
       </mdb-jumbotron>
