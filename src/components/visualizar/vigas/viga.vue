@@ -85,7 +85,7 @@
         <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;" />
     </div>
 
-    <grafica v-if="def && !editado && !editadoDef" :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="mm" :precision="5"></grafica>
+    <grafica v-if="def && !editado && !editadoDef" :datos="this.datosGraficas.deformada" titulo="Deformada" color="rgb(128, 0, 128)" :invertida="false" unidad="m" :precision="5"></grafica>
 
 </mdb-container>
 </template>
